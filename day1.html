@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY 01 — THE BEGINNING | Budduu Journey ❤️🌅</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="day1.css">
+</head>
+<body class="day1-body">
+
+  <!-- Ambient Sunset Sky Background -->
+  <div class="day1-ambient-sky" aria-hidden="true">
+    <div class="sky-tint-base"></div>
+    <div class="sky-glow-top"></div>
+    <div class="sky-glow-mid"></div>
+    <div class="sky-glow-bottom"></div>
+    <div class="sky-grain-layer"></div>
+  </div>
+
+  <!-- Ambient Canvas for Micro Particles & Stars -->
+  <canvas id="day1ParticlesCanvas" class="day1-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="site-nav" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
+        <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span class="nav-brand-fallback">BUDDUU ❤️</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="day1.html" class="nav-link active">Day 01</a></li>
+        <li><a href="day2.html" class="nav-link" id="navNextDayBtn">Next Day →</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================================================
+       GATE 1: DATE LOCK VIEW (Active before 20 October 2026)
+       ========================================================= -->
+  <section id="day1DateLockedView" class="day1-locked-view" style="display: none;" aria-label="Day 1 Locked by Date">
+    <div class="glass-card locked-card-container">
+      <div class="locked-icon-halo" aria-hidden="true">🔒</div>
+      <span class="locked-tag">DAY 1</span>
+      <h1 class="locked-heading">THE JOURNEY HASN'T BEGUN YET.</h1>
+      <p class="locked-quote">“Something is waiting here...”</p>
+      <div class="locked-date-pill" id="dateLockCountdown">Unlocks on 20 October 2026</div>
+      <div class="locked-actions">
+        <a href="index.html#journey" class="btn btn-primary">← BACK TO JOURNEY</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       GATE 2: GAME LOCK VIEW (Appears once Date Lock opens)
+       ========================================================= -->
+  <section id="day1GameLockedView" class="day1-game-lock-view" style="display: none;" aria-label="Day 1 Puzzle Challenge">
+    <div class="glass-card game-puzzle-card">
+      <div class="game-lock-halo" aria-hidden="true">
+        <span class="lock-glow-icon">🔐</span>
+      </div>
+
+      <span class="game-kicker-tag">A SUNSET RIDDLE FOR BUDDUU</span>
+      <h1 class="game-main-title">ONE LITTLE TEST</h1>
+      
+      <p class="game-subtitle-lead">
+        Before Day 1 begins...<br>
+        <span>you have to solve something first.</span>
+      </p>
+
+      <p class="game-instructions-note">
+        Three clues. One answer. Take your time.
+      </p>
+
+      <!-- Clues Container -->
+      <div class="clues-stream" role="region" aria-label="Puzzle Clues">
+        <!-- Clue 01 -->
+        <div class="clue-card is-visible" id="clueCard1">
+          <div class="clue-badge">CLUE 01</div>
+          <p class="clue-verse">“I can disappear from your hands, but stay inside your mind.”</p>
+        </div>
+
+        <!-- Clue 02 -->
+        <div class="clue-card" id="clueCard2" style="display: none;">
+          <div class="clue-badge">CLUE 02</div>
+          <p class="clue-verse">“You cannot touch me, but a single photograph can bring me back.”</p>
+        </div>
+
+        <!-- Clue 03 -->
+        <div class="clue-card" id="clueCard3" style="display: none;">
+          <div class="clue-badge">CLUE 03</div>
+          <p class="clue-verse">“Years can pass, and I can still make you smile.”</p>
+        </div>
+      </div>
+
+      <!-- Progressive Clue Reveal Button -->
+      <div class="clue-actions-wrap" id="clueActionsWrap">
+        <button type="button" class="btn btn-secondary reveal-clue-btn" id="revealNextClueBtn">
+          <span>REVEAL NEXT CLUE</span>
+          <span class="btn-spark-dot" aria-hidden="true">✦</span>
+        </button>
+      </div>
+
+      <!-- Choices Panel (Revealed after Clue 03) -->
+      <div class="puzzle-choices-panel" id="puzzleChoicesPanel" style="display: none;">
+        <span class="choices-prompt-text">Choose carefully, Budduu:</span>
+        <div class="choices-grid" role="group" aria-label="Puzzle Options">
+          <button type="button" class="choice-chip" data-answer="DREAM">DREAM</button>
+          <button type="button" class="choice-chip" data-answer="MEMORY">MEMORY</button>
+          <button type="button" class="choice-chip" data-answer="TIME">TIME</button>
+          <button type="button" class="choice-chip" data-answer="MOMENT">MOMENT</button>
+          <button type="button" class="choice-chip" data-answer="FEELING">FEELING</button>
+        </div>
+
+        <!-- Feedback & Error Toast -->
+        <div class="puzzle-feedback-toast" id="puzzleFeedbackToast" aria-live="polite"></div>
+
+        <!-- Optional Hint Trigger (Shown after 2 incorrect attempts) -->
+        <div class="puzzle-hint-wrapper" id="puzzleHintWrapper" style="display: none;">
+          <button type="button" class="btn-text-hint" id="requestHintBtn">NEED A HINT?</button>
+          <div class="hint-message-box" id="hintMessageBox" style="display: none;">
+            <span class="hint-icon" aria-hidden="true">💡</span>
+            <p>“Sometimes the past lives quietly inside us.”</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Transition Overlay (Inside Game Card) -->
+      <div class="puzzle-success-overlay" id="puzzleSuccessOverlay" style="display: none;" aria-live="assertive">
+        <div class="success-inner-content">
+          <div class="success-ring-spark" aria-hidden="true">✨</div>
+          <h2 class="success-heading">CORRECT.</h2>
+          <p class="success-subtext">Maybe you were ready for this journey after all. <span class="letter-heart">❤️</span></p>
+          <div class="success-loader-bar">
+            <div class="loader-bar-fill"></div>
+          </div>
+          <span class="unlocking-tag">UNLOCKING DAY 1...</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ACTUAL DAY 1 CONTENT (Accessible after Game Lock is solved)
+       ========================================================= -->
+  <div id="day1UnlockedView" class="day1-unlocked-view" style="display: none;">
+
+    <!-- EXPERIENCE 1: CINEMATIC OPENING (Full-screen Sunset Horizon Scene) -->
+    <section id="cinematicIntro" class="cinematic-intro-stage" aria-label="Cinematic Day 1 Prelude">
+      <div class="cinematic-sunset-backdrop" aria-hidden="true">
+        <div class="intro-sun-orb"></div>
+        <div class="intro-sun-rays"></div>
+        <div class="intro-distant-mountains"></div>
+        <div class="intro-horizon-water"></div>
+      </div>
+
+      <!-- Progressive Intro Text Sequence -->
+      <div class="intro-text-cluster" id="introTextCluster">
+        <p class="intro-line line-1" id="introLine1">“Some journeys don't need a map...”</p>
+        <p class="intro-line line-2" id="introLine2">“They just need a beginning.”</p>
+        <p class="intro-line line-3" id="introLine3">“Welcome to Day 1.”</p>
+        <h2 class="intro-line line-4" id="introLine4">THE BEGINNING</h2>
+      </div>
+
+      <button type="button" class="intro-skip-btn" id="skipIntroBtn" aria-label="Skip Introduction">
+        SKIP INTO SUNSET ↓
+      </button>
+    </section>
+
+    <!-- MAIN DAY 1 JOURNEY STAGE -->
+    <main id="mainDay1Content" class="day1-main-stage">
+      <div class="container">
+
+        <!-- Progress Indicator Bar -->
+        <div class="day1-progress-strip glass-card" role="region" aria-label="Journey Progress">
+          <div class="progress-strip-left">
+            <span class="progress-pill-badge">DAY 01 / 10</span>
+            <span class="progress-sub-caption">The First Step</span>
+          </div>
+          <div class="progress-strip-track">
+            <div class="progress-strip-fill" style="width: 10%;"></div>
+          </div>
+          <span class="progress-strip-percentage">10%</span>
+        </div>
+
+        <!-- EXPERIENCE 2: INTERACTIVE ENVELOPE & LETTER -->
+        <section class="envelope-showcase-section" id="envelopeSection" aria-label="Personal Letter">
+          <div class="section-cue-header">
+            <span class="cue-kicker">A LITTLE LETTER JUST FOR YOU</span>
+            <h2 class="cue-title">There's something I wanted you to read...</h2>
+            <p class="cue-sub" id="envelopeHintText">Open it.</p>
+          </div>
+
+          <!-- Tactile 3D Envelope Container -->
+          <div class="envelope-stage-container">
+            <div 
+              class="interactive-envelope" 
+              id="interactiveEnvelope" 
+              role="button" 
+              tabindex="0" 
+              aria-label="Open Letter for Budduu"
+              aria-expanded="false"
+            >
+              <div class="envelope-ambient-glow" aria-hidden="true"></div>
+              <div class="envelope-pocket-back"></div>
+
+              <!-- Unfolding Letter Paper Sheet -->
+              <article class="envelope-letter-paper" id="envelopeLetter" aria-label="Birthday Letter">
+                <div class="letter-paper-texture"></div>
+                <div class="letter-seal-watermark" aria-hidden="true">❤️</div>
+                
+                <header class="letter-header">
+                  <h3 class="letter-salutation">Hey Budduu <span class="letter-heart">❤️</span></h3>
+                </header>
+
+                <div class="letter-content-blocks" id="letterBodyBlocks">
+                  <p class="letter-block block-1">So...</p>
+                  <p class="letter-block block-2">this is Day 1.</p>
+                  <p class="letter-block block-3">And I didn't want to start this journey with something ordinary.</p>
+                  <p class="letter-block block-4">There are 10 days ahead.</p>
+                  <p class="letter-block block-5">10 little moments.</p>
+                  <p class="letter-block block-6">10 surprises.</p>
+                  <p class="letter-block block-7">And hopefully...</p>
+                  <p class="letter-block block-8">a lot of smiles.</p>
+                  <p class="letter-block block-9">So take your time.</p>
+                  <p class="letter-block block-10 letter-closing-highlight">The journey has officially begun. 🌅</p>
+                </div>
+              </article>
+
+              <!-- Front left & right folding flaps -->
+              <div class="envelope-flaps-front">
+                <div class="flap-left"></div>
+                <div class="flap-right"></div>
+                <div class="flap-bottom"></div>
+              </div>
+
+              <!-- Top folding flap -->
+              <div class="envelope-flap-top" id="envelopeFlapTop">
+                <div class="wax-seal-badge" aria-hidden="true">
+                  <span>💌</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 3: HIDDEN MESSAGE TEASER -->
+        <section class="personal-touch-section" id="personalTouchSection" style="display: none;" aria-label="Teaser Message">
+          <div class="glass-card personal-touch-card">
+            <div class="whisper-cue">
+              <span class="whisper-dot"></span>
+              <span class="whisper-text">Psst...</span>
+            </div>
+            <h3 class="teaser-statement">This is only the beginning.</h3>
+            <p class="teaser-substatement">There are 9 more surprises waiting for you. 👀</p>
+
+            <button type="button" class="btn btn-secondary teaser-reveal-btn" id="revealHiddenBtn">
+              WAIT... THERE'S MORE 👀
+            </button>
+
+            <!-- HIDDEN MESSAGE CARD (Revealed when clicked) -->
+            <div class="hidden-secret-card" id="hiddenSecretCard" style="display: none;">
+              <div class="secret-divider-line"></div>
+              <p class="secret-line line-a">Okay okay...</p>
+              <p class="secret-line line-b">I won't spoil everything yet.</p>
+              <p class="secret-line line-c">But here's a tiny hint:</p>
+              <div class="secret-hint-pill">
+                Tomorrow takes us down memory lane. 📸
+              </div>
+              <p class="secret-line line-d">See you on Day 2. <span class="letter-heart">❤️</span></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DAY 1 COMPLETION LOCKUP & CHAPTER NAVIGATION -->
+        <section class="day1-completion-section" id="completionSection" style="display: none;" aria-label="Day 1 Complete">
+          <div class="completion-indicator-box">
+            <div class="completion-check-icon">✓</div>
+            <span class="completion-pill">DAY 1 COMPLETE ✓</span>
+            <h2 class="completion-next-title">You've officially started the journey. <span class="letter-heart">❤️</span></h2>
+            <p class="completion-subtext">Ready for the next chapter?</p>
+          </div>
+
+          <div class="day1-foot-nav-cluster">
+            <a href="index.html" class="btn btn-secondary foot-home-btn">
+              ← HOME
+            </a>
+            <a href="day2.html" class="btn btn-primary foot-next-btn" id="completionNextDayBtn">
+              DAY 2 →
+            </a>
+          </div>
+
+          <div class="day1-signoff-summary">
+            <span class="signoff-tag">DAY 01</span>
+            <h3 class="signoff-title">THE BEGINNING</h3>
+            <p class="signoff-quote">“Every journey starts somewhere.”</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Upgraded Minimal Footer -->
+    <footer class="site-footer day1-site-footer">
+      <div class="container">
+        <p class="footer-main-text">
+          Made with <span class="footer-heart">❤️</span> for Budduu
+        </p>
+        <p class="footer-sub-text">
+          10 DAYS &bull; 10 MOMENTS &bull; ONE SPECIAL JOURNEY
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="global.js"></script>
+  <script src="day1.js"></script>
+</body>
+</html>
