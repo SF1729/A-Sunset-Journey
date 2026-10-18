@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY 04 — HOW WELL DO YOU KNOW ME? | Budduu Journey 💭🧩</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="day4.css">
+</head>
+<body class="day4-body">
+
+  <!-- Ambient Mysterious Sunset & Amber Silhouette Atmosphere -->
+  <div class="day4-ambient-sky" aria-hidden="true">
+    <div class="sky-base-gradient"></div>
+    <div class="sky-orb-crimson" id="skyOrbCrimson"></div>
+    <div class="sky-orb-coral" id="skyOrbCoral"></div>
+    <div class="sky-orb-amber" id="skyOrbAmber"></div>
+    <div class="ambient-curiosity-fog"></div>
+    <div class="sky-grain-overlay"></div>
+  </div>
+
+  <!-- Ambient Floating Particles Canvas -->
+  <canvas id="day4ParticlesCanvas" class="day4-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="site-nav" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
+        <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span class="nav-brand-fallback">BUDDUU ❤️</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="day3.html" class="nav-link">← Day 03</a></li>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="day5.html" class="nav-link" id="navNextDayBtn">Next Day →</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================================================
+       GATE 1: DATE LOCK VIEW (Active before 23 October 2026)
+       ========================================================= -->
+  <section id="day4DateLockedView" class="day4-locked-view" style="display: none;" aria-label="Day 4 Locked by Date">
+    <div class="glass-card locked-card-container">
+      <div class="locked-icon-halo" aria-hidden="true">🔒</div>
+      <span class="locked-tag">DAY 4</span>
+      <h1 class="locked-heading">NOT EVERYTHING IS WHAT IT SEEMS.</h1>
+      <p class="locked-quote">“A quiet curiosity waits on the horizon…”</p>
+      <div class="locked-date-pill" id="dateLockCountdown">Unlocks on 23 October 2026</div>
+      <div class="locked-actions">
+        <a href="index.html#journey" class="btn btn-primary">← BACK TO JOURNEY</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       GATE 2: MINI MAZE LOCK (Find the Secret Key 🗝️)
+       ========================================================= -->
+  <section id="day4GameLockedView" class="day4-game-lock-view" style="display: none;" aria-label="Day 4 Mini Maze Lock">
+    <div class="glass-card maze-puzzle-card">
+      
+      <div class="maze-header-badge">
+        <span class="maze-kicker-tag">GATE 02 • MINI MAZE LOCK</span>
+        <h1 class="maze-main-title">THE SECRET LABYRINTH</h1>
+        <p class="maze-subtitle-lead">
+          Exit par <strong>Secret Key 🗝️</strong> chhupi hai...<br>
+          <span>Apne character ko rasta dikha kar chabi tak pahunchao!</span>
+        </p>
+      </div>
+
+      <!-- Maze Game Board Area -->
+      <div class="maze-stage-wrap">
+        <div class="maze-grid-frame" id="mazeGridFrame">
+          <div class="maze-grid" id="mazeGrid" role="grid" aria-label="Maze Labyrinth">
+            <!-- Dynamically populated 9x9 cells by day4.js -->
+          </div>
+        </div>
+
+        <!-- On-Screen Virtual D-Pad for Touch/Mobile -->
+        <div class="maze-dpad-container" aria-label="Maze Movement Controls">
+          <div class="dpad-row dpad-top">
+            <button type="button" class="dpad-btn" id="dpadUp" aria-label="Move Up">▲</button>
+          </div>
+          <div class="dpad-row dpad-middle">
+            <button type="button" class="dpad-btn" id="dpadLeft" aria-label="Move Left">◀</button>
+            <div class="dpad-center-dot">✦</div>
+            <button type="button" class="dpad-btn" id="dpadRight" aria-label="Move Right">▶</button>
+          </div>
+          <div class="dpad-row dpad-bottom">
+            <button type="button" class="dpad-btn" id="dpadDown" aria-label="Move Down">▼</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="maze-tip-caption">💡 Keyboard Arrow keys / Swipe ya screen ke arrows se move karo.</p>
+
+      <!-- Key Unlocked Celebration Overlay -->
+      <div class="maze-success-overlay" id="mazeSuccessOverlay" style="display: none;" aria-live="assertive">
+        <div class="maze-success-modal glass-card">
+          <div class="key-unlocked-icon" aria-hidden="true">🗝️</div>
+          <span class="key-status-tag">KEY COLLECTED!</span>
+          <h2 class="key-success-title">Day 4 Unlocked!</h2>
+          <p class="key-subtext">
+            “Raste chahe kitne bhi uljhe hue kyu na ho...<br>
+            <strong>aap hamesha sahi rasta dhoondh hi leti hain. ❤️</strong>”
+          </p>
+          <div class="maze-loader-bar">
+            <div class="loader-bar-fill"></div>
+          </div>
+          <span class="entering-tag">ENTERING THE QUIZ ARCHIVE...</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ACTUAL DAY 4 CONTENT (Accessible after Maze Lock is solved)
+       ========================================================= -->
+  <div id="day4UnlockedView" class="day4-unlocked-view" style="display: none;">
+
+    <!-- CINEMATIC TRANSITION INTRO -->
+    <section id="day4IntroStage" class="day4-intro-stage" aria-label="Day 4 Narrative Intro">
+      <div class="intro-curtain-glow" aria-hidden="true"></div>
+      <div class="intro-text-cluster" id="introTextCluster">
+        <span class="intro-numeral-tag" id="introTag">DAY 04</span>
+        <h1 class="intro-title-text" id="introTitle">HOW WELL DO YOU KNOW ME?</h1>
+        <p class="intro-whisper-line" id="introLine1">“Okay...”</p>
+        <p class="intro-whisper-line" id="introLine2">“Enough mysteries for now.”</p>
+        <p class="intro-sub-prompt" id="introLine3">Let's see how well you actually know this journey.</p>
+      </div>
+
+      <button type="button" class="intro-skip-btn" id="skipIntroBtn" aria-label="Skip Introduction">
+        START THE QUIZ ↓
+      </button>
+    </section>
+
+    <!-- MAIN DAY 4 STAGE -->
+    <main id="mainDay4Content" class="day4-main-stage">
+      <div class="container">
+
+        <!-- Progress Indicator Bar -->
+        <div class="day4-progress-strip glass-card" role="region" aria-label="Journey Progress">
+          <div class="progress-strip-left">
+            <span class="progress-pill-badge">DAY 04 / 10</span>
+            <span class="progress-sub-caption">HOW WELL DO YOU KNOW ME?</span>
+          </div>
+          <div class="progress-strip-track">
+            <div class="progress-strip-fill" style="width: 40%;"></div>
+          </div>
+          <span class="progress-strip-percentage">40%</span>
+        </div>
+
+        <!-- EXPERIENCE 1: INTERACTIVE JOURNEY QUIZ (10 QUESTIONS) -->
+        <section class="quiz-showcase-section" id="quizSection" aria-label="Journey Quiz Experience">
+          <div class="section-cue-header">
+            <span class="cue-kicker">A PLAYFUL TEST OF MEMORY & BOND</span>
+            <h2 class="cue-title">TESTING THE ARCHIVE</h2>
+            <p class="cue-sub">“10 questions. No traps, just our story and little memories.”</p>
+          </div>
+
+          <div class="glass-card quiz-interactive-card" id="quizCardWrapper">
+            <!-- Question Tracker & Indicator -->
+            <div class="quiz-meta-bar">
+              <span class="question-tracker-pill" id="questionTrackerPill">QUESTION 1 / 10</span>
+              <div class="quiz-step-dots" id="quizStepDots" aria-hidden="true">
+                <!-- Dynamically populated 10 dots by day4.js -->
+              </div>
+            </div>
+
+            <!-- Question Prompt Body -->
+            <div class="question-prompt-box">
+              <h3 class="question-prompt-text" id="questionPromptText">Loading question...</h3>
+            </div>
+
+            <!-- 4 Multiple Choice Options Grid -->
+            <div class="quiz-options-grid" id="quizOptionsGrid" role="radiogroup" aria-label="Question choices"></div>
+
+            <!-- Explanation / Result Toast (Revealed after selection) -->
+            <div class="quiz-explanation-box" id="quizExplanationBox" style="display: none;" aria-live="polite">
+              <div class="explanation-icon" id="explanationIcon">✓</div>
+              <div class="explanation-body">
+                <h4 class="explanation-verdict" id="explanationVerdict">Correct!</h4>
+                <p class="explanation-detail" id="explanationDetail">Explanation text goes here...</p>
+              </div>
+            </div>
+
+            <!-- Next Question Action Button -->
+            <div class="quiz-actions-bar" id="quizActionsBar" style="display: none;">
+              <button type="button" class="btn btn-primary next-question-btn" id="nextQuestionBtn">
+                <span>NEXT QUESTION</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 2: CINEMATIC SCORE REVEAL -->
+        <section class="score-reveal-section" id="scoreSection" style="display: none;" aria-label="Quiz Score Summary">
+          <div class="glass-card score-summary-card">
+            <div class="score-badge-halo" aria-hidden="true">🏆</div>
+            <span class="score-kicker-tag">FINAL TALLY</span>
+            <h3 class="score-main-title">YOUR SCORE</h3>
+
+            <!-- Animated Number Counter -->
+            <div class="score-number-display">
+              <span class="score-dynamic-val" id="scoreDynamicVal" aria-live="polite">0</span>
+              <span class="score-denominator">/ 10</span>
+            </div>
+
+            <p class="score-verdict-quote" id="scoreVerdictQuote">Calculating your sunset memories...</p>
+
+            <div class="score-accent-divider" aria-hidden="true"></div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 3: SECRET QUESTION -->
+        <section class="secret-question-section" id="secretSection" style="display: none;" aria-label="Secret Question">
+          <div class="glass-card secret-question-card">
+            
+            <!-- Locked State of Secret Question -->
+            <div class="secret-gate-intro" id="secretGateIntro">
+              <span class="secret-tag">EXPERIENCE 03</span>
+              <h3 class="secret-gate-heading">ONE LAST QUESTION...</h3>
+              <p class="secret-gate-subheading">“This one doesn't have a wrong answer.”</p>
+              
+              <button type="button" class="btn btn-primary open-secret-btn" id="openSecretBtn">
+                <span>OPEN SECRET QUESTION</span>
+                <span class="btn-spark-dot" aria-hidden="true">🔐</span>
+              </button>
+            </div>
+
+            <!-- Unfolded Secret Question & Form -->
+            <div class="secret-revealed-form" id="secretRevealedForm" style="display: none;">
+              <div class="secret-prompt-banner">
+                <span class="secret-lock-unsealed">🔓 UNSEALED</span>
+                <p class="secret-emotional-prompt">
+                  “If you could keep just ONE memory from this entire journey forever...<br>
+                  <strong>which one would you choose?</strong>”
+                </p>
+              </div>
+
+              <form class="secret-input-form" id="secretInputForm">
+                <div class="textarea-wrap">
+                  <textarea 
+                    id="secretAnswerInput" 
+                    name="budduu_memory"
+                    class="secret-textarea" 
+                    rows="4" 
+                    placeholder="Write whatever comes to your mind... Budduu ❤️" 
+                    aria-label="Your chosen memory to keep forever"
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit-memory-btn" id="submitSecretBtn">
+                  <span id="submitBtnText">KEEP THIS MEMORY</span>
+                  <span class="btn-heart" aria-hidden="true">❤️</span>
+                </button>
+              </form>
+
+              <!-- Saved State Toast -->
+              <div class="secret-saved-toast" id="secretSavedToast" style="display: none;" aria-live="polite">
+                <div class="saved-icon">💌</div>
+                <h4>Sent to Shazan's Heart. <span class="letter-heart">❤️</span></h4>
+                <p>Aapka yeh jawab hamesha ke liye sambhal kar rakh liya gaya hai.</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- DAY 4 COMPLETION LOCKUP & CHAPTER NAVIGATION -->
+        <section class="day4-completion-section" id="day4CompletionSection" style="display: none;" aria-label="Day 4 Completed">
+          <div class="completion-indicator-box">
+            <div class="completion-check-icon">✓</div>
+            <span class="completion-pill">DAY 4 COMPLETE ✓</span>
+            <h2 class="completion-next-title">Four days down... and the best surprises are still ahead! <span class="letter-heart">❤️</span></h2>
+            <p class="completion-subtext">Ready for Day 05?</p>
+          </div>
+
+          <div class="day4-foot-nav-cluster">
+            <a href="day3.html" class="btn btn-secondary foot-home-btn">
+              ← DAY 3
+            </a>
+            <a href="index.html" class="btn btn-secondary foot-home-btn">
+              HOME
+            </a>
+            <a href="day5.html" class="btn btn-primary foot-next-btn" id="completionNextDayBtn">
+              DAY 5 →
+            </a>
+          </div>
+
+          <div class="day4-signoff-summary">
+            <span class="signoff-tag">DAY 04</span>
+            <h3 class="signoff-title">HOW WELL DO YOU KNOW ME?</h3>
+            <p class="signoff-quote">“Sometimes the little details tell the biggest stories.”</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Minimal Elegant Footer -->
+    <footer class="site-footer day4-site-footer">
+      <div class="container">
+        <h3 class="footer-brand-title">BUDDUU <span class="footer-heart">❤️</span></h3>
+        <p class="footer-journey-caps">10 DAYS &bull; 10 MOMENTS &bull; ONE SPECIAL JOURNEY</p>
+        <p class="footer-signature-line">Made with <span class="footer-heart">❤️</span> for Budduu</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="global.js"></script>
+  <script src="day4.js"></script>
+</body>
+</html>
