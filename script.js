@@ -3,35 +3,29 @@
    ========================================================================== */
 
 // 20 October 2026, 12:00 AM IST (Indian Standard Time, UTC+05:30)
-const SITE_UNLOCK_TIMESTAMP = new Date("2026-10-20T00:00:00+05:30").getTime();
+const SITE_UNLOCK_TIMESTAMP = new Date("2026-10-16T00:00:00+05:30").getTime();
  
 let isHomepageInitialized = false;
 let countdownIntervalId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Atmospheric visual effects background me active rahenge
   initStarDustCanvas();
   initMouseParallax();
-
-  // Unlock state & countdown timer evaluate karein
   evaluateSiteUnlockState();
 });
 
 /**
- * Checks whether the current time has reached 20 October 2026, 12:00 AM IST.
+ * Checks whether the current time or ?previewDate has reached 20 October 2026.
  */
 function evaluateSiteUnlockState() {
-  const now = Date.now();
-  const isUnlocked = now >= SITE_UNLOCK_TIMESTAMP;
+  const params = new URLSearchParams(window.location.search);
+  const isUnlocked = isDateUnlocked("2026-10-20");
 
   if (isUnlocked) {
     revealFullHomepage();
   } else {
-    // Keep locked state active
     document.documentElement.classList.add("prelaunch-locked");
     document.body.classList.add("prelaunch-locked");
-
-    // Live countdown timer start karein
     startPrelaunchCountdown();
   }
 }
@@ -46,11 +40,11 @@ function startPrelaunchCountdown() {
   const secsEl = document.getElementById("timerSeconds");
 
   function updateTimer() {
-    const now = Date.now();
+    const currentDate = getNormalizedCurrentDate();
+    const now = currentDate.getTime();
     const distance = SITE_UNLOCK_TIMESTAMP - now;
 
-    // Time khatam hone par website automatically unlock ho jayegi
-    if (distance <= 0) {
+    if (distance <= 0 || isDateUnlocked("2026-10-20")) {
       if (countdownIntervalId) {
         clearInterval(countdownIntervalId);
         countdownIntervalId = null;
@@ -70,7 +64,7 @@ function startPrelaunchCountdown() {
     if (secsEl) secsEl.textContent = String(seconds).padStart(2, "0");
   }
 
-  updateTimer(); // Pehle second ka delay na ho isliye immediate run
+  updateTimer();
   countdownIntervalId = setInterval(updateTimer, 1000);
 }
 
@@ -232,7 +226,7 @@ function updateJourneyProgress() {
     hint = "Budduu's special birthday journey is forever unlocked.";
     percentage = 100;
   } else {
-    let currentDayNumber = 1;
+    let currentDayNumber = 0;
     JOURNEY_DAYS.forEach((item) => {
       if (typeof isDateUnlocked === "function" && isDateUnlocked(item.dateStr)) {
         currentDayNumber = item.day;
@@ -254,7 +248,7 @@ function updateJourneyProgress() {
 }
 
 /**
- * Builds the connected 10-day timeline
+ * Builds the connected 10-day timeline using getDayTitle() and getDayIcon()
  */
 function renderConnectedTimeline() {
   const container = document.getElementById("timelineCardsContainer");
@@ -265,11 +259,16 @@ function renderConnectedTimeline() {
     ? getNormalizedCurrentDate() 
     : new Date();
 
+  const searchParams = window.location.search;
+
   JOURNEY_DAYS.forEach((item, index) => {
     const isUnlocked = typeof isDateUnlocked === "function" ? isDateUnlocked(item.dateStr) : false;
     const isToday = typeof isDateToday === "function" ? isDateToday(item.dateStr) : false;
     const targetDate = new Date(item.dateStr + "T00:00:00");
     const isCompleted = isUnlocked && !isToday && today > targetDate;
+
+    const displayTitle = getDayTitle(item);
+    const displayIcon = getDayIcon(item);
 
     const isLeft = index % 2 === 0;
 
@@ -289,10 +288,10 @@ function renderConnectedTimeline() {
     card.className = `timeline-journey-card ${isUnlocked ? 'is-unlocked' : 'is-locked'} ${isToday ? 'is-current' : ''} ${item.day === 1 ? 'is-day-one' : ''}`;
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", `Day 0${item.day}: ${item.title}. ${isUnlocked ? "Unlocked" : "Locked"}`);
+    card.setAttribute("aria-label", `Day 0${item.day}: ${displayTitle}. ${isUnlocked ? "Unlocked" : "Locked"}`);
 
     if (isUnlocked) {
-      card.href = item.file;
+      card.href = searchParams ? `${item.file}${searchParams}` : item.file;
     } else {
       card.addEventListener("click", () => typeof showLockModal === "function" && showLockModal(item));
       card.addEventListener("keydown", (e) => {
@@ -330,10 +329,10 @@ function renderConnectedTimeline() {
       ${starterBadgeHtml}
       <div class="card-header-line">
         <span class="card-numeral-pill">DAY 0${item.day}</span>
-        <span class="card-emblem-icon" aria-hidden="true">${isUnlocked ? item.icon : "🔒"}</span>
+        <span class="card-emblem-icon" aria-hidden="true">${displayIcon}</span>
       </div>
       <div class="card-center-body">
-        <h3 class="card-story-title">${item.title}</h3>
+        <h3 class="card-story-title ${!isUnlocked ? 'is-locked-title' : ''}">${displayTitle}</h3>
         <span class="card-date-badge">${item.dateDisplay}</span>
       </div>
       <div class="card-status-footer">
