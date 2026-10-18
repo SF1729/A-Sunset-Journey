@@ -3,13 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAY 01 — THE BEGINNING | Budduu Journey ❤️🌅</title>
+  <title>DAY 01 — THE BEGINNING | Budduu Journey 💛🌅</title>
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="global.css">
   <link rel="stylesheet" href="day1.css">
+
+  <!-- Immediate Zero-Flash Lock Guard -->
+  <script>
+    (function () {
+      const UNLOCK_TIMESTAMP = new Date("2026-10-20T00:00:00+05:30").getTime();
+      const params = new URLSearchParams(window.location.search);
+      const preview = params.get("previewDate");
+      const checkTime = preview ? new Date(preview + "T00:00:00+05:30").getTime() : Date.now();
+      if (checkTime < UNLOCK_TIMESTAMP) {
+        document.documentElement.classList.add("date-locked");
+      }
+    })();
+  </script>
 </head>
 <body class="day1-body">
 
@@ -22,15 +35,23 @@
     <div class="sky-grain-layer"></div>
   </div>
 
-  <!-- Ambient Canvas for Micro Particles & Stars -->
+  <!-- Ambient Micro Particles Canvas -->
   <canvas id="day1ParticlesCanvas" class="day1-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Golden Confetti Canvas for Celebratory Moments -->
+  <canvas id="confettiCanvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 9999;"></canvas>
+
+  <!-- Ambient Sound Toggle -->
+  <button type="button" class="sound-toggle-btn" id="soundToggleBtn" aria-label="Toggle Sound Effects" title="Toggle Sound">
+    <span id="soundIcon">🔊</span>
+  </button>
 
   <!-- Navigation Bar -->
   <header>
     <nav class="site-nav" aria-label="Main Navigation">
       <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
         <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <span class="nav-brand-fallback">BUDDUU ❤️</span>
+        <span class="nav-brand-fallback">BUDDUU 💛</span>
       </a>
       <ul class="nav-links">
         <li><a href="index.html" class="nav-link">Home</a></li>
@@ -44,14 +65,14 @@
        GATE 1: DATE LOCK VIEW (Active before 20 October 2026)
        ========================================================= -->
   <section id="day1DateLockedView" class="day1-locked-view" style="display: none;" aria-label="Day 1 Locked by Date">
-    <div class="glass-card locked-card-container">
+    <div class="locked-card-container">
       <div class="locked-icon-halo" aria-hidden="true">🔒</div>
       <span class="locked-tag">DAY 1</span>
       <h1 class="locked-heading">THE JOURNEY HASN'T BEGUN YET.</h1>
       <p class="locked-quote">“Something is waiting here...”</p>
       <div class="locked-date-pill" id="dateLockCountdown">Unlocks on 20 October 2026</div>
       <div class="locked-actions">
-        <a href="index.html#journey" class="btn btn-primary">← BACK TO JOURNEY</a>
+        <a href="index.html#journey" class="foot-next-btn">← BACK TO JOURNEY</a>
       </div>
     </div>
   </section>
@@ -60,7 +81,7 @@
        GATE 2: GAME LOCK VIEW (Appears once Date Lock opens)
        ========================================================= -->
   <section id="day1GameLockedView" class="day1-game-lock-view" style="display: none;" aria-label="Day 1 Puzzle Challenge">
-    <div class="glass-card game-puzzle-card">
+    <div class="game-puzzle-card">
       <div class="game-lock-halo" aria-hidden="true">
         <span class="lock-glow-icon">🔐</span>
       </div>
@@ -77,7 +98,7 @@
         Three clues. One answer. Take your time.
       </p>
 
-      <!-- Clues Container -->
+      <!-- Clues Stream -->
       <div class="clues-stream" role="region" aria-label="Puzzle Clues">
         <!-- Clue 01 -->
         <div class="clue-card is-visible" id="clueCard1">
@@ -100,9 +121,9 @@
 
       <!-- Progressive Clue Reveal Button -->
       <div class="clue-actions-wrap" id="clueActionsWrap">
-        <button type="button" class="btn btn-secondary reveal-clue-btn" id="revealNextClueBtn">
+        <button type="button" class="reveal-clue-btn" id="revealNextClueBtn">
           <span>REVEAL NEXT CLUE</span>
-          <span class="btn-spark-dot" aria-hidden="true">✦</span>
+          <span aria-hidden="true"> ✦</span>
         </button>
       </div>
 
@@ -117,20 +138,18 @@
           <button type="button" class="choice-chip" data-answer="FEELING">FEELING</button>
         </div>
 
-        <!-- Feedback & Error Toast -->
         <div class="puzzle-feedback-toast" id="puzzleFeedbackToast" aria-live="polite"></div>
 
-        <!-- Optional Hint Trigger (Shown after 2 incorrect attempts) -->
         <div class="puzzle-hint-wrapper" id="puzzleHintWrapper" style="display: none;">
           <button type="button" class="btn-text-hint" id="requestHintBtn">NEED A HINT?</button>
           <div class="hint-message-box" id="hintMessageBox" style="display: none;">
-            <span class="hint-icon" aria-hidden="true">💡</span>
+            <span aria-hidden="true">💡</span>
             <p>“Sometimes the past lives quietly inside us.”</p>
           </div>
         </div>
       </div>
 
-      <!-- Success Transition Overlay (Inside Game Card) -->
+      <!-- Success Transition Overlay -->
       <div class="puzzle-success-overlay" id="puzzleSuccessOverlay" style="display: none;" aria-live="assertive">
         <div class="success-inner-content">
           <div class="success-ring-spark" aria-hidden="true">✨</div>
@@ -151,7 +170,7 @@
        ========================================================= -->
   <div id="day1UnlockedView" class="day1-unlocked-view" style="display: none;">
 
-    <!-- EXPERIENCE 1: CINEMATIC OPENING (Full-screen Sunset Horizon Scene) -->
+    <!-- EXPERIENCE 1: CINEMATIC OPENING (Fullscreen Sunset Scene) -->
     <section id="cinematicIntro" class="cinematic-intro-stage" aria-label="Cinematic Day 1 Prelude">
       <div class="cinematic-sunset-backdrop" aria-hidden="true">
         <div class="intro-sun-orb"></div>
@@ -160,7 +179,6 @@
         <div class="intro-horizon-water"></div>
       </div>
 
-      <!-- Progressive Intro Text Sequence -->
       <div class="intro-text-cluster" id="introTextCluster">
         <p class="intro-line line-1" id="introLine1">“Some journeys don't need a map...”</p>
         <p class="intro-line line-2" id="introLine2">“They just need a beginning.”</p>
@@ -175,10 +193,10 @@
 
     <!-- MAIN DAY 1 JOURNEY STAGE -->
     <main id="mainDay1Content" class="day1-main-stage">
-      <div class="container">
+      <div class="container" style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
 
         <!-- Progress Indicator Bar -->
-        <div class="day1-progress-strip glass-card" role="region" aria-label="Journey Progress">
+        <div class="day1-progress-strip" role="region" aria-label="Journey Progress">
           <div class="progress-strip-left">
             <span class="progress-pill-badge">DAY 01 / 10</span>
             <span class="progress-sub-caption">The First Step</span>
@@ -194,7 +212,6 @@
           <div class="section-cue-header">
             <span class="cue-kicker">A LITTLE LETTER JUST FOR YOU</span>
             <h2 class="cue-title">There's something I wanted you to read...</h2>
-            <p class="cue-sub" id="envelopeHintText">Open it.</p>
           </div>
 
           <!-- Tactile 3D Envelope Container -->
@@ -205,54 +222,155 @@
               role="button" 
               tabindex="0" 
               aria-label="Open Letter for Budduu"
-              aria-expanded="false"
             >
               <div class="envelope-ambient-glow" aria-hidden="true"></div>
               <div class="envelope-pocket-back"></div>
 
-              <!-- Unfolding Letter Paper Sheet -->
-              <article class="envelope-letter-paper" id="envelopeLetter" aria-label="Birthday Letter">
-                <div class="letter-paper-texture"></div>
-                <div class="letter-seal-watermark" aria-hidden="true">❤️</div>
-                
-                <header class="letter-header">
-                  <h3 class="letter-salutation">Hey Budduu <span class="letter-heart">❤️</span></h3>
-                </header>
-
-                <div class="letter-content-blocks" id="letterBodyBlocks">
-                  <p class="letter-block block-1">So...</p>
-                  <p class="letter-block block-2">this is Day 1.</p>
-                  <p class="letter-block block-3">And I didn't want to start this journey with something ordinary.</p>
-                  <p class="letter-block block-4">There are 10 days ahead.</p>
-                  <p class="letter-block block-5">10 little moments.</p>
-                  <p class="letter-block block-6">10 surprises.</p>
-                  <p class="letter-block block-7">And hopefully...</p>
-                  <p class="letter-block block-8">a lot of smiles.</p>
-                  <p class="letter-block block-9">So take your time.</p>
-                  <p class="letter-block block-10 letter-closing-highlight">The journey has officially begun. 🌅</p>
-                </div>
-              </article>
-
-              <!-- Front left & right folding flaps -->
+              <!-- Front folding flaps -->
               <div class="envelope-flaps-front">
                 <div class="flap-left"></div>
                 <div class="flap-right"></div>
                 <div class="flap-bottom"></div>
               </div>
 
-              <!-- Top folding flap -->
+              <!-- Top folding flap with Wax Seal -->
               <div class="envelope-flap-top" id="envelopeFlapTop">
                 <div class="wax-seal-badge" aria-hidden="true">
                   <span>💌</span>
                 </div>
               </div>
             </div>
+
+            <!-- Letter Paper (Click karne ke baad smoothly bahar aayega) -->
+            <div class="parchment-sheet-container" id="parchmentContainer">
+              <article class="envelope-letter-paper" id="envelopeLetter" aria-label="Birthday Letter">
+                <div class="letter-paper-texture"></div>
+                <div class="letter-seal-watermark" aria-hidden="true">💛</div>
+                
+                <header class="letter-header">
+  <h3 class="letter-salutation">
+    Dear Budduu <span class="letter-heart">💛🫂</span>
+  </h3>
+</header>
+
+<div class="letter-content-blocks" id="letterBodyBlocks">
+
+  <p class="letter-block block-1">Accha sun... ❤️</p>
+
+  <p class="letter-block block-2">
+    Sabse pehle toh ye mat sochna ki maine itni mehnat kyun ki
+    aur ye sab banane ki kya zarurat thi. 😂❤️
+  </p>
+
+  <p class="letter-block block-3">
+    Bas yaar, iss baar tera birthday thoda alag karna tha.
+    Har baar ki tarah sirf birthday wish karke baat khatam nahi karni thi.
+  </p>
+
+  <p class="letter-block block-4">
+    Kuch aisa karna tha jo tere liye special ho, jo thoda alag ho
+    aur jise tu baad mein bhi yaad kare.
+    (Agar yaad raha tab 😒
+    Khair...) Kya pata mujhe hi bhool jaaye, as always. 😭❤️
+  </p>
+
+  <p class="letter-block block-5">
+    Isliye ye poore days ka plan banaya hai.
+    Pata hai, thoda extra hai...
+    par chal, tere liye itna toh banta hai. 🤌🏻😭
+  </p>
+
+  <p class="letter-block block-6">
+    Honestly, mujhe nahi pata tujhe ye sab dekh ke kaisa lagega.
+    Tu emotional hoga ya phir, as always, koi farak hi nahi padega. 😒
+    Khair...
+  </p>
+
+  <p class="letter-block block-7">
+    Lekin jo bhi ho, maine ye sab apni taraf se poori effort se banaya hai. 🧡
+  </p>
+
+  <p class="letter-block block-8">
+    Apni friendship mein bohot saari cheezein hoti hain.
+    Hasi-mazaak hota hai, kabhi arguments bhi hote hain.
+    Kabhi ek doosre ki taang kheenchte hain,
+    kabhi bina matlab ke pareshan karte hain.
+  </p>
+
+  <p class="letter-block block-9">
+    Kabhi main pyaar jatata hoon, par aapko problem hoti hai
+    ya phir awkward feel hota hai...
+    kya bolun phir main? 😂😭
+  </p>
+
+  <p class="letter-block block-10">
+    Lekin in sabke beech kuch log life mein important ban jaate hain,
+    aur unke liye kuch karne ka mann khud hi karta hai.
+    (Expect from you 🤡)
+  </p>
+
+  <p class="letter-block block-11">
+    Toh Budduu, ye wahi chhoti si koshish hai meri taraf se. 🧡
+  </p>
+
+  <p class="letter-block block-12">
+    Agle kuch din tak tujhe har din yahan kuch naya milega.
+    Kya milega, woh abhi nahi bataunga.
+    Itna suspense toh banta hai na, birthday boy. 😉🔐
+  </p>
+
+  <p class="letter-block block-13">Bas ek baat bolni thi...</p>
+
+  <p class="letter-block block-14 letter-closing-highlight">
+    Thank you, Budduu, meri life ka part hone ke liye. 💛🫂
+  </p>
+
+  <p class="letter-block block-15">
+    Baaki zyada emotional nahi hounga,
+    kyunki mere emotions ki value nahi hai... 🥲💔
+  </p>
+
+  <p class="letter-block block-16">
+    Aaj Day 1 hai, abhi toh aur din bhi baaki hain. 🌅
+  </p>
+
+  <p class="letter-block block-17">
+    Toh aaram se enjoy kar, aur haan, next day unlock karne ke
+    chakkar mein koi setting mat karna.
+    Sab apne time pe khulega. 😭🔒
+  </p>
+
+  <p class="letter-block block-18 letter-closing-highlight">
+    Happy Birthday in advance, Budduu! 💛🌅
+  </p>
+
+  <p class="letter-block block-19">
+    Abhi toh bas shuruaat hai, mere bhai.
+  </p>
+
+  <p class="letter-block block-20">
+    Baaki milte hain kal. 🫂❤️
+  </p>
+
+  <p class="letter-block block-21 letter-closing-highlight">
+    Tera Tedduu,<br>
+    Shahid 🧡
+  </p>
+
+  <p class="letter-block block-22">
+    P.S. Itna padh liya hai toh ab smile kar de.
+    Bohot efforts laga kar banaya hai tere liye. 😂❤️
+  </p>
+
+</div>
+              </article>
+            </div>
           </div>
         </section>
 
         <!-- EXPERIENCE 3: HIDDEN MESSAGE TEASER -->
         <section class="personal-touch-section" id="personalTouchSection" style="display: none;" aria-label="Teaser Message">
-          <div class="glass-card personal-touch-card">
+          <div class="personal-touch-card">
             <div class="whisper-cue">
               <span class="whisper-dot"></span>
               <span class="whisper-text">Psst...</span>
@@ -260,18 +378,17 @@
             <h3 class="teaser-statement">This is only the beginning.</h3>
             <p class="teaser-substatement">There are 9 more surprises waiting for you. 👀</p>
 
-            <button type="button" class="btn btn-secondary teaser-reveal-btn" id="revealHiddenBtn">
+            <button type="button" class="teaser-reveal-btn" id="revealHiddenBtn">
               WAIT... THERE'S MORE 👀
             </button>
 
-            <!-- HIDDEN MESSAGE CARD (Revealed when clicked) -->
             <div class="hidden-secret-card" id="hiddenSecretCard" style="display: none;">
               <div class="secret-divider-line"></div>
               <p class="secret-line line-a">Okay okay...</p>
               <p class="secret-line line-b">I won't spoil everything yet.</p>
               <p class="secret-line line-c">But here's a tiny hint:</p>
               <div class="secret-hint-pill">
-                Tomorrow takes us down memory lane. 📸
+                Tomorrow takes us to something <span class="letter-heart">❤️</span> and <span class="letter-heart">🫂</span> in the sunset. 🌅
               </div>
               <p class="secret-line line-d">See you on Day 2. <span class="letter-heart">❤️</span></p>
             </div>
@@ -288,12 +405,8 @@
           </div>
 
           <div class="day1-foot-nav-cluster">
-            <a href="index.html" class="btn btn-secondary foot-home-btn">
-              ← HOME
-            </a>
-            <a href="day2.html" class="btn btn-primary foot-next-btn" id="completionNextDayBtn">
-              DAY 2 →
-            </a>
+            <a href="index.html" class="foot-home-btn">← HOME</a>
+            <a href="day2.html" class="foot-next-btn" id="completionNextDayBtn">DAY 2 →</a>
           </div>
 
           <div class="day1-signoff-summary">
@@ -309,10 +422,8 @@
     <!-- Upgraded Minimal Footer -->
     <footer class="site-footer day1-site-footer">
       <div class="container">
-        <p class="footer-main-text">
-          Made with <span class="footer-heart">❤️</span> for Budduu
-        </p>
-        <p class="footer-sub-text">
+        <p style="margin-bottom: 6px;">Made with <span class="letter-heart">❤️</span> for Budduu</p>
+        <p style="font-size: 0.8rem; color: rgba(255, 241, 230, 0.6); letter-spacing: 2px;">
           10 DAYS &bull; 10 MOMENTS &bull; ONE SPECIAL JOURNEY
         </p>
       </div>
