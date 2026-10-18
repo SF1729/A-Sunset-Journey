@@ -3,7 +3,7 @@
    ========================================================================== */
 
 // 20 October 2026, 12:00 AM IST (Indian Standard Time, UTC+05:30)
-const SITE_UNLOCK_TIMESTAMP = new Date("2026-10-16T00:00:00+05:30").getTime();
+const SITE_UNLOCK_TIMESTAMP = new Date("2026-10-20T00:00:00+05:30").getTime();
  
 let isHomepageInitialized = false;
 let countdownIntervalId = null;
