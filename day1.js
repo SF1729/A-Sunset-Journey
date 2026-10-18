@@ -88,7 +88,7 @@ function initSoundToggle() {
  */
 function initDay1Flow() {
   // ✅ FIXED: Set correctly to 20 October 2026
-  const day1DateStr = "2026-10-20";
+  const day1DateStr = "2026-10-16";
   const dateLockedView = document.getElementById("day1DateLockedView");
   const gameLockedView = document.getElementById("day1GameLockedView");
   const unlockedView = document.getElementById("day1UnlockedView");
