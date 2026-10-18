@@ -637,6 +637,7 @@ body.prelaunch-locked .prelaunch-logo-stage {
   font-weight: 800;
   letter-spacing: -0.5px;
   background: var(--sunset-gradient);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 12px;
