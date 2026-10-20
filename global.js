@@ -7,11 +7,11 @@ const JOURNEY_START_DATE = "2026-10-20";
 
 const JOURNEY_DAYS = [
   { day: 1, title: "THE BEGINNING", dateStr: "2026-10-20", dateDisplay: "20 OCT 2026", fullDisplay: "20 October 2026", file: "day1.html", icon: "✨" },
-  { day: 2, title: "MEMORY LANE", dateStr: "2026-10-1", dateDisplay: "21 OCT 2026", fullDisplay: "21 October 2026", file: "day2.html", icon: "📸" },
-  { day: 3, title: "THE SOUNDTRACK", dateStr: "2026-10-2", dateDisplay: "22 OCT 2026", fullDisplay: "22 October 2026", file: "day3.html", icon: "🎵" },
-  { day: 4, title: "HOW WELL DO YOU KNOW ME?", dateStr: "2026-10-3", dateDisplay: "23 OCT 2026", fullDisplay: "23 October 2026", file: "day4.html", icon: "💭" },
-  { day: 5, title: "OUR STORY", dateStr: "2026-10-4", dateDisplay: "24 OCT 2026", fullDisplay: "24 October 2026", file: "day5.html", icon: "📖" },
-  { day: 6, title: "THINGS I NEVER SAID", dateStr: "2026-10-5", dateDisplay: "25 OCT 2026", fullDisplay: "25 October 2026", file: "day6.html", icon: "💌" },
+  { day: 2, title: "MEMORY LANE", dateStr: "2026-10-21", dateDisplay: "21 OCT 2026", fullDisplay: "21 October 2026", file: "day2.html", icon: "📸" },
+  { day: 3, title: "THE SOUNDTRACK", dateStr: "2026-10-22", dateDisplay: "22 OCT 2026", fullDisplay: "22 October 2026", file: "day3.html", icon: "🎵" },
+  { day: 4, title: "HOW WELL DO YOU KNOW ME?", dateStr: "2026-10-23", dateDisplay: "23 OCT 2026", fullDisplay: "23 October 2026", file: "day4.html", icon: "💭" },
+  { day: 5, title: "OUR STORY", dateStr: "2026-10-24", dateDisplay: "24 OCT 2026", fullDisplay: "24 October 2026", file: "day5.html", icon: "📖" },
+  { day: 6, title: "THINGS I NEVER SAID", dateStr: "2026-10-25", dateDisplay: "25 OCT 2026", fullDisplay: "25 October 2026", file: "day6.html", icon: "💌" },
   { day: 7, title: "CHOOSE YOUR SURPRISE", dateStr: "2026-10-26", dateDisplay: "26 OCT 2026", fullDisplay: "26 October 2026", file: "day7.html", icon: "🎁" },
   { day: 8, title: "OUR LITTLE UNIVERSE", dateStr: "2026-10-27", dateDisplay: "27 OCT 2026", fullDisplay: "27 October 2026", file: "day8.html", icon: "🌌" },
   { day: 9, title: "ONE MORE DAY", dateStr: "2026-10-28", dateDisplay: "28 OCT 2026", fullDisplay: "28 October 2026", file: "day9.html", icon: "⏳" },
