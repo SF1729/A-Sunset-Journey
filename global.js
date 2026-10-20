@@ -7,7 +7,7 @@ const JOURNEY_START_DATE = "2026-10-20";
 
 const JOURNEY_DAYS = [
   { day: 1, title: "THE BEGINNING", dateStr: "2026-10-20", dateDisplay: "20 OCT 2026", fullDisplay: "20 October 2026", file: "day1.html", icon: "✨" },
-  { day: 2, title: "MEMORY LANE", dateStr: "2026-10-21", dateDisplay: "21 OCT 2026", fullDisplay: "21 October 2026", file: "day2.html", icon: "📸" },
+  { day: 2, title: "MEMORY LANE", dateStr: "2026-10-20", dateDisplay: "21 OCT 2026", fullDisplay: "21 October 2026", file: "day2.html", icon: "📸" },
   { day: 3, title: "THE SOUNDTRACK", dateStr: "2026-10-22", dateDisplay: "22 OCT 2026", fullDisplay: "22 October 2026", file: "day3.html", icon: "🎵" },
   { day: 4, title: "HOW WELL DO YOU KNOW ME?", dateStr: "2026-10-23", dateDisplay: "23 OCT 2026", fullDisplay: "23 October 2026", file: "day4.html", icon: "💭" },
   { day: 5, title: "OUR STORY", dateStr: "2026-10-24", dateDisplay: "24 OCT 2026", fullDisplay: "24 October 2026", file: "day5.html", icon: "📖" },
