@@ -34,7 +34,7 @@ const galleryMemories = [
     id: 5, 
     image: "memory4.jpg", 
     title: "Hyee Meri Cutie Budduu 😘", 
-    message: "Hyeee mera cte little red flag, toh yeh photo mujhe bhot hi pasand hai kyu ke isme mera cutiepie hai or kitna cute lag raha hai hyeeeee. Or ha isme haircut meri pasand ka hai 🤭 \n or ab toh bataya bhi nhi jata kuch bhi .... " 
+    message: "Hyeee mera cute little red flag, toh yeh photo mujhe bhot hi pasand hai kyu ke isme mera cutiepie hai or kitna cute lag raha hai hyeeeee. Or ha isme haircut meri pasand ka hai 🤭 \n or ab toh bataya bhi nhi jata kuch bhi .... " 
   },
   { 
     id: 6, 
@@ -82,13 +82,13 @@ const galleryMemories = [
     id: 13,
     image: "memory12.jpg",
     title: "The Way You Look at Me 👀",
-    message: "Doobna hai bas tera banke \n Haaye nahin rehna dooja banke\n aap toh aaise dekh rahe hai jaise yeh lyrics hai 😝...."
+    message: "Doobna hai bas tera banke \n Haaye nahin rehna dooja banke\n aap toh aaise dekh rahe hai jaise yeh lyrics hai 😝....\n Yaah phir gusse me dekh raha hai ..."
 },
   { 
     id: 14, 
     image: "memory14.jpg", 
     title: "The Moment I Get real Happiness 🤭", 
-    message: "Toh mujhe bhoy zyada khushi hui thi yeh photo dekh kar , bhot zyadaaaaaa .... because mere buddu ne mujhe Tedduuu Bola thaa ....." 
+    message: "Toh mujhe bhot zyada khushi hui thi yeh photo dekh kar , bhot zyadaaaaaa .... because mere buddu ne mujhe Tedduuu Bola thaa ....." 
   }
 ];
 
