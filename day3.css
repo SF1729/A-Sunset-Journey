@@ -1,5 +1,6 @@
 /* ==========================================================================
    BUDDUU — DAY 3: “THE SOUNDTRACK”
+   With Wrapped & Luxury Concert Ticket Styling
    ========================================================================== */
 
 :root {
@@ -11,7 +12,10 @@
   --color-coral: #ff6b4a;
   --color-pink: #ff416c;
   --color-violet: #9333ea;
+  --color-emerald: #52e396;
+  
   --sunset-gradient: linear-gradient(135deg, #ff416c 0%, #ff6b4a 50%, #ffb347 100%);
+  --gold-ticket-gradient: linear-gradient(135deg, #ffd782 0%, #ffb347 50%, #ff8a4c 100%);
   --sunset-glow: 0 0 35px rgba(255, 107, 74, 0.45);
   --glass-bg: rgba(26, 11, 19, 0.88);
   --glass-border: rgba(255, 107, 74, 0.32);
@@ -38,12 +42,12 @@ body.day3-body {
 }
 
 .day3-container {
-  max-width: 920px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* Ambient Horizon Background */
+/* Ambient Sky */
 .day3-ambient-sky {
   position: fixed;
   inset: 0;
@@ -116,25 +120,20 @@ body.day3-body {
   background-size: 24px 24px;
 }
 
-/* Atmosphere Glow When Playing */
-.day3-body.is-audio-playing .sky-orb-violet {
-  opacity: 0.65;
-  transform: scale(1.08);
-}
-.day3-body.is-audio-playing .sky-orb-rose {
-  opacity: 0.6;
-  transform: scale(1.06);
-}
-.day3-body.is-audio-playing .sky-orb-amber {
-  opacity: 0.55;
-  transform: scale(1.05);
-}
-
 .day3-particles-canvas {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  width: 100vw;
+  height: 100vh;
+}
+
+.day3-confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
   width: 100vw;
   height: 100vh;
 }
@@ -159,6 +158,12 @@ body.day3-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
 }
 
 .nav-brand-fallback {
@@ -345,9 +350,7 @@ body.day3-body {
   overflow: hidden;
 }
 
-.puzzle-header-badge {
-  margin-bottom: 20px;
-}
+.puzzle-header-badge { margin-bottom: 20px; }
 
 .puzzle-kicker-tag {
   display: inline-block;
@@ -382,7 +385,6 @@ body.day3-body {
   font-size: 0.95rem;
 }
 
-/* Puzzle Meta Bar */
 .puzzle-meta-bar {
   display: flex;
   align-items: center;
@@ -411,11 +413,7 @@ body.day3-body {
   font-weight: 900;
 }
 
-.puzzle-btn-cluster {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.puzzle-btn-cluster { display: flex; align-items: center; gap: 8px; }
 
 .btn-puzzle-tool {
   background: rgba(255, 255, 255, 0.08);
@@ -439,12 +437,6 @@ body.day3-body {
   color: #fff;
 }
 
-.btn-magic-solve {
-  border-color: rgba(255, 179, 71, 0.5);
-  background: rgba(255, 179, 71, 0.12);
-}
-
-/* 3x3 Puzzle Board */
 .puzzle-stage-frame {
   position: relative;
   width: 330px;
@@ -486,10 +478,6 @@ body.day3-body {
   border-color: var(--color-gold);
   box-shadow: 0 6px 18px rgba(255, 107, 74, 0.45);
   transform: scale(0.97);
-}
-
-.puzzle-tile:active {
-  transform: scale(0.94);
 }
 
 .puzzle-tile.is-empty {
@@ -578,7 +566,7 @@ body.day3-body {
   font-size: 0.76rem;
 }
 
-/* SUCCESS MODAL */
+/* Success Modal */
 .puzzle-love-overlay {
   position: absolute;
   inset: 0;
@@ -832,12 +820,6 @@ body.day3-body {
   transition: all 0.3s ease;
 }
 
-.intro-skip-btn:hover {
-  color: var(--color-warm-white);
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 107, 74, 0.5);
-}
-
 /* ==========================================================================
    MAIN DAY 3 STAGE & PROGRESS
    ========================================================================== */
@@ -943,8 +925,14 @@ body.day3-body {
   font-style: italic;
 }
 
+.cue-hint {
+  font-size: 0.88rem;
+  color: var(--color-gold);
+  margin-top: 4px;
+}
+
 /* ==========================================================================
-   EXPERIENCE 1: MUSIC PLAYER
+   EXPERIENCE 1 & 2: MUSIC PLAYER, VISUALIZER & LYRICS
    ========================================================================== */
 .player-showcase-section {
   margin-bottom: 75px;
@@ -970,7 +958,6 @@ body.day3-body {
   margin-bottom: 30px;
 }
 
-/* Album Art & Vinyl */
 .album-art-wrap {
   position: relative;
   width: 240px;
@@ -1014,17 +1001,7 @@ body.day3-body {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.7);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   background: #180912;
-}
-
-.album-art-wrap.is-spinning .album-cover-box {
-  animation: gentleFloatCover 4s ease-in-out infinite alternate;
-}
-
-@keyframes gentleFloatCover {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-6px) scale(1.02); }
 }
 
 .album-cover-img {
@@ -1035,16 +1012,13 @@ body.day3-body {
   display: block;
 }
 
-/* Track Details & Controls */
 .player-controls-wrap {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.track-identity-block {
-  margin-bottom: 22px;
-}
+.track-identity-block { margin-bottom: 22px; }
 
 .track-channel-badge {
   font-size: 0.72rem;
@@ -1060,7 +1034,6 @@ body.day3-body {
   letter-spacing: -0.3px;
   color: var(--color-warm-white);
   margin: 6px 0 4px;
-  line-height: 1.25;
 }
 
 .track-artist-line {
@@ -1069,10 +1042,7 @@ body.day3-body {
   font-style: italic;
 }
 
-/* Scrubbing Progress Bar */
-.custom-progress-module {
-  margin-bottom: 24px;
-}
+.custom-progress-module { margin-bottom: 24px; }
 
 .progress-interactive-bar {
   width: 100%;
@@ -1086,10 +1056,7 @@ body.day3-body {
   touch-action: none;
 }
 
-.progress-interactive-bar:hover,
-.progress-interactive-bar:focus-visible {
-  height: 10px;
-}
+.progress-interactive-bar:hover { height: 10px; }
 
 .progress-bar-current {
   height: 100%;
@@ -1097,7 +1064,6 @@ body.day3-body {
   border-radius: var(--radius-full);
   position: relative;
   box-shadow: 0 0 12px rgba(255, 107, 74, 0.7);
-  pointer-events: none;
 }
 
 .progress-scrub-handle {
@@ -1114,8 +1080,8 @@ body.day3-body {
 
 .progress-time-row {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-top: 8px;
 }
 
@@ -1126,7 +1092,6 @@ body.day3-body {
   letter-spacing: 1px;
 }
 
-/* Action Buttons */
 .player-buttons-deck {
   display: flex;
   align-items: center;
@@ -1144,19 +1109,13 @@ body.day3-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(255, 65, 108, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 24px rgba(255, 65, 108, 0.5);
+  transition: transform 0.2s ease;
   outline: none;
 }
 
-.btn-master-play:hover {
-  transform: scale(1.08);
-  box-shadow: 0 12px 32px rgba(255, 107, 74, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.btn-master-play:active {
-  transform: scale(0.95);
-}
+.btn-master-play:hover { transform: scale(1.08); }
+.btn-master-play:active { transform: scale(0.95); }
 
 .play-symbol {
   font-size: 1.6rem;
@@ -1167,7 +1126,6 @@ body.day3-body {
 .btn-master-play.playing .play-symbol {
   margin-left: 0;
   font-size: 1.35rem;
-  letter-spacing: 2px;
 }
 
 .volume-slider-group {
@@ -1186,9 +1144,6 @@ body.day3-body {
   color: var(--color-warm-white);
   font-size: 1.1rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .volume-range-input {
@@ -1199,7 +1154,6 @@ body.day3-body {
   border-radius: var(--radius-full);
   background: rgba(255, 255, 255, 0.2);
   outline: none;
-  cursor: pointer;
 }
 
 .volume-range-input::-webkit-slider-thumb {
@@ -1213,9 +1167,7 @@ body.day3-body {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   EXPERIENCE 2: VISUALIZER
-   ========================================================================== */
+/* Visualizer Canvas */
 .visualizer-stage-wrapper {
   margin-top: 10px;
   padding-top: 20px;
@@ -1243,7 +1195,6 @@ body.day3-body {
   text-transform: uppercase;
   font-weight: 800;
   color: var(--color-text-subtle);
-  transition: color 0.3s ease;
 }
 
 .visualizer-live-indicator.live {
@@ -1258,21 +1209,11 @@ body.day3-body {
   background: linear-gradient(180deg, rgba(20, 8, 14, 0.6) 0%, rgba(14, 5, 10, 0.9) 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   overflow: hidden;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.music-visualizer-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.music-visualizer-canvas { width: 100%; height: 100%; display: block; }
 
-/* ==========================================================================
-   LIVE SYNCHRONIZED LYRICS (Spotify / Apple Music Karaoke Style)
-   ========================================================================== */
+/* Synced Lyrics */
 .lyrics-karaoke-wrapper {
   margin-top: 26px;
   padding-top: 22px;
@@ -1298,7 +1239,6 @@ body.day3-body {
   font-size: 0.72rem;
   color: var(--color-text-subtle);
   font-style: italic;
-  letter-spacing: 1px;
 }
 
 .lyrics-scroll-box {
@@ -1314,18 +1254,8 @@ body.day3-body {
   flex-direction: column;
   gap: 18px;
   text-align: center;
-  outline: none;
   mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
-}
-
-.lyrics-scroll-box::-webkit-scrollbar {
-  width: 5px;
-}
-
-.lyrics-scroll-box::-webkit-scrollbar-thumb {
-  background: rgba(255, 107, 74, 0.35);
-  border-radius: var(--radius-full);
 }
 
 .lyric-line-item {
@@ -1333,16 +1263,12 @@ body.day3-body {
   font-weight: 700;
   color: rgba(255, 255, 255, 0.35);
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s ease;
   padding: 4px 12px;
   border-radius: 8px;
-  user-select: none;
 }
 
-.lyric-line-item:hover {
-  color: rgba(255, 255, 255, 0.75);
-  transform: scale(1.02);
-}
+.lyric-line-item:hover { color: rgba(255, 255, 255, 0.75); }
 
 .lyric-line-item.is-active {
   color: #fff;
@@ -1355,16 +1281,12 @@ body.day3-body {
   filter: drop-shadow(0 2px 14px rgba(255, 107, 74, 0.55));
 }
 
-.lyric-line-item.is-passed {
-  color: rgba(255, 255, 255, 0.55);
-}
+.lyric-line-item.is-passed { color: rgba(255, 255, 255, 0.55); }
 
 /* ==========================================================================
    EXPERIENCE 3: SONG MESSAGE
    ========================================================================== */
-.song-message-section {
-  margin-bottom: 85px;
-}
+.song-message-section { margin-bottom: 85px; }
 
 .song-message-card {
   max-width: 760px;
@@ -1373,9 +1295,7 @@ body.day3-body {
   text-align: center;
 }
 
-.message-meta-header {
-  margin-bottom: 26px;
-}
+.message-meta-header { margin-bottom: 26px; }
 
 .message-track-label {
   display: inline-block;
@@ -1403,9 +1323,7 @@ body.day3-body {
   font-style: italic;
 }
 
-.message-action-wrap {
-  margin: 10px 0;
-}
+.message-action-wrap { margin: 10px 0; }
 
 .btn-reveal-message {
   padding: 16px 40px;
@@ -1415,7 +1333,7 @@ body.day3-body {
 
 .revealed-song-letter {
   margin-top: 30px;
-  animation: fadeInLetter 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInLetter 0.75s ease forwards;
 }
 
 @keyframes fadeInLetter {
@@ -1436,7 +1354,6 @@ body.day3-body {
   flex-direction: column;
   gap: 18px;
   margin-bottom: 20px;
-  text-align: center;
 }
 
 .message-block-item {
@@ -1447,9 +1364,7 @@ body.day3-body {
   opacity: 0;
   transform: translateY(12px);
   filter: blur(5px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .message-block-item.is-revealed {
@@ -1471,6 +1386,517 @@ body.day3-body {
 }
 
 /* ==========================================================================
+   EXPERIENCE 4: SPOTIFY-STYLE FRIENDSHIP WRAPPED 📊
+   ========================================================================== */
+.wrapped-showcase-section {
+  margin-bottom: 85px;
+}
+
+.wrapped-main-card {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 38px 32px;
+  background: rgba(22, 9, 16, 0.9);
+  border: 1px solid rgba(255, 179, 71, 0.35);
+  box-shadow: 0 30px 75px -15px rgba(0, 0, 0, 0.9), 0 0 45px rgba(255, 107, 74, 0.22);
+}
+
+.wrapped-banner-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wrapped-brand-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: var(--color-gold);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spotify-accent-dot {
+  color: #1ed760;
+  font-size: 1.1rem;
+}
+
+.wrapped-duo-tag {
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: 800;
+}
+
+/* Bento Stats Grid */
+.wrapped-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+}
+
+.bento-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 22px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 179, 71, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+.bento-kicker {
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--color-gold);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.bento-caption {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* Bento 1: Top Artist (7 cols) */
+.bento-top-artist {
+  grid-column: span 7;
+  background: linear-gradient(135deg, rgba(255, 65, 108, 0.15) 0%, rgba(30, 11, 20, 0.8) 100%);
+  border-color: rgba(255, 65, 108, 0.35);
+}
+
+.bento-artist-name {
+  font-size: 2.1rem;
+  font-weight: 900;
+  background: var(--sunset-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.bento-art-halo {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  font-size: 3.5rem;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* Bento 2: Minutes Listened (5 cols) */
+.bento-minutes {
+  grid-column: span 5;
+  background: linear-gradient(135deg, rgba(255, 179, 71, 0.15) 0%, rgba(30, 11, 20, 0.8) 100%);
+  border-color: rgba(255, 179, 71, 0.35);
+}
+
+.bento-stat-big {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 900;
+  color: var(--color-gold);
+  line-height: 1.1;
+  margin-bottom: 8px;
+  text-shadow: 0 0 15px rgba(255, 179, 71, 0.5);
+}
+
+/* Bento 3: Mood Genres (7 cols) */
+.bento-genres {
+  grid-column: span 7;
+}
+
+.genre-bar-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.genre-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-warm-white);
+  margin-bottom: 4px;
+}
+
+.genre-meta-row strong {
+  color: var(--color-gold);
+  font-family: 'Space Mono', monospace;
+}
+
+.genre-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.genre-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+.fill-masti { background: linear-gradient(90deg, #ff6b4a, #ffb347); }
+.fill-drama { background: linear-gradient(90deg, #ff416c, #ff6b8b); }
+.fill-sukoon { background: linear-gradient(90deg, #52e396, #38ef7d); }
+
+/* Bento 4: Most Streamed (5 cols) */
+.bento-track {
+  grid-column: span 5;
+}
+
+.bento-song-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--color-warm-white);
+  margin-bottom: 2px;
+}
+
+.bento-song-artist {
+  font-size: 0.88rem;
+  color: var(--color-coral);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+/* Bento 5: Listener Status (12 cols) */
+.bento-status {
+  grid-column: span 12;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(82, 227, 150, 0.1) 0%, rgba(20, 8, 14, 0.85) 100%);
+  border-color: rgba(82, 227, 150, 0.35);
+  padding: 24px;
+}
+
+.bento-status-badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  font-weight: 900;
+  color: var(--color-emerald);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-shadow: 0 0 15px rgba(82, 227, 150, 0.45);
+}
+
+/* ==========================================================================
+   EXPERIENCE 5: VIP CONCERT TICKET FOR TWO 🎟️
+   ========================================================================== */
+.concert-ticket-section {
+  margin-bottom: 90px;
+}
+
+.ticket-presentation-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.luxury-concert-ticket {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 34px 220px;
+  background: linear-gradient(135deg, #240c16 0%, #17070f 60%, #1c0812 100%);
+  border: 2px solid rgba(255, 179, 71, 0.45);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 45px rgba(255, 107, 74, 0.25);
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.luxury-concert-ticket:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 55px rgba(255, 179, 71, 0.4);
+}
+
+/* Ticket Left Section */
+.ticket-body-left {
+  padding: 34px 30px 30px 36px;
+}
+
+.ticket-header-lead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ticket-tour-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 2.5px;
+  color: var(--color-gold);
+  font-weight: 800;
+}
+
+.ticket-admit-badge {
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 65, 108, 0.18);
+  border: 1px solid rgba(255, 65, 108, 0.5);
+  color: var(--color-pink);
+}
+
+.ticket-duo-heading {
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: var(--gold-ticket-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.ticket-subtext-tour {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: 22px;
+}
+
+.ticket-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 20px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 179, 71, 0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+
+.ticket-meta-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.meta-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
+.meta-val {
+  font-size: 0.98rem;
+  color: var(--color-warm-white);
+  font-weight: 700;
+}
+
+/* Perks Ribbon */
+.ticket-perks-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.perk-chip {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+}
+
+/* Perforated Divider */
+.ticket-perforated-divider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notch-cutout {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-bg-dark);
+  border: 2px solid rgba(255, 179, 71, 0.45);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.notch-top { top: -18px; }
+.notch-bottom { bottom: -18px; }
+
+.perforated-dash-line {
+  width: 2px;
+  height: 100%;
+  border-left: 2px dashed rgba(255, 179, 71, 0.35);
+  margin: 20px 0;
+}
+
+/* Ticket Right Stub */
+.ticket-stub-right {
+  padding: 30px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.stub-pass-no {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  color: var(--color-gold);
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.ticket-barcode-lines {
+  display: flex;
+  gap: 3px;
+  height: 60px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ticket-barcode-lines span {
+  width: 3px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 1px;
+}
+
+.ticket-barcode-lines span:nth-child(2n) { width: 1.5px; height: 85%; }
+.ticket-barcode-lines span:nth-child(3n) { width: 4.5px; height: 95%; }
+.ticket-barcode-lines span:nth-child(5n) { width: 2px; height: 75%; }
+
+.stub-serial {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: var(--color-text-subtle);
+  margin-bottom: 16px;
+}
+
+.stub-security-hologram {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  font-weight: 800;
+  color: var(--color-gold);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 179, 71, 0.15);
+  border: 1px solid rgba(255, 179, 71, 0.4);
+}
+
+/* Ticket Rubber Stamp Effect */
+.ticket-stamp-overlay {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%) rotate(-14deg);
+  z-index: 20;
+  pointer-events: none;
+  animation: slamStamp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slamStamp {
+  0% { transform: translate(-50%, -50%) scale(3.5) rotate(-35deg); opacity: 0; }
+  70% { transform: translate(-50%, -50%) scale(0.92) rotate(-12deg); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(-14deg); opacity: 1; }
+}
+
+.stamp-seal-badge {
+  padding: 12px 28px;
+  border: 4px solid #ff3355;
+  border-radius: 14px;
+  background: rgba(255, 26, 64, 0.22);
+  box-shadow: 0 0 35px rgba(255, 26, 64, 0.65), inset 0 0 15px rgba(255, 26, 64, 0.3);
+  text-align: center;
+}
+
+.stamp-seal-badge span {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #ff3355;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(255, 51, 85, 0.8);
+  white-space: nowrap;
+}
+
+.ticket-action-box {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.btn-claim-ticket {
+  padding: 16px 44px;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  box-shadow: 0 10px 30px rgba(255, 107, 74, 0.5);
+}
+
+.ticket-claimed-banner {
+  margin-top: 26px;
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  background: rgba(82, 227, 150, 0.12);
+  border: 1px solid rgba(82, 227, 150, 0.4);
+  text-align: center;
+  animation: fadeInLetter 0.5s ease forwards;
+}
+
+.claimed-icon-halo {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ticket-claimed-banner h4 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-emerald);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.ticket-claimed-banner p {
+  font-size: 0.95rem;
+  color: var(--color-warm-white);
+  font-style: italic;
+}
+
+/* ==========================================================================
    DAY 3 COMPLETION LOCKUP
    ========================================================================== */
 .day3-completion-section {
@@ -1480,9 +1906,7 @@ body.day3-body {
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.completion-indicator-box {
-  margin-bottom: 30px;
-}
+.completion-indicator-box { margin-bottom: 30px; }
 
 .completion-check-icon {
   width: 58px;
@@ -1532,13 +1956,8 @@ body.day3-body {
   flex-wrap: wrap;
 }
 
-.foot-home-btn {
-  padding: 14px 28px;
-}
-
-.foot-next-btn {
-  padding: 14px 34px;
-}
+.foot-home-btn { padding: 14px 28px; }
+.foot-next-btn { padding: 14px 34px; }
 
 .day3-signoff-summary {
   padding-top: 24px;
@@ -1605,83 +2024,83 @@ body.day3-body {
 /* ==========================================================================
    RESPONSIVE DESIGN
    ========================================================================== */
-@media (max-width: 820px) {
+@media (max-width: 860px) {
   .player-main-grid {
     grid-template-columns: 1fr;
     gap: 28px;
     text-align: center;
   }
 
-  .album-art-wrap {
-    width: 200px;
-    height: 200px;
+  .album-art-wrap { width: 200px; height: 200px; }
+  .player-controls-wrap { align-items: center; }
+  .player-buttons-deck { justify-content: center; }
+
+  /* Bento Wrapped */
+  .bento-top-artist { grid-column: span 12; }
+  .bento-minutes { grid-column: span 12; }
+  .bento-genres { grid-column: span 12; }
+  .bento-track { grid-column: span 12; }
+
+  /* Luxury Concert Ticket */
+  .luxury-concert-ticket {
+    grid-template-columns: 1fr;
   }
 
-  .player-controls-wrap {
-    align-items: center;
+  .ticket-perforated-divider {
+    flex-direction: row;
+    width: 100%;
+    height: 34px;
+    justify-content: space-between;
   }
 
-  .player-buttons-deck {
-    justify-content: center;
+  .perforated-dash-line {
+    width: 100%;
+    height: 2px;
+    border-left: none;
+    border-top: 2px dashed rgba(255, 179, 71, 0.35);
+    margin: 0 20px;
   }
 
-  .lyrics-scroll-box {
-    height: 200px;
-    padding: 45px 12px;
+  .notch-top {
+    left: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .notch-bottom {
+    right: -18px;
+    left: auto;
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .ticket-stub-right {
+    padding: 24px 20px;
+  }
+
+  .ticket-stamp-overlay {
+    left: 50%;
   }
 }
 
 @media (max-width: 480px) {
-  .photo-puzzle-card {
-    padding: 28px 16px;
-  }
-
-  .puzzle-stage-frame {
-    width: 285px;
-    height: 285px;
-    padding: 6px;
-  }
-
-  .puzzle-main-title {
-    font-size: 1.85rem;
-  }
-
-  .day3-main-stage {
-    padding-top: 85px;
-  }
-
-  .player-and-visualizer-card {
-    padding: 24px 16px;
-  }
-
-  .player-buttons-deck {
-    flex-direction: column;
-    gap: 16px;
-  }
-
+  .photo-puzzle-card { padding: 28px 16px; }
+  .puzzle-stage-frame { width: 285px; height: 285px; padding: 6px; }
+  .puzzle-main-title { font-size: 1.85rem; }
+  .day3-main-stage { padding-top: 85px; }
+  .player-and-visualizer-card { padding: 24px 16px; }
+  .player-buttons-deck { flex-direction: column; gap: 16px; }
+  
+  .ticket-body-left { padding: 26px 18px; }
+  .ticket-meta-grid { grid-template-columns: 1fr; }
+  
   .day3-progress-strip {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .progress-strip-track {
-    width: 100%;
-  }
-
-  .day3-foot-nav-cluster {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .foot-home-btn,
-  .foot-next-btn {
-    width: 100%;
-  }
-}
-
-.progress-time-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+  .progress-strip-track { width: 100%; }
+  .day3-foot-nav-cluster { flex-direction: column; width: 100%; }
+  .foot-home-btn, .foot-next-btn { width: 100%; }
 }
