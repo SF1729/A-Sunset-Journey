@@ -1132,6 +1132,55 @@
   font-style: italic;
 }
 
+
+/* Multiple Field Styling for Experience 3 */
+.secret-intro-caption {
+  font-size: 0.95rem;
+  color: var(--color-gold, #ffb347);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.secret-field-group {
+  text-align: left;
+  margin-bottom: 22px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 107, 74, 0.2);
+  border-radius: var(--radius-md, 14px);
+  padding: 16px 18px;
+  transition: all 0.3s ease;
+}
+
+.secret-field-group:focus-within {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 179, 71, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.secret-question-label {
+  display: block;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.08rem;
+  color: var(--color-warm-white, #fdf6ec);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.secret-question-label strong {
+  color: var(--color-coral, #ff6b4a);
+}
+
+.secret-question-label .q-number {
+  color: var(--color-gold, #ffb347);
+  font-family: var(--font-family, sans-serif);
+  font-weight: 800;
+  margin-right: 4px;
+}
+
+.secret-field-group .textarea-wrap {
+  margin-bottom: 0;
+}
+
 /* ==========================================================================
    DAY 4 COMPLETION LOCKUP
    ========================================================================== */
