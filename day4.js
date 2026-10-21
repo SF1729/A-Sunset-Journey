@@ -1,7 +1,7 @@
 /* ==========================================================================
    BUDDUU — DAY 4: “HOW WELL DO YOU KNOW ME?”
    Multi-Gate Architecture:
-   Gate 1 (Date Lock) → Gate 2 (Mini Maze Lock: Guide to Key 🗝️) → 10 Quiz Questions → Complete
+   Gate 1 (Date Lock) → Gate 2 (Mini Maze Lock: Guide to Key 🗝️) → 10 Quiz Questions → 5 Secret Questions → Complete
    ========================================================================== */
 
 /**
@@ -279,7 +279,6 @@ function initMiniMazeLock() {
   const mazeGridFrame = document.getElementById("mazeGridFrame");
   const successOverlay = document.getElementById("mazeSuccessOverlay");
 
-  // On-Screen D-Pad Buttons
   const btnUp = document.getElementById("dpadUp");
   const btnDown = document.getElementById("dpadDown");
   const btnLeft = document.getElementById("dpadLeft");
@@ -287,8 +286,6 @@ function initMiniMazeLock() {
 
   if (!mazeGridEl) return;
 
-  // 9x9 Maze Layout (1 = Wall, 0 = Walkable Path)
-  // Solvable path from (1,1) to (7,7)
   const mazeMatrix = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -325,10 +322,10 @@ function initMiniMazeLock() {
 
         if (isPlayer) {
           cell.classList.add("has-player");
-          cell.textContent = "🧸"; // Cute Budduu Teddy Avatar
+          cell.textContent = "🧸";
         } else if (isKey) {
           cell.classList.add("has-key");
-          cell.textContent = "🗝️"; // Golden Secret Key
+          cell.textContent = "🗝️";
         }
 
         mazeGridEl.appendChild(cell);
@@ -342,14 +339,12 @@ function initMiniMazeLock() {
     const newR = playerPos.r + dr;
     const newC = playerPos.c + dc;
 
-    // Check bounds & wall
     if (newR >= 0 && newR < 9 && newC >= 0 && newC < 9) {
       if (mazeMatrix[newR][newC] === 0) {
         playerPos.r = newR;
         playerPos.c = newC;
         renderMaze();
 
-        // Check if reached Secret Key
         if (playerPos.r === keyPos.r && playerPos.c === keyPos.c) {
           handleKeyCollected();
         }
@@ -365,11 +360,9 @@ function initMiniMazeLock() {
       localStorage.setItem("budduu_day4_lock_solved", "true");
     } catch (e) {}
 
-    // Show Celebration Overlay
     setTimeout(() => {
       if (successOverlay) successOverlay.style.display = "flex";
 
-      // Transition to actual content after 2.4s
       setTimeout(() => {
         const gameView = document.getElementById("day4GameLockedView");
         if (gameView) gameView.style.display = "none";
@@ -378,7 +371,6 @@ function initMiniMazeLock() {
     }, 250);
   }
 
-  // Keyboard Movement Listener
   window.addEventListener("keydown", (e) => {
     if (isLevelFinished) return;
     if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
@@ -396,13 +388,11 @@ function initMiniMazeLock() {
     }
   });
 
-  // Touch / Click D-Pad Listeners
   if (btnUp) btnUp.addEventListener("click", () => movePlayer(-1, 0));
   if (btnDown) btnDown.addEventListener("click", () => movePlayer(1, 0));
   if (btnLeft) btnLeft.addEventListener("click", () => movePlayer(0, -1));
   if (btnRight) btnRight.addEventListener("click", () => movePlayer(0, 1));
 
-  // Mobile Touch Swipe Gesture Support on Maze Frame
   let touchStartX = 0;
   let touchStartY = 0;
 
@@ -426,13 +416,13 @@ function initMiniMazeLock() {
 
     if (Math.abs(diffX) > Math.abs(diffY)) {
       if (Math.abs(diffX) > minSwipeDist) {
-        if (diffX > 0) movePlayer(0, 1);  // Right
-        else movePlayer(0, -1);           // Left
+        if (diffX > 0) movePlayer(0, 1);
+        else movePlayer(0, -1);
       }
     } else {
       if (Math.abs(diffY) > minSwipeDist) {
-        if (diffY > 0) movePlayer(1, 0);  // Down
-        else movePlayer(-1, 0);           // Up
+        if (diffY > 0) movePlayer(1, 0);
+        else movePlayer(-1, 0);
       }
     }
   }
@@ -441,7 +431,7 @@ function initMiniMazeLock() {
 }
 
 /**
- * Launch Actual Day 4 Content: Intro Sequence & 3 Experiences
+ * Launch Actual Day 4 Content
  */
 function launchActualDay4Content() {
   const unlockedView = document.getElementById("day4UnlockedView");
@@ -566,7 +556,6 @@ function initQuizExperience(alreadyCompleted) {
       if (currentQuestionIndex < quizQuestions.length) {
         renderQuestion(currentQuestionIndex);
       } else {
-        // Quiz complete -> Show Score
         hasCompletedQuiz = true;
         const cardWrap = document.getElementById("quizCardWrapper");
         if (cardWrap) cardWrap.style.display = "none";
@@ -626,7 +615,6 @@ function handleAnswerSelect(selectedLetter, clickedBtn, qData) {
     clickedBtn.classList.add("is-correct");
   } else {
     clickedBtn.classList.add("is-wrong");
-    // Highlight the correct answer for learning
     allOptionBtns.forEach(btn => {
       const letterSpan = btn.querySelector(".opt-letter");
       if (letterSpan && letterSpan.textContent === qData.correct) {
@@ -635,7 +623,6 @@ function handleAnswerSelect(selectedLetter, clickedBtn, qData) {
     });
   }
 
-  // Show explanation toast
   const explanationBox = document.getElementById("quizExplanationBox");
   const icon = document.getElementById("explanationIcon");
   const verdict = document.getElementById("explanationVerdict");
@@ -671,7 +658,6 @@ function showScoreReveal(score) {
   scoreSection.style.display = "block";
   scoreSection.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  // Animate number counting upward
   let currentVal = 0;
   const counterInterval = setInterval(() => {
     if (currentVal <= score) {
@@ -682,7 +668,6 @@ function showScoreReveal(score) {
     }
   }, 100);
 
-  // Dynamic Verdict Quote
   if (verdictQuote) {
     if (score >= 9) {
       verdictQuote.textContent = "“Incredible! You remember every tiny detail of this journey. You are pure magic, Budduu. 👀❤️”";
@@ -695,39 +680,52 @@ function showScoreReveal(score) {
     }
   }
 
-  // Unlock Experience 3 (Secret Question)
   setTimeout(() => {
     if (secretSection) secretSection.style.display = "block";
   }, 1400);
 }
 
 /**
- * EXPERIENCE 3: Secret Question & Direct Gmail Dispatch to shazan1729@gmail.com
+ * EXPERIENCE 3: Multi-Question Secret Section & Gmail Dispatch to shazan1729@gmail.com
  */
 function initSecretQuestionExperience(alreadyCompleted) {
   const openBtn = document.getElementById("openSecretBtn");
   const gateIntro = document.getElementById("secretGateIntro");
   const formBox = document.getElementById("secretRevealedForm");
   const form = document.getElementById("secretInputForm");
-  const textarea = document.getElementById("secretAnswerInput");
+  const ans1 = document.getElementById("secretAnswer1");
+  const ans2 = document.getElementById("secretAnswer2");
+  const ans3 = document.getElementById("secretAnswer3");
+  const ans4 = document.getElementById("secretAnswer4");
+  const ans5 = document.getElementById("secretAnswer5");
   const submitBtn = document.getElementById("submitSecretBtn");
   const submitBtnText = document.getElementById("submitBtnText");
   const savedToast = document.getElementById("secretSavedToast");
 
   if (!openBtn) return;
 
-  // Restore stored answer if already answered earlier
-  let savedAnswer = "";
+  // Restore stored answers from localStorage (if already answered)
+  let savedData = null;
   try {
-    savedAnswer = localStorage.getItem("budduu_day4_secret_answer") || "";
+    const rawSaved = localStorage.getItem("budduu_day4_secret_answers");
+    if (rawSaved) {
+      savedData = JSON.parse(rawSaved);
+    } else {
+      const oldSingle = localStorage.getItem("budduu_day4_secret_answer");
+      if (oldSingle) savedData = { q1: oldSingle, q2: "", q3: "", q4: "", q5: "" };
+    }
   } catch (e) {}
 
-  if (alreadyCompleted || savedAnswer) {
+  if (alreadyCompleted || savedData) {
     if (gateIntro) gateIntro.style.display = "none";
     if (formBox) formBox.style.display = "block";
-    if (savedAnswer && textarea) {
-      textarea.value = savedAnswer;
-      textarea.disabled = true;
+    
+    if (savedData) {
+      if (ans1 && savedData.q1) { ans1.value = savedData.q1; ans1.disabled = true; }
+      if (ans2 && savedData.q2) { ans2.value = savedData.q2; ans2.disabled = true; }
+      if (ans3 && savedData.q3) { ans3.value = savedData.q3; ans3.disabled = true; }
+      if (ans4 && savedData.q4) { ans4.value = savedData.q4; ans4.disabled = true; }
+      if (ans5 && savedData.q5) { ans5.value = savedData.q5; ans5.disabled = true; }
       if (submitBtn) submitBtn.style.display = "none";
       if (savedToast) savedToast.style.display = "block";
       hasSubmittedSecret = true;
@@ -737,48 +735,70 @@ function initSecretQuestionExperience(alreadyCompleted) {
   openBtn.addEventListener("click", () => {
     if (gateIntro) gateIntro.style.display = "none";
     if (formBox) formBox.style.display = "block";
-    if (textarea) textarea.focus();
+    if (ans1) ans1.focus();
   });
 
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const answer = textarea ? textarea.value.trim() : "";
-      if (!answer) return;
+      
+      const q1Val = ans1 ? ans1.value.trim() : "";
+      const q2Val = ans2 ? ans2.value.trim() : "";
+      const q3Val = ans3 ? ans3.value.trim() : "";
+      const q4Val = ans4 ? ans4.value.trim() : "";
+      const q5Val = ans5 ? ans5.value.trim() : "";
 
-      // 1. Show romantic sending state on the button
+      if (!q1Val || !q2Val || !q3Val || !q4Val || !q5Val) {
+        alert("Please answer all 5 questions! ❤️");
+        return;
+      }
+
+      // 1. Sending animation state
       if (submitBtn) submitBtn.disabled = true;
       if (submitBtnText) submitBtnText.textContent = "SENDING TO SHAZAN... 💌";
 
-      // 2. Local Storage me backup save karein
+      // 2. Save locally in localStorage
+      const allAnswers = { q1: q1Val, q2: q2Val, q3: q3Val, q4: q4Val, q5: q5Val };
       try {
-        localStorage.setItem("budduu_day4_secret_answer", answer);
+        localStorage.setItem("budduu_day4_secret_answers", JSON.stringify(allAnswers));
       } catch (err) {}
 
-      // 3. Send email directly to shazan1729@gmail.com via FormSubmit AJAX API
+      // 3. Send all 5 answers to your Gmail via FormSubmit
       try {
-        await fetch("https://formsubmit.co/ajax/shazan1729@gmail.com", {
+        const response = await fetch("https://formsubmit.co/ajax/shazan1729@gmail.com", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
           },
           body: JSON.stringify({
-            _subject: "💌 Budduu's Day 4 Secret Memory Answer!",
-            _captcha: "false", // Disables captcha for seamless delivery
+            _subject: "💌 Budduu's Day 4 Secret Answers — All 5 Questions!",
+            _captcha: "false",
+            _template: "table",
             from_name: "Budduu",
-            question: "If you could keep just ONE memory from this entire journey forever, which one would you choose?",
-            budduu_answer: answer,
+            "1. Forever Memory": q1Val,
+            "2. Special/Cute Habit": q2Val,
+            "3. Future Promise": q3Val,
+            "4. Memory That Still Brings a Smile": q4Val,
+            "5. How Would You Fix Our Distance?": q5Val,
             date_submitted: new Date().toLocaleString()
           })
         });
+
+        const result = await response.json();
+        if (!response.ok || result.success === "false") {
+          console.warn("FormSubmit notice:", result);
+        }
       } catch (networkError) {
-        // Network issue hone par bhi locally safe rahega
         console.warn("Email delivery queued locally:", networkError);
       }
 
-      // 4. Update UI to success toast
-      if (textarea) textarea.disabled = true;
+      // 4. Update UI to success toast & lock fields
+      if (ans1) ans1.disabled = true;
+      if (ans2) ans2.disabled = true;
+      if (ans3) ans3.disabled = true;
+      if (ans4) ans4.disabled = true;
+      if (ans5) ans5.disabled = true;
       if (submitBtn) submitBtn.style.display = "none";
       if (savedToast) savedToast.style.display = "block";
 
@@ -793,7 +813,7 @@ function initSecretQuestionExperience(alreadyCompleted) {
  * 1. Mini Maze Lock Solved
  * 2. All 10 Quiz questions completed
  * 3. Score revealed
- * 4. Secret question opened and saved
+ * 4. 5 Secret questions opened and saved
  */
 function checkDay4Completion() {
   if (isMazeSolved && hasCompletedQuiz && hasRevealedScore && hasSubmittedSecret) {
