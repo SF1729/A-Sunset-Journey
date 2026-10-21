@@ -1,11 +1,10 @@
 /* ==========================================================================
    BUDDUU — DAY 3: “THE SOUNDTRACK”
-   With Live Synchronized Lyrics Karaoke System
+   With Live Synced Lyrics, Spotify-Style Wrapped & VIP Concert Ticket
    ========================================================================== */
 
 /**
  * 1. EDITABLE SONG DATA
- * song.mp3: "Tu Chahiye" (Atif Aslam, 04:32)
  */
 const songData = {
   title: "Budduu🥭 x Tedduu🍊",
@@ -16,7 +15,7 @@ const songData = {
 };
 
 /**
- * 2. SYNCHRONIZED LYRICS WITH TIMESTAMPS (Calculated from your file)
+ * 2. SYNCHRONIZED LYRICS WITH TIMESTAMPS
  */
 const songLyricsTimeline = [
   { time: 14, text: "Haal-e-dil ko sukoon chahiye..." },
@@ -50,7 +49,7 @@ const songLyricsTimeline = [
 ];
 
 /**
- * 3. EDITABLE ROMANTIC LETTER (Revealed in Experience 3)
+ * 3. EDITABLE ROMANTIC LETTER
  */
 const songMessageParagraphs = [
   "Some songs are just songs.",
@@ -64,6 +63,7 @@ const songMessageParagraphs = [
 let isGameSolved = false;
 let hasPlayedAudio = false;
 let hasRevealedMessage = false;
+let hasClaimedTicket = false;
 
 // Audio & Visualizer State
 let audioCtx = null;
@@ -76,6 +76,42 @@ let visualizerAnimationFrame = null;
 let puzzleTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 let puzzleMoves = 0;
 let puzzleResolvedImgUrl = "puzzle.jpg";
+
+// Web Audio API Synthesizer Chimes
+function playStampChime() {
+  try {
+    const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtxClass) return;
+    const ctx = new AudioCtxClass();
+    
+    // Low stamp thud
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(140, ctx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.2);
+    gain1.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start();
+    osc1.stop(ctx.currentTime + 0.2);
+
+    // High celebratory chime
+    setTimeout(() => {
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(587.33, ctx.currentTime);
+      gain2.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start();
+      osc2.stop(ctx.currentTime + 0.6);
+    }, 120);
+  } catch (e) {}
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   initDay3Flow();
@@ -120,10 +156,14 @@ function initDay3Flow() {
     if (localStorage.getItem("budduu_day3_lock_solved") === "true") {
       isGameSolved = true;
     }
+    if (localStorage.getItem("budduu_day3_ticket_claimed") === "true") {
+      hasClaimedTicket = true;
+    }
     if (localStorage.getItem("budduu_day3_completed") === "true") {
       isGameSolved = true;
       hasPlayedAudio = true;
       hasRevealedMessage = true;
+      hasClaimedTicket = true;
     }
   } catch (err) {}
 
@@ -215,7 +255,6 @@ function initPhotoMemoryPuzzle() {
   const board = document.getElementById("puzzleBoardGrid");
   const movesEl = document.getElementById("puzzleMovesCount");
   const previewBtn = document.getElementById("previewPhotoBtn");
-  const autoSolveBtn = document.getElementById("autoSolveBtn");
   const previewOverlay = document.getElementById("puzzlePreviewOverlay");
   const closePreviewBtn = document.getElementById("closePreviewBtn");
   const closePreviewBackdrop = document.getElementById("closePreviewBackdrop");
@@ -371,14 +410,6 @@ function initPhotoMemoryPuzzle() {
   if (closePreviewBtn) closePreviewBtn.addEventListener("click", hidePreview);
   if (closePreviewBackdrop) closePreviewBackdrop.addEventListener("click", hidePreview);
 
-  if (autoSolveBtn) {
-    autoSolveBtn.addEventListener("click", () => {
-      puzzleTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-      renderBoard();
-      triggerPuzzleSuccess();
-    });
-  }
-
   if (continueBtn) {
     continueBtn.addEventListener("click", () => {
       if (loveOverlay) loveOverlay.style.display = "none";
@@ -404,12 +435,31 @@ function launchActualDay3Content() {
   initIntroSequence(alreadyCompleted);
   initMusicPlayer();
   initSongMessageReveal();
+  initConcertTicketExperience();
+  updateProgressHUD();
 
   if (alreadyCompleted) {
     hasPlayedAudio = true;
     hasRevealedMessage = true;
+    hasClaimedTicket = true;
     renderCompletionView();
   }
+}
+
+function updateProgressHUD() {
+  let step = 1; // Puzzle solved
+  if (hasPlayedAudio) step++;
+  if (hasRevealedMessage) step++;
+  if (hasClaimedTicket) step++;
+
+  const pct = Math.min(step * 25, 100);
+  const fill = document.getElementById("journeyProgressFill");
+  const pctText = document.getElementById("journeyProgressPct");
+  const badge = document.getElementById("day3StepBadge");
+
+  if (fill) fill.style.width = `${pct}%`;
+  if (pctText) pctText.textContent = `${pct}%`;
+  if (badge) badge.textContent = `DAY 03 / 10 • ${pct}%`;
 }
 
 /**
@@ -521,7 +571,6 @@ function initMusicPlayer() {
     return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
   }
 
-  // Populate Synced Lyrics DOM
   let activeLyricIdx = -1;
   const lyricLineEls = [];
 
@@ -535,7 +584,6 @@ function initMusicPlayer() {
       lineDiv.setAttribute("role", "button");
       lineDiv.setAttribute("tabindex", "0");
 
-      // Tap-to-seek functionality
       lineDiv.addEventListener("click", () => {
         audio.currentTime = item.time;
         if (audio.paused) {
@@ -567,7 +615,6 @@ function initMusicPlayer() {
         el.classList.remove("is-active", "is-passed");
         if (idx === currentIdx) {
           el.classList.add("is-active");
-          // Smooth auto-scroll active lyric to center of box
           const offsetTop = el.offsetTop - lyricsContainer.offsetTop - (lyricsContainer.clientHeight / 2) + (el.clientHeight / 2);
           lyricsContainer.scrollTo({ top: offsetTop, behavior: "smooth" });
         } else if (idx < currentIdx) {
@@ -583,7 +630,6 @@ function initMusicPlayer() {
     }
   });
 
-  // Toggle Play / Pause
   function togglePlay() {
     setupAudioContext();
 
@@ -602,6 +648,7 @@ function initMusicPlayer() {
     }
 
     hasPlayedAudio = true;
+    updateProgressHUD();
     checkDay3Completion();
   }
 
@@ -645,7 +692,7 @@ function initMusicPlayer() {
     setPlayingUIState(false);
   });
 
-  // Smooth Scrubber Drag & Click
+  // Scrubber drag & seek
   let isDraggingScrubber = false;
 
   function updateScrubPos(clientX) {
@@ -717,15 +764,11 @@ function initMusicPlayer() {
 
 /**
  * ==========================================================================
- * EXPERIENCE 2: VISUALIZER (Safe connection)
+ * EXPERIENCE 2: VISUALIZER
  * ==========================================================================
  */
 function setupAudioContext() {
-  if (isAudioContextConnected) return;
-
-  if (window.location.protocol === "file:") {
-    return;
-  }
+  if (isAudioContextConnected || window.location.protocol === "file:") return;
 
   const audio = document.getElementById("soundtrackAudio");
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -884,15 +927,123 @@ function initSongMessageReveal() {
     });
 
     hasRevealedMessage = true;
+    updateProgressHUD();
     checkDay3Completion();
   });
+}
+
+/**
+ * ==========================================================================
+ * EXPERIENCE 5: VIP CONCERT TICKET CLAIM & CONFETTI CELEBRATION
+ * ==========================================================================
+ */
+function initConcertTicketExperience() {
+  const claimBtn = document.getElementById("claimTicketBtn");
+  const stampOverlay = document.getElementById("ticketStampOverlay");
+  const actionBox = document.getElementById("ticketActionBox");
+  const claimedBanner = document.getElementById("ticketClaimedBanner");
+
+  if (!claimBtn) return;
+
+  if (hasClaimedTicket) {
+    if (stampOverlay) stampOverlay.style.display = "block";
+    if (actionBox) actionBox.style.display = "none";
+    if (claimedBanner) claimedBanner.style.display = "block";
+    return;
+  }
+
+  claimBtn.addEventListener("click", () => {
+    hasClaimedTicket = true;
+    try {
+      localStorage.setItem("budduu_day3_ticket_claimed", "true");
+    } catch (e) {}
+
+    // 1. Play stamp thud & celebration chime
+    playStampChime();
+
+    // 2. Animate Rubber Stamp Slam
+    if (stampOverlay) stampOverlay.style.display = "block";
+    if (actionBox) actionBox.style.display = "none";
+
+    // 3. Fire Confetti
+    launchTicketConfetti();
+
+    // 4. Reveal celebration banner
+    setTimeout(() => {
+      if (claimedBanner) claimedBanner.style.display = "block";
+    }, 500);
+
+    updateProgressHUD();
+    checkDay3Completion();
+  });
+}
+
+/**
+ * Confetti Canvas Generator (Lightweight, pure JS, no external libraries)
+ */
+function launchTicketConfetti() {
+  const canvas = document.getElementById("day3ConfettiCanvas");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
+  const width = (canvas.width = window.innerWidth);
+  const height = (canvas.height = window.innerHeight);
+
+  const colors = ["#ff416c", "#ff6b4a", "#ffb347", "#52e396", "#ffd700", "#ffffff"];
+  const pieces = [];
+
+  for (let i = 0; i < 90; i++) {
+    pieces.push({
+      x: width / 2 + (Math.random() - 0.5) * 200,
+      y: height / 2,
+      w: Math.random() * 9 + 5,
+      h: Math.random() * 7 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: (Math.random() - 0.5) * 14,
+      vy: Math.random() * -12 - 4,
+      rot: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 8,
+      gravity: 0.38,
+      opacity: 1
+    });
+  }
+
+  let frame = 0;
+  function updateConfetti() {
+    ctx.clearRect(0, 0, width, height);
+
+    pieces.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.rot += p.rotSpeed;
+      p.opacity -= 0.009;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rot * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+
+    frame++;
+    if (frame < 120) {
+      requestAnimationFrame(updateConfetti);
+    } else {
+      ctx.clearRect(0, 0, width, height);
+    }
+  }
+
+  requestAnimationFrame(updateConfetti);
 }
 
 /**
  * Completion Criteria
  */
 function checkDay3Completion() {
-  if (isGameSolved && hasPlayedAudio && hasRevealedMessage) {
+  if (isGameSolved && hasPlayedAudio && hasRevealedMessage && hasClaimedTicket) {
     try {
       localStorage.setItem("budduu_day3_completed", "true");
     } catch (e) {}
@@ -907,7 +1058,7 @@ function renderCompletionView() {
     compSection.style.display = "block";
     setTimeout(() => {
       compSection.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 500);
+    }, 550);
   }
 }
 
