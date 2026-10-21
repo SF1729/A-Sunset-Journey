@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   
   <!-- Styles -->
   <link rel="stylesheet" href="global.css">
@@ -30,12 +30,15 @@
   <!-- Ambient Floating Musical Dust Canvas -->
   <canvas id="day3ParticlesCanvas" class="day3-particles-canvas" aria-hidden="true"></canvas>
 
+  <!-- Confetti Canvas for Ticket Celebration -->
+  <canvas id="day3ConfettiCanvas" class="day3-confetti-canvas" aria-hidden="true"></canvas>
+
   <!-- Navigation Bar -->
   <header class="day3-header">
     <nav class="site-nav" aria-label="Main Navigation">
       <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
         <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <span class="nav-brand-fallback">BUDDUU ❤️</span>
+        <span class="nav-brand-fallback">BUDDUU <span class="heart-pulse">❤️</span></span>
       </a>
       <ul class="nav-links">
         <li><a href="day2.html" class="nav-link">← Day 02</a></li>
@@ -86,7 +89,6 @@
           <button type="button" class="btn-puzzle-tool" id="previewPhotoBtn" aria-label="Preview Full Picture">
             👁️ <span>Preview</span>
           </button>
-          
         </div>
       </div>
 
@@ -169,13 +171,13 @@
         <!-- Progress Indicator -->
         <div class="day3-progress-strip glass-card" role="region" aria-label="Journey Progress">
           <div class="progress-strip-left">
-            <span class="progress-pill-badge">DAY 03 / 10</span>
+            <span class="progress-pill-badge" id="day3StepBadge">DAY 03 / 10 • 30%</span>
             <span class="progress-sub-caption">THE SOUNDTRACK</span>
           </div>
           <div class="progress-strip-track">
             <div class="progress-strip-fill" id="journeyProgressFill" style="width: 30%;"></div>
           </div>
-          <span class="progress-strip-percentage">30%</span>
+          <span class="progress-strip-percentage" id="journeyProgressPct">30%</span>
         </div>
 
         <!-- EXPERIENCE 1 & 2: MUSIC PLAYER, VISUALIZER & SYNCED LYRICS -->
@@ -184,7 +186,7 @@
             <span class="cue-kicker">A SUNSET HARMONY</span>
             <h2 class="cue-title">ONE SONG. ONE FEELING.</h2>
             <p class="cue-sub">“Whenever this melody plays, I start missing you very much.”</p>
-          <p class="cue-sub">("Use Ear Buds For Better Exprience")</p>
+            <p class="cue-sub cue-hint">🎧 Use Earbuds for the best experience</p>
           </div>
 
           <div class="player-and-visualizer-card glass-card" id="playerCardWrapper">
@@ -192,7 +194,7 @@
             <!-- Player Main Grid Deck -->
             <div class="player-main-grid">
               
-              <!-- Album Artwork Wrap (Full Picture Display) -->
+              <!-- Album Artwork Wrap -->
               <div class="album-art-wrap" id="albumArtWrap">
                 <div class="album-vinyl-halo" aria-hidden="true"></div>
                 <div class="album-grooves" aria-hidden="true"></div>
@@ -214,7 +216,7 @@
                   <p class="track-artist-line" id="trackArtistText">Tedduu • For Budduu</p>
                 </div>
 
-                <!-- Custom Scrubbing Progress Bar with Drag support -->
+                <!-- Custom Scrubbing Progress Bar -->
                 <div class="custom-progress-module">
                   <div 
                     class="progress-interactive-bar" 
@@ -278,7 +280,7 @@
               </div>
             </div>
 
-            <!-- LIVE SYNCHRONIZED LYRICS SECTION (Spotify / Apple Music Style) -->
+            <!-- LIVE SYNCHRONIZED LYRICS SECTION -->
             <div class="lyrics-karaoke-wrapper" id="lyricsWrapper">
               <div class="lyrics-header-row">
                 <span class="lyrics-tag">🎵 LIVE SYNCED LYRICS</span>
@@ -291,7 +293,6 @@
 
           </div>
 
-          <!-- Direct HTML5 Audio Element -->
           <audio id="soundtrackAudio" preload="auto" src="song.mp3"></audio>
         </section>
 
@@ -312,7 +313,6 @@
               </button>
             </div>
 
-            <!-- Progressive Staggered Message Blocks -->
             <article class="revealed-song-letter" id="revealedSongLetter" style="display: none;">
               <div class="letter-gilded-divider" aria-hidden="true"></div>
               <div class="message-paragraphs-list" id="messageParagraphsList"></div>
@@ -321,11 +321,201 @@
           </div>
         </section>
 
+        <!-- =========================================================
+             EXPERIENCE 4: SPOTIFY-STYLE FRIENDSHIP WRAPPED 📊
+             ========================================================= -->
+        <section class="wrapped-showcase-section" id="wrappedSection" aria-label="Friendship Wrapped Experience">
+          <div class="section-cue-header">
+            <span class="cue-kicker">TRACK 03 • AUDIO METRICS</span>
+            <h2 class="cue-title">BUDDUU & TEDDUU WRAPPED</h2>
+            <p class="cue-sub">“Data doesn't lie... we are officially each other's favorite habit.”</p>
+          </div>
+
+          <div class="glass-card wrapped-main-card">
+            <header class="wrapped-banner-bar">
+              <div class="wrapped-brand-tag">
+                <span class="spotify-accent-dot">●</span> 2026 WRAPPED • SPECIAL EDITION
+              </div>
+              <span class="wrapped-duo-tag">BUDDUU x TEDDUU</span>
+            </header>
+
+            <!-- Bento Stats Grid -->
+            <div class="wrapped-bento-grid">
+              
+              <!-- Card 1: Top Artist -->
+              <div class="bento-card bento-top-artist">
+                <span class="bento-kicker">#1 ON REPEAT 🎤</span>
+                <h3 class="bento-artist-name">Tedduu x Budduu</h3>
+                <p class="bento-caption">Always playing 24/7 in our head, free of charge with zero ads.</p>
+                <div class="bento-art-halo" aria-hidden="true">👑</div>
+              </div>
+
+              <!-- Card 2: Minutes Listened -->
+              <div class="bento-card bento-minutes">
+                <span class="bento-kicker">MINUTES LISTENED ⏱️</span>
+                <div class="bento-stat-big">999,999+</div>
+                <p class="bento-caption">Listening to each other's chaotic rants, voice notes & comfortable silences.</p>
+              </div>
+
+              <!-- Card 3: Top Mood Genres -->
+              <div class="bento-card bento-genres">
+                <span class="bento-kicker">OUR EMOTIONAL AUDIO MIX 🎭</span>
+                
+                <div class="genre-bar-cluster">
+                  <div class="genre-bar-item">
+                    <div class="genre-meta-row">
+                      <span>Masti & Non-Stop Trolling</span>
+                      <strong>30%</strong>
+                    </div>
+                    <div class="genre-track"><div class="genre-fill fill-masti" style="width: 30%;"></div></div>
+                  </div>
+
+                  <div class="genre-bar-item">
+                    <div class="genre-meta-row">
+                      <span>Drama & Nakhre Jhelna</span>
+                      <strong>30%</strong>
+                    </div>
+                    <div class="genre-track"><div class="genre-fill fill-drama" style="width: 30%;"></div></div>
+                  </div>
+
+                  <div class="genre-bar-item">
+                    <div class="genre-meta-row">
+                      <span>Pure Sukoon & Comfort</span>
+                      <strong>40%</strong>
+                    </div>
+                    <div class="genre-track"><div class="genre-fill fill-sukoon" style="width: 40%;"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: Most Streamed Track -->
+              <div class="bento-card bento-track">
+                <span class="bento-kicker">ALL-TIME ANTHEM 🎵</span>
+                <h4 class="bento-song-title">“Tu Chahiye”</h4>
+                <p class="bento-song-artist">Atif Aslam • Forever Dedication</p>
+                <p class="bento-caption">Played on loop whenever you're missed. No skips allowed.</p>
+              </div>
+
+              <!-- Card 5: Fan Trophy -->
+              <div class="bento-card bento-status">
+                <span class="bento-kicker">LISTENER BADGE 🏆</span>
+                <div class="bento-status-badge">TOP 0.001% VIP</div>
+                <p class="bento-caption">Congratulations! You've unlocked lifetime permanent residence in Tedduu's heart.</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 5: VIP CONCERT TICKET FOR TWO 🎟️
+             ========================================================= -->
+        <section class="concert-ticket-section" id="concertTicketSection" aria-label="VIP Concert Ticket Experience">
+          <div class="section-cue-header">
+            <span class="cue-kicker">TRACK 03 • THE LIFETIME PASS</span>
+            <h2 class="cue-title">VIP CONCERT TICKET FOR TWO</h2>
+            <p class="cue-sub">“One golden pass. Valid across every universe and lifetime.”</p>
+          </div>
+
+          <!-- Luxury Concert Ticket Mockup Frame -->
+          <div class="ticket-presentation-wrap">
+            <article class="luxury-concert-ticket" id="luxuryConcertTicket">
+              
+              <!-- Ticket Left Section (Main Details) -->
+              <div class="ticket-body-left">
+                <div class="ticket-header-lead">
+                  <span class="ticket-tour-badge">★★★ THE LIFETIME TOUR ★★★</span>
+                  <span class="ticket-admit-badge">ADMIT TWO</span>
+                </div>
+
+                <h3 class="ticket-duo-heading">BUDDUU & TEDDUU</h3>
+                <p class="ticket-subtext-tour">World Premiere • An Unbreakable Bond Live in Concert</p>
+
+                <!-- Ticket Meta Details Grid -->
+                <div class="ticket-meta-grid">
+                  <div class="ticket-meta-cell">
+                    <span class="meta-label">VENUE</span>
+                    <strong class="meta-val">Jahan bhi hum dono ho 📍</strong>
+                  </div>
+                  <div class="ticket-meta-cell">
+                    <span class="meta-label">SEAT</span>
+                    <strong class="meta-val">Dil ke sabse kareeb ❤️</strong>
+                  </div>
+                  <div class="ticket-meta-cell">
+                    <span class="meta-label">DATE & TIME</span>
+                    <strong class="meta-val">Forever & Always ♾️</strong>
+                  </div>
+                  <div class="ticket-meta-cell">
+                    <span class="meta-label">GATE</span>
+                    <strong class="meta-val">No Exit Gate</strong>
+                  </div>
+                </div>
+
+                <!-- VIP Perks Ribbon -->
+                <div class="ticket-perks-row">
+                  <span class="perk-chip">☕ Free Chai & Coffee</span>
+                  <span class="perk-chip">📞 24/7 Priority Calls</span>
+                  <span class="perk-chip">🌯 Shorma Dates</span>
+                  <span class="perk-chip">🍲 Briyani Dates</span>
+                  <span class="perk-chip">😤 Don't Forget Me</span>
+                  <span class="perk-chip">👂 Lifetime Rant Listener</span>
+                  <span class="perk-chip">🫩 - 100% Forgetness & Rudeness</span>
+                  <span class="perk-chip">🧡 100% Love & Cuddle</span>
+                  <span class="perk-chip">🛡️ 100% Care & Protection</span>
+                </div>
+              </div>
+
+              <!-- Perforated Notch Divider -->
+              <div class="ticket-perforated-divider" aria-hidden="true">
+                <span class="notch-cutout notch-top"></span>
+                <span class="perforated-dash-line"></span>
+                <span class="notch-cutout notch-bottom"></span>
+              </div>
+
+              <!-- Ticket Right Section (Barcode Stub) -->
+              <div class="ticket-stub-right">
+                <span class="stub-pass-no">PASS #003</span>
+                <div class="ticket-barcode-lines" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <span class="stub-serial">BDU-TDU-2026-FOREVER</span>
+                <div class="stub-security-hologram">✨ VALIDATED</div>
+              </div>
+
+              <!-- Stamped Overlay (Hidden until claimed) -->
+              <div class="ticket-stamp-overlay" id="ticketStampOverlay" style="display: none;" aria-live="assertive">
+                <div class="stamp-seal-badge">
+                  <span>CONFIRMED FOR LIFE ✓</span>
+                </div>
+              </div>
+
+            </article>
+
+            <!-- Claim Button Action Area -->
+            <div class="ticket-action-box" id="ticketActionBox">
+              <button type="button" class="btn btn-primary btn-claim-ticket" id="claimTicketBtn">
+                <span>CLAIM YOUR TICKET</span>
+                <span class="btn-spark" aria-hidden="true">🎟️✨</span>
+              </button>
+            </div>
+
+            <!-- Post-Claim Celebration Toast -->
+            <div class="ticket-claimed-banner" id="ticketClaimedBanner" style="display: none;" aria-live="polite">
+              <span class="claimed-icon-halo">🎉</span>
+              <h4>YOUR LIFETIME PASS IS OFFICIALLY STAMPED!</h4>
+              <p>Yeh ticket humesha ke liye register ho gaya hai. Ab koi refund ya cancellation possible nahi hai! ❤️</p>
+            </div>
+          </div>
+        </section>
+
         <!-- DAY 3 COMPLETION LOCKUP & NEXT STEPS -->
         <section class="day3-completion-section" id="day3CompletionSection" style="display: none;" aria-label="Day 3 Completed">
           <div class="completion-indicator-box">
             <div class="completion-check-icon">✓</div>
-            <span class="completion-pill">CHAPTER 03 COMPLETE</span>
+            <span class="completion-pill">CHAPTER 03 COMPLETE (100%)</span>
+            <span class="completion-pill">Agar Chapter 03 pasand aaya ho toh kuch kar dena mere liye jo aapko karna ho </span>
             <h2 class="completion-next-title">Some memories sound sweeter than words. <span class="letter-heart">❤️</span></h2>
             <p class="completion-subtext">The story continues on tomorrow's page.</p>
           </div>
