@@ -218,62 +218,136 @@
           </div>
         </section>
 
-        <!-- EXPERIENCE 3: SECRET QUESTION -->
-        <section class="secret-question-section" id="secretSection" style="display: none;" aria-label="Secret Question">
-          <div class="glass-card secret-question-card">
-            
-            <!-- Locked State of Secret Question -->
-            <div class="secret-gate-intro" id="secretGateIntro">
-              <span class="secret-tag">EXPERIENCE 03</span>
-              <h3 class="secret-gate-heading">ONE LAST QUESTION...</h3>
-              <p class="secret-gate-subheading">“This one doesn't have a wrong answer.”</p>
-              
-              <button type="button" class="btn btn-primary open-secret-btn" id="openSecretBtn">
-                <span>OPEN SECRET QUESTION</span>
-                <span class="btn-spark-dot" aria-hidden="true">🔐</span>
-              </button>
-            </div>
+       <!-- EXPERIENCE 3: SECRET QUESTIONS -->
+<section class="secret-question-section" id="secretSection"
+  style="display: none;" aria-label="Secret Questions">
 
-            <!-- Unfolded Secret Question & Form -->
-            <div class="secret-revealed-form" id="secretRevealedForm" style="display: none;">
-              <div class="secret-prompt-banner">
-                <span class="secret-lock-unsealed">🔓 UNSEALED</span>
-                <p class="secret-emotional-prompt">
-                  “Agar tu hamari poori journey ki sirf EK yaad hamesha ke liye apne paas rakh sakta...
-                  <br>
-                  <strong>toh woh kaunsi yaad hogi?</strong>”
-                </p>
-              </div>
+  <div class="glass-card secret-question-card">
 
-              <form class="secret-input-form" id="secretInputForm">
-                <div class="textarea-wrap">
-                  <textarea 
-                    id="secretAnswerInput" 
-                    name="budduu_memory"
-                    class="secret-textarea" 
-                    rows="4" 
-                    placeholder="Write whatever comes to your mind... Budduu ❤️" 
-                    aria-label="Your chosen memory to keep forever"
-                    required
-                  ></textarea>
-                </div>
+    <!-- Locked State -->
+    <div class="secret-gate-intro" id="secretGateIntro">
+      <span class="secret-tag">EXPERIENCE 03</span>
+      <h3 class="secret-gate-heading">A FEW LAST QUESTIONS...</h3>
+      <p class="secret-gate-subheading">
+        “These ones don't have a wrong answer. Sirf dil ki baatein.”
+      </p>
 
-                <button type="submit" class="btn btn-primary submit-memory-btn" id="submitSecretBtn">
-                  <span id="submitBtnText">KEEP THIS MEMORY</span>
-                  <span class="btn-heart" aria-hidden="true">❤️</span>
-                </button>
-              </form>
+      <button type="button" class="btn btn-primary open-secret-btn"
+        id="openSecretBtn">
+        <span>OPEN SECRET QUESTIONS</span>
+        <span class="btn-spark-dot" aria-hidden="true">🔐</span>
+      </button>
+    </div>
 
-              <!-- Saved State Toast -->
-              <div class="secret-saved-toast" id="secretSavedToast" style="display: none;" aria-live="polite">
-                <div class="saved-icon">💌</div>
-                <h4>Sent to Tedduu's Heart. <span class="letter-heart">❤️</span></h4>
-                <p>Aapka yeh jawab hamesha ke liye sambhal kar rakh liya gaya hai.</p>
-              </div>
-            </div>
+    <!-- Revealed Questions -->
+    <div class="secret-revealed-form" id="secretRevealedForm"
+      style="display: none;">
 
+      <div class="secret-prompt-banner">
+        <span class="secret-lock-unsealed">🔓 UNSEALED SECRETS</span>
+        <p class="secret-intro-caption">
+          Dil khol kar likhna, Tedduu yeh sab hamesha sambhal kar rakhega. ❤️
+        </p>
+      </div>
+
+      <form class="secret-input-form" id="secretInputForm">
+
+        <!-- Question 1 -->
+        <div class="secret-field-group">
+          <label for="secretAnswer1" class="secret-question-label">
+            <span class="q-number">1.</span>
+            Agar tu hamari poori journey ki sirf
+            <strong>EK yaad</strong> hamesha ke liye apne paas rakh sakti,
+            toh woh kaunsi yaad hogi?
+          </label>
+          <div class="textarea-wrap">
+            <textarea id="secretAnswer1" name="memory_forever"
+              class="secret-textarea" rows="3"
+              placeholder="Woh ek khaas lamha..." required></textarea>
           </div>
-        </section>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="secret-field-group">
+          <label for="secretAnswer2" class="secret-question-label">
+            <span class="q-number">2.</span>
+            Tedduu ki aisi kaunsi aadat ya baat hai jo tujhe sabse zyada
+            <strong>special (ya cute)</strong> lagti hai?
+          </label>
+          <div class="textarea-wrap">
+            <textarea id="secretAnswer2" name="special_habit"
+              class="secret-textarea" rows="3"
+              placeholder="Jo sirf Tedduu karta hai..." required></textarea>
+          </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="secret-field-group">
+          <label for="secretAnswer3" class="secret-question-label">
+            <span class="q-number">3.</span>
+            Aane wale waqt mein humare bond ke liye tera
+            <strong>sabse bada promise</strong> kya hai?
+          </label>
+          <div class="textarea-wrap">
+            <textarea id="secretAnswer3" name="future_promise"
+              class="secret-textarea" rows="3"
+              placeholder="Aane wale waqt ke liye tera promise..." required></textarea>
+          </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="secret-field-group">
+          <label for="secretAnswer4" class="secret-question-label">
+            <span class="q-number">4.</span>
+            Humari aisi kaunsi <strong>memory</strong> hai jise yaad
+            karke aaj bhi tere face pe smile aa jaati hai?
+          </label>
+          <div class="textarea-wrap">
+            <textarea id="secretAnswer4" name="favorite_smile_memory"
+              class="secret-textarea" rows="3"
+              placeholder="Woh memory jo aaj bhi smile laati hai..." required></textarea>
+          </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="secret-field-group">
+          <label for="secretAnswer5" class="secret-question-label">
+            <span class="q-number">5.</span>
+            Agar humare beech kabhi <strong>distance</strong> aa jaaye,
+            toh tu usse <strong>fix</strong> karne ke liye kya karna chahega?
+          </label>
+          <div class="textarea-wrap">
+            <textarea id="secretAnswer5" name="repair_our_bond"
+              class="secret-textarea" rows="3"
+              placeholder="Tu humara bond kaise sambhalna chahega?" required></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary submit-memory-btn"
+          id="submitSecretBtn">
+          <span id="submitBtnText">KEEP THESE MEMORIES</span>
+          <span class="btn-heart" aria-hidden="true">❤️</span>
+        </button>
+
+      </form>
+
+      <!-- Saved State -->
+      <div class="secret-saved-toast" id="secretSavedToast"
+        style="display: none;" aria-live="polite">
+        <div class="saved-icon">💌</div>
+        <h4>
+          Sent to Tedduu's Heart.
+          <span class="letter-heart">❤️</span>
+        </h4>
+        <p>
+          Tere paanchon answers Tedduu ke liye ek special memory
+          banke rahenge. ❤️🫂
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
         <!-- DAY 4 COMPLETION LOCKUP & CHAPTER NAVIGATION -->
         <section class="day4-completion-section" id="day4CompletionSection" style="display: none;" aria-label="Day 4 Completed">
