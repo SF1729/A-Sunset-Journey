@@ -77,25 +77,25 @@ const DAY5_CONFIG = {
       detour: 1,
       title: "The Sudden Turn",
       answers: ["turn", "sudden", "unplanned", "cross", "bypass"],
-      hint: "The direction we took unexpectedly (e.g. 'turn')."
+      hint: "The direction we took unexpectedly (e.g. mai kyu du )."
     },
     {
       detour: 2,
       title: "The Midnight Viewpoint",
       answers: ["midnight", "stars", "night", "3am", "skyline"],
-      hint: "The hour when the sky and conversations were quietest (e.g. 'midnight')."
+      hint: "The hour when the sky and conversations were quietest (e.g. Chal Chala ve)."
     },
     {
       detour: 3,
       title: "The Rainstorm Shelter",
       answers: ["rain", "storm", "shelter", "calm", "safe"],
-      hint: "What falling from the sky made us stand closer? (e.g. 'rain')."
+      hint: "What falling from the sky made us stand closer? (e.g. Meow Gop Gop Gop ...)."
     },
     {
       detour: 4,
       title: "The Golden Horizon",
       answers: ["horizon", "gold", "golden", "sunrise", "sunset", "home"],
-      hint: "The warm view at the end of the road (e.g. 'horizon')."
+      hint: "The warm view at the end of the road (e.g. Asan lag raha tha na )."
     }
   ],
   scrapbookTargetSequence: [1, 2, 3, 4, 5]
