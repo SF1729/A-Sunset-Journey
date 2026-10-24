@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>DAY 06 — THINGS I NEVER SAID | Budduu Journey ✍️💌🎙️</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="day6.css">
+</head>
+<body class="day6-body">
+
+  <!-- Ambient Deep Sunset & Parchment Glow Atmosphere -->
+  <div class="day6-ambient-sky" aria-hidden="true">
+    <div class="sky-base-gradient"></div>
+    <div class="sky-orb-crimson" id="skyOrbCrimson"></div>
+    <div class="sky-orb-coral" id="skyOrbCoral"></div>
+    <div class="sky-orb-amber" id="skyOrbAmber"></div>
+    <div class="ambient-paper-glow"></div>
+    <div class="sky-grain-overlay"></div>
+  </div>
+
+  <!-- Ambient Floating Dust & Ink Sparkles Canvas -->
+  <canvas id="day6ParticlesCanvas" class="day6-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <header class="day6-header">
+    <nav class="site-nav" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
+        <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span class="nav-brand-fallback">BUDDUU ❤️</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="day5.html" class="nav-link">← Day 05</a></li>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="day7.html" class="nav-link" id="navNextDayBtn">Next Day →</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================================================
+       GATE 1: DATE LOCK VIEW (Active before unlock date)
+       ========================================================= -->
+  <section id="day6DateLockedView" class="day6-locked-view" style="display: none;" aria-label="Day 6 Locked by Date">
+    <div class="glass-card locked-card-container">
+      <div class="locked-icon-halo" aria-hidden="true">🔒</div>
+      <span class="locked-tag">DAY 6 • CHAPTER VI</span>
+      <h1 class="locked-heading">SOME THINGS ARE BETTER WRITTEN.</h1>
+      <p class="locked-quote">“Ink waits quietly for its sunset moment…”</p>
+      <div class="locked-date-pill" id="dateLockCountdown">Unlocks on 25 October 2026</div>
+      <div class="locked-actions">
+        <a href="index.html#journey" class="btn btn-primary">← BACK TO JOURNEY</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       GATE 2: THE NO-RETURN MAZE 🌑
+       7 Depth Stages • 6 Clues ['O','B','T','A','B','I'] • Final Code: SHAZAN
+       ========================================================= -->
+  <section id="day6GameLockedView" class="day6-game-lock-view" style="display: none;" aria-label="Day 6 The No-Return Maze">
+    <div class="glass-card maze-puzzle-card">
+      
+      <!-- Maze Header & HUD -->
+      <header class="maze-header">
+        <div class="maze-badge-row">
+          <span class="maze-mode-pill">ONE WRONG TURN CHANGES EVERYTHING</span>
+        </div>
+        <h1 class="maze-main-title">THE NO-RETURN PAHELIYA</h1>
+        <p class="maze-subtitle-lead">
+          Tum ek maze mein trapped ho. Exit saamne hai, lekin us tak pahunchne ke liye <strong>6 clues</strong> collect karne honge aur har clue tumhe paheli suljha kar milega.
+        </p>
+      </header>
+
+      <!-- Status HUD: 3 Lives, Stages, 6 Clue Slots -->
+      <div class="maze-hud-dashboard" role="region" aria-label="Maze Status HUD">
+        <div class="hud-item hud-lives">
+          <span class="hud-label">LIVES REMAINING</span>
+          <div class="lives-container" id="mazeLivesContainer" aria-label="3 lives available">
+            <span class="heart-life" id="life1">❤️</span>
+            <span class="heart-life" id="life2">❤️</span>
+            <span class="heart-life" id="life3">❤️</span>
+          </div>
+        </div>
+
+        <div class="hud-item hud-stage">
+          <span class="hud-label">CURRENT DEPTH</span>
+          <span class="hud-val" id="mazeStageIndicator">STAGE 1 / 7</span>
+        </div>
+
+        <div class="hud-item hud-clues">
+          <span class="hud-label">MEMORY CLUES (6)</span>
+          <div class="clues-slots-row" id="mazeCluesRow">
+            <span class="clue-slot" id="clueSlot1">?</span>
+            <span class="clue-slot" id="clueSlot2">?</span>
+            <span class="clue-slot" id="clueSlot3">?</span>
+            <span class="clue-slot" id="clueSlot4">?</span>
+            <span class="clue-slot" id="clueSlot5">?</span>
+            <span class="clue-slot" id="clueSlot6">?</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maze Chambers Viewport -->
+      <div class="maze-chamber-viewport" id="mazeChamberViewport">
+        
+        <!-- STAGE 1: THE INVISIBLE FORCE -->
+        <div class="maze-stage-panel" id="mazeStage1">
+          <div class="stage-narrative-box">
+            <span class="stage-kicker">STAGE 1: THE INVISIBLE FORCE</span>
+            <h2 class="stage-title">Jo Pakdo Toh Na Mile</h2>
+            <p class="stage-description">
+              Na rang mera, na roop mera, phir bhi ehsaas karaati,<br>
+              Kabhi dheere se gaal chhoo kar, kabhi aandhi ban jaati.<br>
+              Pedon ko main jhoomaaun, baadalon ko door bhagaaun,<br>
+              Patang ko aasman mein le jaun, par khud nazar na aaun.<br>
+              Darwaaze se ghus sakti hoon, bina dastak, bina awaaz,<br>
+              Batao kaun hoon main, jo har jagah karti raaj?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="1" data-choice="correct">
+              <span class="choice-num">OPTION A</span>
+              <span class="choice-label">Hawa 🌬️</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="1" data-choice="wrong">
+              <span class="choice-num">OPTION B</span>
+              <span class="choice-label">Dhunl 🌫️</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="1" data-choice="wrong">
+              <span class="choice-num">OPTION C</span>
+              <span class="choice-label">Khushboo 🌸</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 2: THE SILENT KEEPER -->
+        <div class="maze-stage-panel" id="mazeStage2" style="display: none;">
+          <div class="stage-narrative-box">
+            <span class="stage-kicker">STAGE 2: THE SILENT KEEPER</span>
+            <h2 class="stage-title">Bina Zubaan Ka Raazdaan</h2>
+            <p class="stage-description">
+              Mere andar hazaaron baatein, phir bhi bol na paaun,<br>
+              Khamoshi mein baithne waale ko, duniya bhar ghumaaun.<br>
+              Na main guru, na main dost, phir bhi gyaan sikhaati hoon,<br>
+              Band rahun toh raaz chhupaun, khul jaun toh samjhaati hoon.<br>
+              Mere panne palat-te jao, har panna nayi kahaani,<br>
+              Batao kaun hoon main, jo ban sakti sabki zubaani?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="2" data-choice="wrong">
+              <span class="choice-num">OPTION A</span>
+              <span class="choice-label">Radio 📻</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="2" data-choice="correct">
+              <span class="choice-num">OPTION B</span>
+              <span class="choice-label">Kitaab 📖</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="2" data-choice="wrong">
+              <span class="choice-num">OPTION C</span>
+              <span class="choice-label">Tasveer 🖼️</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 3: THE CANDLE IN THE DARK -->
+        <div class="maze-stage-panel" id="mazeStage3" style="display: none;">
+          <div class="stage-narrative-box danger-box">
+            <span class="stage-kicker danger-tag">STAGE 3: THE NO-RETURN TRIAL ⚠️</span>
+            <h2 class="stage-title">Khud Marjai, Doosron Ko Roshni De</h2>
+            <p class="stage-description">
+              Na main insaan, na jaanwar, phir bhi kaam mein aati,<br>
+              Andheri raat ke sannate mein, roshni bankar chha jaati.<br>
+              Na pair mere, na hi haath, ek jagah par rehti hoon,<br>
+              Apne tan ko dheere-dheere khokar, ujiyara deti hoon.<br>
+              Hawa chale toh kaanp uthun, bujh jaun ek hi pal,<br>
+              Batao kaun hoon main, jo roshan karti mahal?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="3" data-choice="wrong">
+              <span class="choice-num">Option 1</span>
+              <span class="choice-label">Jugnu ✨</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="3" data-choice="correct">
+              <span class="choice-num">Option 2</span>
+              <span class="choice-label">Mombatti 🕯️</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="3" data-choice="wrong">
+              <span class="choice-num">Option 3</span>
+              <span class="choice-label">Torch 🔦</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 4: THE THIRTY-TWO THIEVES -->
+        <div class="maze-stage-panel" id="mazeStage4" style="display: none;">
+          <div class="stage-narrative-box danger-box">
+            <span class="stage-kicker danger-tag">STAGE 4: THE NO-RETURN DECISION ⚠️</span>
+            <h2 class="stage-title">The House of Thirty-Two Thieves</h2>
+            <p class="stage-description">
+              Ek ghar mein battis chor,<br>
+              Din bhar machate shor.<br>
+              Khana aaye toh kaam karein,<br>
+              Batao kaun hain ye sab chor?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="4" data-choice="wrong">
+              <span class="choice-num">Option 1</span>
+              <span class="choice-label">Ungliyan ✋</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="4" data-choice="correct">
+              <span class="choice-num">Option 2</span>
+              <span class="choice-label">Daant 🦷</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="4" data-choice="wrong">
+              <span class="choice-num">Option 3</span>
+              <span class="choice-label">Zubaan 👅</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 5: THE BLACK THREAD -->
+        <div class="maze-stage-panel" id="mazeStage5" style="display: none;">
+          <div class="stage-narrative-box">
+            <span class="stage-kicker">STAGE 5: THE CORRIDOR OF ECHOES</span>
+            <h2 class="stage-title">The Mystery of the Black Thread</h2>
+            <p class="stage-description">
+              Kaali hoon par kauwa nahi,<br>
+              Lambi hoon par rassi nahi.<br>
+              Tel lagao, chamak dikhaun,<br>
+              Batao main kya kehlaun?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="5" data-choice="wrong">
+              <span class="choice-num">Option 1</span>
+              <span class="choice-label">Kaali Rassi 🪢</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="5" data-choice="wrong">
+              <span class="choice-num">Option 2</span>
+              <span class="choice-label">Kauwa 🐦‍⬛</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="5" data-choice="correct">
+              <span class="choice-num">Option 3</span>
+              <span class="choice-label">Choti 🎀</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 6: THE FINAL PIECE -->
+        <div class="maze-stage-panel" id="mazeStage6" style="display: none;">
+          <div class="stage-narrative-box">
+            <span class="stage-kicker">STAGE 6: THE FINAL PIECE</span>
+            <h2 class="stage-title">Waqt Ka Chor</h2>
+            <p class="stage-description">
+              Na main chor hoon, na lutera, phir bhi sab kuch le jaaun,<br>
+              Raja ho ya aam musafir, kisi ke liye na ruk paaun.<br>
+              Bachpan ko jawaani kar doon, jawaani ko yaadon mein,<br>
+              Kal ko aaj bana kar rakh doon, phir chhupa doon baaton mein.<br>
+              Na mujhe baandh sake zanjeer, na rok sake deewaar,<br>
+              Batao kaun hoon main, jo chalta rehta lagataar?
+            </p>
+          </div>
+
+          <div class="maze-options-grid">
+            <button type="button" class="maze-choice-btn" data-stage="6" data-choice="wrong">
+              <span class="choice-num">Option 1</span>
+              <span class="choice-label">Kismat 🔮</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="6" data-choice="wrong">
+              <span class="choice-num">Option 2</span>
+              <span class="choice-label">Yaadein 📸</span>
+            </button>
+            <button type="button" class="maze-choice-btn" data-stage="6" data-choice="correct">
+              <span class="choice-num">Option 3</span>
+              <span class="choice-label">Samay ⏳</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STAGE 7: THE MASTER EXIT KEYPAD -->
+        <div class="maze-stage-panel" id="mazeStage7" style="display: none;">
+          <div class="stage-narrative-box">
+            <span class="stage-kicker">STAGE 7: THE EXIT KEYPAD</span>
+            <h2 class="stage-title">Decode The Master Password</h2>
+            <p class="stage-description">
+              Tumne saare 6 fragments collect kar liye hain.<br><br>
+              <strong class="highlight-code">Shift Reverse (-1) • Rearrange • Unlock</strong><br><br>
+              Fragments ko ek letter peeche shift karo (jaise B → A, T → S), phir un letters ko sahi order mein arrange karke 6-letter secret code banao.
+            </p>
+            <div class="stage-whisper-rule">
+              💡 <strong>Vault Hint:</strong> “Jo Words Puzzle hai unhe samjho or arrange karo aur code enter karo.”
+            </div>
+          </div>
+
+          <div class="maze-terminal-box">
+            <div class="terminal-display">
+              <span class="terminal-prompt">&gt;</span>
+              <input
+                type="text"
+                id="mazePasswordInput"
+                class="terminal-input"
+                placeholder="ENTER 6-LETTER CODE"
+                maxlength="8"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="characters"
+              >
+            </div>
+
+            <div class="terminal-actions">
+              <button type="button" class="btn btn-primary" id="mazeSubmitCodeBtn">
+                <span>UNLOCK EXIT GATE 🔓</span>
+              </button>
+            </div>
+
+            <p class="maze-terminal-status" id="mazeTerminalStatus" aria-live="polite"></p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Maze Toast Messages -->
+      <div class="maze-feedback-toast" id="mazeFeedbackToast" aria-live="polite">Choose your first path carefully.</div>
+
+      <!-- Success Transition Overlay -->
+      <div class="maze-success-overlay" id="mazeSuccessOverlay" style="display: none;" aria-live="assertive">
+        <div class="maze-success-modal glass-card">
+          <div class="maze-spark-halo" aria-hidden="true">✨🗝️✨</div>
+          <span class="maze-status-badge">PAHELIYA SOLVED • ZERO TURNS LEFT</span>
+          <h2 class="maze-success-heading">You Conquered The Paheliya.</h2>
+          <p class="maze-success-subtext">
+            “Chahe kitne bhi pahliya aai cahhe kitna bhi duriya aai <br>
+            <strong>humari dosti hamesha sahi manzil dhoondh leti hai. ❤️</strong>”
+          </p>
+          <div class="maze-loader-track">
+            <div class="maze-loader-fill"></div>
+          </div>
+          <span class="maze-entering-tag">ENTERING THE UNSAID WORDS ARCHIVE...</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       ACTUAL DAY 6 UNLOCKED CONTENT (Sequential Experiences)
+       ========================================================= -->
+  <div id="day6UnlockedView" class="day6-unlocked-view" style="display: none;">
+
+    <!-- CINEMATIC NARRATIVE INTRO -->
+    <section id="day6IntroStage" class="day6-intro-stage" aria-label="Day 6 Narrative Intro">
+      <div class="intro-curtain-glow" aria-hidden="true"></div>
+      <div class="intro-text-cluster" id="introTextCluster">
+        <span class="intro-numeral-tag" id="introTag">DAY 06</span>
+        <h1 class="intro-title-text" id="introTitle">THINGS I NEVER SAID</h1>
+        <p class="intro-whisper-line" id="introLine1">“Some things are easier to say on paper.”</p>
+        <p class="intro-sub-prompt" id="introLine2">So I wrote this one down for you. ❤️</p>
+      </div>
+
+      <button type="button" class="intro-skip-btn" id="skipIntroBtn" aria-label="Skip Introduction">
+        READ THE LETTER ↓
+      </button>
+    </section>
+
+    <!-- MAIN DAY 6 STAGE -->
+    <main id="mainDay6Content" class="day6-main-stage">
+      <div class="day6-container">
+
+        <!-- Progress Indicator Bar (7 Steps) -->
+        <div class="day6-progress-strip glass-card" role="region" aria-label="Journey Progress">
+          <div class="progress-strip-left">
+            <span class="progress-pill-badge" id="day6StepBadge">STEP 1 / 7</span>
+            <span class="progress-sub-caption">THINGS I NEVER SAID</span>
+          </div>
+          <div class="progress-strip-track">
+            <div class="progress-strip-fill" id="day6ProgressFill" style="width: 14%;"></div>
+          </div>
+          <span class="progress-strip-percentage" id="day6ProgressPct">14%</span>
+        </div>
+
+        <!-- EXPERIENCE 1: HANDWRITTEN LETTER -->
+        <section class="letter-showcase-section" id="letterSection" aria-label="Personal Handwritten Letter">
+          <div class="section-cue-header">
+            <span class="cue-kicker">EXPERIENCE 01 &bull; WRITTEN FOR BUDDUU</span>
+            <h2 class="cue-title">FOR YOU.</h2>
+            <p class="cue-sub">“Unfolding words one piece at a time.”</p>
+          </div>
+
+          <div class="letter-scroll-card" id="letterScrollCard">
+            <div class="parchment-texture-overlay" aria-hidden="true"></div>
+            <div class="letter-watermark-seal" aria-hidden="true">💌</div>
+
+            <div class="letter-reading-status-bar">
+              <span class="reading-progress-pill" id="readingProgressPill">LETTER — 1 / 5</span>
+            </div>
+
+            <div class="letter-body-container" id="letterBodyContainer">
+              <!-- Part 1 -->
+              <article class="letter-part-block is-active" id="letterPart1">
+                <h3 class="letter-salutation">Hey Budduu <span class="letter-heart">❤️</span></h3>
+                <p>We're already six days into this little journey.</p>
+                <p>And somehow, I still feel like there are things I haven't said properly.</p>
+                <p>So I'm writing them instead.</p>
+              </article>
+
+              <!-- Part 2 -->
+              <article class="letter-part-block" id="letterPart2" style="display: none;">
+                <p>I hope you know that some people become special without even trying.</p>
+                <p>Not because of one huge moment.</p>
+                <p>But because of hundreds of tiny ones.</p>
+                <p class="letter-list-stanza">
+                  The random conversations.<br>
+                  The stupid jokes.<br>
+                  The unexpected laughs.<br>
+                  The moments that didn't seem important until we looked back at them.
+                </p>
+              </article>
+
+              <!-- Part 3 -->
+              <article class="letter-part-block" id="letterPart3" style="display: none;">
+                <p>Maybe that's what makes someone special.</p>
+                <p>They become part of the ordinary days without you even realizing it.</p>
+                <p>And then one day...</p>
+                <p>you realize those ordinary days became some of your favorite memories.</p>
+              </article>
+
+              <!-- Part 4 -->
+              <article class="letter-part-block" id="letterPart4" style="display: none;">
+                <p>So this letter isn't really about one particular moment.</p>
+                <p>It's about all of them.</p>
+                <p>And about being grateful that they happened.</p>
+              </article>
+
+              <!-- Part 5 -->
+              <article class="letter-part-block letter-final-part" id="letterPart5" style="display: none;">
+                <div class="final-heart-cluster">
+                  <span class="pulsing-heart-seal">💛🧡</span>
+                </div>
+                <div class="letter-end-badge">YOU MADE IT TO THE END OF THIS LETTER.</div>
+              </article>
+            </div>
+
+            <!-- Keep Reading Action Button -->
+            <div class="keep-reading-action-bar" id="keepReadingActionBar">
+              <button type="button" class="btn btn-primary keep-reading-btn" id="keepReadingBtn">
+                <span>KEEP READING</span>
+                <span class="btn-arrow" aria-hidden="true">↓</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 2: VINTAGE ANSWERING MACHINE & CASSETTE DECK 🎙️📼 -->
+        <section class="answering-machine-section" id="voiceMessageSection" aria-label="Vintage Answering Machine">
+          <div class="glass-card answering-machine-card">
+            
+            <header class="section-cue-header">
+              <span class="cue-kicker">EXPERIENCE 02 &bull; VINTAGE CASSETTE MEMO</span>
+              <h2 class="cue-title">TEDDUU'S ANSWERING MACHINE</h2>
+              <p class="cue-sub">“Beep... You have 1 unread voice message waiting on the tape so plese use buds for better experience.”</p>
+            </header>
+
+            <!-- Vintage Cassette Player Chassis -->
+            <div class="vintage-deck-console">
+              
+              <div class="deck-top-bar">
+                <div class="deck-indicator-group">
+                  <span class="deck-led" id="deckLed"></span>
+                  <span class="deck-status-text" id="deckStatusText">STANDBY // READY</span>
+                </div>
+                <div class="deck-counter-lcd">
+                  <span class="lcd-label">INDEX</span>
+                  <span class="lcd-digits" id="deckTimeDigits">00:00</span>
+                </div>
+              </div>
+
+              <!-- Physical Cassette Tape Body -->
+              <div class="vintage-cassette-chassis" id="cassetteChassis">
+                <div class="cassette-label-sticker">
+                  <div class="cassette-label-header">
+                    <span class="tape-brand">MAGNETIC SOUND CORP.</span>
+                    <span class="tape-side-badge">SIDE A</span>
+                  </div>
+                  <h4 class="cassette-title-written">Things I Never Said Out Loud 🧡</h4>
+                  <p class="cassette-artist-tag">From: Tedduu • To: Budduu</p>
+                </div>
+
+                <div class="cassette-window-cutout">
+                  <div class="cassette-spool spool-left" id="spoolLeft">
+                    <span class="spool-cog"></span>
+                  </div>
+                  <div class="tape-bridge-track"></div>
+                  <div class="cassette-spool spool-right" id="spoolRight">
+                    <span class="spool-cog"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Answering Machine Audio Scrubber -->
+              <div 
+                class="machine-scrub-bar" 
+                id="voiceScrubBar" 
+                role="slider" 
+                tabindex="0" 
+                aria-label="Tape playback position"
+                aria-valuemin="0" 
+                aria-valuemax="100" 
+                aria-valuenow="0"
+              >
+                <div class="machine-scrub-fill" id="voiceScrubFill" style="width: 0%;">
+                  <span class="machine-scrub-pin"></span>
+                </div>
+              </div>
+
+              <!-- Mechanical Controls Deck -->
+              <div class="deck-controls-row">
+                <button type="button" class="btn-deck-key btn-deck-play" id="voicePlayBtn" aria-label="Play Answering Machine Message">
+                  <span class="key-icon" id="voicePlayIcon">▶</span>
+                  <span class="key-text" id="voicePlayLabel">PLAY TAPE</span>
+                </button>
+
+                <div class="deck-volume-cluster">
+                  <button type="button" class="btn-deck-mute" id="voiceMuteBtn" aria-label="Mute Audio">
+                    <span id="voiceMuteIcon">🔊</span>
+                  </button>
+                  <input 
+                    type="range" 
+                    id="voiceVolumeSlider" 
+                    class="deck-volume-slider" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value="0.85" 
+                    aria-label="Cassette volume slider"
+                  >
+                </div>
+              </div>
+
+              <!-- Live Synchronized Typewriter Transcript Stream -->
+              <div class="answering-transcript-box" id="answeringTranscriptBox">
+                <div class="transcript-header-row">
+                  <span class="transcript-meta-tag">📟 LIVE TRANSCRIPTION</span>
+                  <span class="transcript-blink-dot" id="transcriptBlinkDot">●</span>
+                </div>
+                <div class="transcript-terminal-screen">
+                  <p class="transcript-typed-line" id="transcriptTypedLine">
+                    [Press PLAY to initialize the tape recorder and hear Tedduu's message...]
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <audio id="voiceAudio" preload="metadata" src="voice.mp3"></audio>
+
+          </div>
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 3: THE 11:11 SECRET WISH CAPSULE 🕯️✨
+             ========================================================= -->
+        <section class="wish-capsule-section" id="wishCapsuleSection" aria-label="The 11:11 Secret Wish">
+          <div class="glass-card wish-capsule-card">
+            
+            <header class="section-cue-header">
+              <span class="cue-kicker">EXPERIENCE 03 &bull; MIDNIGHT CONFESSION</span>
+              <h2 class="cue-title">THE 11:11 SECRET WISH</h2>
+              <p class="cue-sub">“Log 11:11 par maangte hain... maine bhi har baar kuch maanga tha.”</p>
+            </header>
+
+            <div class="wish-clock-container">
+              <!-- Digital Neon 11:11 Clock Display -->
+              <div class="digital-wish-clock" id="digitalWishClock" aria-label="Digital Clock Showing 11:11">
+                <span class="clock-digits">11</span>
+                <span class="clock-colon">:</span>
+                <span class="clock-digits">11</span>
+                <span class="clock-meridiem">PM</span>
+              </div>
+              
+              <p class="wish-lead-prompt">
+                “Kehte hain ghadi par jab 11:11 bajein, toh dil ki sabse gehri dua qubool hoti hai...<br>
+                Jaanna chahta hai Tedduu ne har baar kya maanga tha?”
+              </p>
+
+              <!-- Reveal Button -->
+              <div class="wish-action-wrap" id="wishActionWrap">
+                <button type="button" class="btn btn-primary btn-reveal-wish" id="revealWishBtn">
+                  <span>REVEAL TEDDUU'S 11:11 WISH</span>
+                  <span class="btn-spark-star" aria-hidden="true">🕯️✨</span>
+                </button>
+              </div>
+
+              <!-- Unfolded Golden Wish Box -->
+              <div class="revealed-wish-card" id="revealedWishCard" style="display: none;" aria-live="polite">
+                <div class="wish-ray-halo" aria-hidden="true"></div>
+                <span class="wish-sacred-tag">✦ THE FROZEN MIDNIGHT PRAYER ✦</span>
+                <blockquote class="wish-quote-text">
+                  “Maine har baar har dua mai yahi maga tha ke tu mere saath hamehsa rahe mai tere saath hamehsa rahu , hamare bich me kabhi koi duri naa aai aai bhi toh jaldi cahle jaai , hum saath me job kare aage ki life saath me jiye saath me guzare , har din subha uth kar mai tere se baat karu, tu khush rahe fit rahe cute rahe , bhulna bhul jaai , chize accpet karna sikhe batana sikhe , emotions samjhna sike , or hamehsa tujhe woh sab mile jiska tu haaq daar hai jo tere liye bhetar ho .......”
+                </blockquote>
+                <span class="wish-signoff">— Har 11:11 par sirf tera naam, Tedduu 🧡</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 4: THE HEARTBEAT / FINGERPRINT SENSOR 🖤⚡
+             ========================================================= -->
+        <section class="biometric-heart-section" id="biometricHeartSection" aria-label="Heartbeat Lie Detector">
+          <div class="glass-card biometric-card">
+            
+            <header class="section-cue-header">
+              <span class="cue-kicker">EXPERIENCE 04 &bull; LIE DETECTOR OF THE HEART</span>
+              <h2 class="cue-title">BIOMETRIC OF SILENT FEELINGS</h2>
+              <p class="cue-sub">“Hold your finger on the sensor for 3 seconds. Dil ki dhadkan jhooth nahi bolti.”</p>
+            </header>
+
+            <div class="biometric-interactive-deck">
+              
+              <!-- Scanning Pad Ring -->
+              <div class="scanner-pad-wrapper">
+                <div 
+                  class="fingerprint-sensor-pad" 
+                  id="fingerprintSensorPad" 
+                  role="button" 
+                  tabindex="0" 
+                  aria-label="Fingerprint Sensor. Touch and hold for 3 seconds"
+                >
+                  <!-- SVG Circular Progress Ring -->
+                  <svg class="scanner-progress-ring" viewBox="0 0 160 160" aria-hidden="true">
+                    <circle class="ring-bg" cx="80" cy="80" r="72"></circle>
+                    <circle class="ring-fill" id="scannerRingFill" cx="80" cy="80" r="72"></circle>
+                  </svg>
+
+                  <!-- Scanner Core Icons -->
+                  <div class="sensor-core-glyph" id="sensorCoreGlyph">
+                    <span class="scanner-laser-bar"></span>
+                    <span class="sensor-icon">🧡</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Scanner HUD Status -->
+              <div class="scanner-hud-status">
+                <span class="scanner-status-headline" id="scannerStatusHeadline">[ TOUCH & HOLD SENSOR PAD ]</span>
+                <span class="scanner-pct-indicator" id="scannerPctIndicator">READY &bull; 0%</span>
+              </div>
+
+              <!-- Decoded Result Box (Revealed after 3 sec hold) -->
+              <div class="confession-decoded-modal" id="confessionDecodedModal" style="display: none;" aria-live="assertive">
+                <div class="decoded-check-badge">
+                  <span>CONFESSION DECODED &bull; 100% GENUINE</span>
+                </div>
+                <h3 class="decoded-title">What The Heartbeat Proved:</h3>
+                <blockquote class="decoded-quote">
+                  “Yeh connection koi aam connection nahi hai. Kuch baatein shabdon me nahi, bas dil ki dhadkan se mehsoos ki jaati hain. ❤️”
+                </blockquote>
+                <p class="decoded-footnote">Biometric status: Tedduu's heart is permanently synchronized with Budduu. ♾️</p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 5: WILL YOU GET BLOCKED? 📵 -->
+        <section class="blocked-test-section" id="blockedTestSection" aria-label="Will You Get Blocked?">
+          <div class="glass-card blocked-card">
+            
+            <header class="section-cue-header">
+              <span class="cue-kicker">EXPERIENCE 05 &bull; THE REALITY CHECK</span>
+              <h2 class="cue-title">WILL YOU GET BLOCKED?</h2>
+              <p class="cue-sub">“Ek aakhri sawaal... kya humara connection itna strong hai ya bas ek click ki doori par?”</p>
+            </header>
+
+            <div class="blocked-interactive-box">
+              <div class="blocked-icon-pulse" aria-hidden="true">🚫⚡</div>
+              
+              <p class="blocked-desc-lead">
+                Kabhi-kabhi hum aapas mein baatein chhipa lete hain, par sach zyada der chhup nahi sakta.<br>
+                Chalo ek honest test karke dekhte hain ki kismat aur humara connection kya kehta hai...
+              </p>
+
+              <div class="blocked-action-wrapper">
+                <a 
+                  href="https://block.youtest.me/find?id=vpVA4ui&q=f" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="btn btn-primary btn-blocked-link" 
+                  id="blockedTestLinkBtn"
+                >
+                  <span>TAKE THE TEST NOW ↗</span>
+                </a>
+              </div>
+
+              <p class="blocked-footnote">
+                Click above to take the live test. Don't worry, sach jaisa bhi ho, bond hamesha rahega! 🧡
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- EXPERIENCE 6: THE UNWRITTEN CONTRACT / SILENT PROMISES 🤝📜 -->
+        <section class="silent-promises-section" id="silentPromisesSection" aria-label="The Unwritten Contract">
+          <div class="section-cue-header">
+            <span class="cue-kicker">EXPERIENCE 06 &bull; A SACRED BOND</span>
+            <h2 class="cue-title">THE UNWRITTEN CONTRACT</h2>
+            <p class="cue-sub">“Things I never said out loud, but promise forever.”</p>
+          </div>
+
+          <!-- Royal Golden Parchment Certificate -->
+          <div class="promises-parchment-frame glass-card" id="promisesParchmentFrame">
+            <div class="certificate-inner-border">
+              
+              <!-- Ornamental Corners -->
+              <span class="cert-corner corner-tl">✦</span>
+              <span class="cert-corner corner-tr">✦</span>
+              <span class="cert-corner corner-bl">✦</span>
+              <span class="cert-corner corner-br">✦</span>
+
+              <header class="certificate-header">
+                <span class="cert-badge">LIFETIME COVENANT &bull; NO EXPIRY</span>
+                <h3 class="cert-main-title">THINGS I NEVER SAID OUT LOUD, BUT PROMISE FOREVER</h3>
+                <p class="cert-dedication">Signed in Silence by Tedduu &bull; Dedicated to Budduu ❤️</p>
+                <div class="cert-divider-line"></div>
+              </header>
+
+              <!-- 4 Sacred Unsaid Promises -->
+              <div class="promises-scroll-grid">
+                
+                <div class="promise-item-card">
+                  <span class="promise-num">PROMISE 01</span>
+                  <p class="promise-text">
+                    “Duniya chahe kitni bhi badal jaye, meri priority list me tera number wahi rahega.”
+                  </p>
+                </div>
+
+                <div class="promise-item-card">
+                  <span class="promise-num">PROMISE 02</span>
+                  <p class="promise-text">
+                    “Chahe kitni bhi narazgi ho, hum kabhi ek dusre se door nahi honge.”
+                  </p>
+                </div>
+
+                <div class="promise-item-card">
+                  <span class="promise-num">PROMISE 03</span>
+                  <p class="promise-text">
+                    “Jab tu chup hogi, tab bina bole teri baat samajhne ki koshish hamesha karunga.”
+                  </p>
+                </div>
+
+                <div class="promise-item-card">
+                  <span class="promise-num">PROMISE 04</span>
+                  <p class="promise-text">
+                    “Chahe waqt aur halaat kitne bhi mushkil ho, mera saath aur bharosa hamesha tere saath rahega.”
+                  </p>
+                </div>
+
+              </div>
+
+              <!-- Rubber Stamp Seal Overlay -->
+              <div class="promise-stamp-seal" id="promiseStampSeal" style="display: none;" aria-live="assertive">
+                <div class="stamp-wax-badge">
+                  <span>SEALED IN HEART ❤️</span>
+                </div>
+              </div>
+
+              <!-- Action Area -->
+              <div class="promise-action-container" id="promiseActionContainer">
+                <button type="button" class="btn btn-primary btn-accept-promise" id="acceptPromiseBtn">
+                  <span>ACCEPT THIS SILENT PROMISE</span>
+                  <span class="btn-heart-seal" aria-hidden="true">❤️✨</span>
+                </button>
+              </div>
+
+              <!-- Post-Stamp Confirmation Toast -->
+              <div class="promise-accepted-banner" id="promiseAcceptedBanner" style="display: none;" aria-live="polite">
+                <span class="seal-sparkle-glyph">🤝♾️</span>
+                <h4>PROMISE SEALED FOR A LIFETIME</h4>
+                <p>Aapne yeh silent vaada accept kar liya hai. Yeh bond ab hamesha ke liye locked hai. ❤️</p>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- DAY 6 COMPLETION LOCKUP & CHAPTER NAVIGATION -->
+        <section class="day6-completion-section" id="day6CompletionSection" style="display: none;" aria-label="Day 6 Completed">
+          <div class="completion-indicator-box">
+            <div class="completion-check-icon">✓</div>
+            <span class="completion-pill">DAY 6 COMPLETE (100%)</span>
+            <h2 class="completion-next-title">Six days down... and the bond goes deeper. <span class="letter-heart">❤️</span></h2>
+            <p class="completion-subtext">The unsaid words found their voice today. Four more chapters waiting.</p>
+          </div>
+
+          <div class="day6-foot-nav-cluster">
+            <a href="day5.html" class="btn btn-secondary foot-home-btn">← DAY 5</a>
+            <a href="index.html" class="btn btn-secondary foot-home-btn">HOME</a>
+            <a href="day7.html" class="btn btn-primary foot-next-btn" id="completionNextDayBtn">DAY 7 →</a>
+          </div>
+
+          <div class="day6-signoff-summary">
+            <span class="signoff-tag">DAY 06 SIGN-OFF</span>
+            <h3 class="signoff-title">THINGS I NEVER SAID</h3>
+            <p class="signoff-quote">“Sometimes the deepest feelings speak softly.”</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer day6-site-footer">
+      <div class="day6-container">
+        <h3 class="footer-brand-title">BUDDUU <span class="footer-heart">❤️</span></h3>
+        <p class="footer-journey-caps">10 DAYS &bull; 10 MOMENTS &bull; ONE SPECIAL JOURNEY</p>
+        <p class="footer-signature-line">Made with <span class="footer-heart">❤️</span> for Budduu</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="global.js"></script>
+  <script src="day6.js"></script>
+</body>
+</html>
