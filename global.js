@@ -12,7 +12,7 @@ const JOURNEY_DAYS = [
   { day: 4, title: "HOW WELL DO YOU KNOW ME?", dateStr: "2026-10-23", dateDisplay: "23 OCT 2026", fullDisplay: "23 October 2026", file: "day4.html", icon: "💭" },
   { day: 5, title: "OUR STORY", dateStr: "2026-10-24", dateDisplay: "24 OCT 2026", fullDisplay: "24 October 2026", file: "day5.html", icon: "📖" },
   { day: 6, title: "THINGS I NEVER SAID", dateStr: "2026-10-25", dateDisplay: "25 OCT 2026", fullDisplay: "25 October 2026", file: "day6.html", icon: "💌" },
-  { day: 7, title: "CHOOSE YOUR SURPRISE", dateStr: "2026-10-26", dateDisplay: "26 OCT 2026", fullDisplay: "26 October 2026", file: "day7.html", icon: "🎁" },
+  { day: 7, title: "ZERO HOUR: THE LAST TIMELINE", dateStr: "2026-10-26", dateDisplay: "26 OCT 2026", fullDisplay: "26 October 2026", file: "day7.html", icon: "🎁" },
   { day: 8, title: "OUR LITTLE UNIVERSE", dateStr: "2026-10-27", dateDisplay: "27 OCT 2026", fullDisplay: "27 October 2026", file: "day8.html", icon: "🌌" },
   { day: 9, title: "ONE MORE DAY", dateStr: "2026-10-28", dateDisplay: "28 OCT 2026", fullDisplay: "28 October 2026", file: "day9.html", icon: "⏳" },
   { day: 10, title: "HAPPY BIRTHDAY BUDDUU", dateStr: "2026-10-29", dateDisplay: "29 OCT 2026", fullDisplay: "29 October 2026", file: "day10.html", icon: "🎂" }
