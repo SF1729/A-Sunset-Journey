@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>DAY 07 — ZERO HOUR: THE LAST TIMELINE | Project Omega ⏳🚨</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="day7.css">
+</head>
+<body class="day7-body">
+
+  <!-- Ghost Echo Cursor (Temporal Parallax) -->
+  <div id="ghostCursor" class="ghost-cursor" aria-hidden="true"></div>
+
+  <!-- Sci-Fi Atmosphise: Temporal Distortions, Alarm Pulses & CRT Grid -->
+  <div class="day7-temporal-sky" aria-hidden="true">
+    <div class="facility-grid-mesh"></div>
+    <div class="facility-orb-crimson" id="skyOrbCrimson"></div>
+    <div class="facility-orb-cyan" id="skyOrbCyan"></div>
+    <div class="crt-scanline-layer"></div>
+    <div class="vignette-security-mask"></div>
+  </div>
+
+  <!-- Interactive Temporal Particle Canvas -->
+  <canvas id="day7ParticlesCanvas" class="day7-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Global Modal Dim Backdrop -->
+  <div class="modal-dim-backdrop" id="modalDimBackdrop" style="display: none;" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       FIXED: Modal Log Reader (Shifted to Root Level to Prevent Black Screen)
+       ========================================================= -->
+  <div class="door-chamber-overlay glass-card" id="doorChamberModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="chamberModalTitle">
+    <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+    <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+    <button type="button" class="btn-close-chamber" id="closeDoorModalBtn" aria-label="Close terminal view">&times;</button>
+    
+    <!-- CHAMBER A CONTENT -->
+    <div class="chamber-content-panel" id="panelDoorPast" style="display: none;">
+      <span class="panel-kicker">TERMINAL 01 • TIMELINE PRIME DOSSIER</span>
+      <h3 class="panel-title" id="chamberModalTitle">Incident Archive 04-A: Flawless Alignment</h3>
+      <p class="panel-intro">Inspect the three verified diagnostic sectors from Timeline Prime:</p>
+      
+      <div class="past-relics-cluster">
+        <button type="button" class="relic-item-btn" id="pastRelic1" data-relic="1">
+          <span class="relic-icon">📊</span>
+          <span class="relic-label">Core Telemetry</span>
+          <span class="relic-state" id="relicState1">UNREAD</span>
+        </button>
+        <button type="button" class="relic-item-btn" id="pastRelic2" data-relic="2">
+          <span class="relic-icon">🎙️</span>
+          <span class="relic-label">Victory Audio Tape</span>
+          <span class="relic-state" id="relicState2">UNREAD</span>
+        </button>
+        <button type="button" class="relic-item-btn" id="pastRelic3" data-relic="3">
+          <span class="relic-icon">🔏</span>
+          <span class="relic-label">Architect Key Hash</span>
+          <span class="relic-state" id="relicState3">UNREAD</span>
+        </button>
+      </div>
+
+      <div class="relic-lore-display" id="relicLoreDisplay" style="display: none;">
+        <p class="relic-lore-text" id="relicLoreText"></p>
+      </div>
+
+      <div class="door-success-box" id="pastDoorCompletedBox" style="display: none;">
+        <p class="door-success-msg" id="pastSuccessMsg">✨ “Data extracted: Timeline Prime verified by the Architect.”</p>
+        <button type="button" class="btn btn-primary" id="claimPastFragBtn">EXTRACT RECORD 04-A</button>
+      </div>
+    </div>
+
+    <!-- CHAMBER B CONTENT -->
+    <div class="chamber-content-panel" id="panelDoorImagination" style="display: none;">
+      <span class="panel-kicker">TERMINAL 02 • TIMELINE NULL DISASTER LOG</span>
+      <h3 class="panel-title">Incident Archive 04-B: Cataclysmic Breach</h3>
+      <p class="panel-intro">To bypass the temporal encryption fail-safe, enter the safety glyph sequence in active protocol order:<br><strong>Floating Clock ➔ Inverted Star ➔ Infinite Stair ➔ Celestial Eye</strong></p>
+
+      <div class="imagination-runes-grid">
+        <button type="button" class="btn-imagination-rune" data-glyph="CLOCK">
+          <span class="im-icon">⏳</span>
+          <span class="im-name">Floating Clock</span>
+        </button>
+        <button type="button" class="btn-imagination-rune" data-glyph="STAR">
+          <span class="im-icon">🌟</span>
+          <span class="im-name">Inverted Star</span>
+        </button>
+        <button type="button" class="btn-imagination-rune" data-glyph="STAIR">
+          <span class="im-icon">🪜</span>
+          <span class="im-name">Infinite Stair</span>
+        </button>
+        <button type="button" class="btn-imagination-rune" data-glyph="EYE">
+          <span class="im-icon">👁️</span>
+          <span class="im-name">Celestial Eye</span>
+        </button>
+      </div>
+
+      <div class="imagination-status-track">
+        <span>REGISTERED SEQUENCE:</span>
+        <span class="track-value" id="imTrackValue">NONE</span>
+      </div>
+      <div class="door-feedback" id="imFeedbackText"></div>
+
+      <div class="door-success-box" id="imDoorCompletedBox" style="display: none;">
+        <p class="door-success-msg" id="imSuccessMsg">💥 “Data extracted: Reactor containment breach & total loss logged.”</p>
+        <button type="button" class="btn btn-primary" id="claimImaginationFragBtn">EXTRACT RECORD 04-B</button>
+      </div>
+    </div>
+
+    <!-- CHAMBER C CONTENT -->
+    <div class="chamber-content-panel" id="panelDoorFuture" style="display: none;">
+      <span class="panel-kicker">TERMINAL 03 • EMERGENCY SELF-ERASURE ORDER</span>
+      <h3 class="panel-title">Directive 00-Zero: Memory Purge</h3>
+      <p class="panel-intro">Inspect the Architect's encrypted reasoning for wiping his own identity:</p>
+
+      <div class="future-choices-cluster">
+        <button type="button" class="future-choice-btn" data-choice="1">
+          <span class="choice-icon">🧠</span>
+          <strong class="choice-heading">Reason 1: The Tedduu Paradox</strong>
+          <p class="choice-desc">“In Cycle 001, I hesitated at the moment of erasure because I couldn't bear to lose his. That single hesitation tore reality apart.”</p>
+        </button>
+        <button type="button" class="future-choice-btn" data-choice="2">
+          <span class="choice-icon">🔄</span>
+          <strong class="choice-heading">Reason 2: Clean Slate Evaluation</strong>
+          <p class="choice-desc">“A blank mind evaluates facts without grief. Perhaps without memories, my future self will find the timeline whise she lives.”</p>
+        </button>
+        <button type="button" class="future-choice-btn" data-choice="3">
+          <span class="choice-icon">🧬</span>
+          <strong class="choice-heading">Reason 3: Biometric Trap</strong>
+          <p class="choice-desc">“The facility will only unlock for my DNA. I must return as a stranger to solve what I broke as a desperate creator.”</p>
+        </button>
+      </div>
+
+      <div class="door-success-box" id="futureDoorCompletedBox" style="display: none;">
+        <p class="door-success-msg" id="futureSuccessMsg">🌅 “Data extracted: Total memory wipe confirmed by Architect directive.”</p>
+        <button type="button" class="btn btn-primary" id="claimFutureFragBtn">EXTRACT DIRECTIVE 00-ZERO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Black Mirror Sensory Deprivation Overlay -->
+  <div id="blackMirrorOverlay" class="black-mirror-stage" style="display: none;" aria-hidden="true">
+    <div class="black-mirror-content">
+      <div class="mirror-glitch-line"></div>
+      <p class="mirror-terminal-text" id="mirrorTerminalText"></p>
+      <div class="mirror-scanner-blink"></div>
+    </div>
+  </div>
+
+  <!-- Secret Root Backdoor CLI Console Modal -->
+  <div id="secretTerminalModal" class="secret-terminal-overlay glass-card" style="display: none;" role="dialog" aria-modal="true" aria-label="Omega Root Shell">
+    <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+    <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+    
+    <div class="secret-term-header">
+      <div class="term-traffic-lights">
+        <span class="light red" id="closeSecretTermBtn"></span>
+        <span class="light yellow"></span>
+        <span class="light green"></span>
+      </div>
+      <span class="term-title">OMEGA_KERNEL_V7 // ROOT_DEBUG_SHELL</span>
+      <span class="term-secure-tag">[CONFIDENTIAL]</span>
+    </div>
+
+    <div class="secret-term-body" id="secretTermOutput">
+      <div class="term-log-entry">&gt; PROJECT OMEGA SECURE KERNEL LOADED.</div>
+      <div class="term-log-entry">&gt; WELCOME TO THE UNDOCUMENTED BACKDOOR.</div>
+      <div class="term-log-entry text-cyan">&gt; TYPE &quot;HELP&quot; FOR AVAILABLE OVERRIDE COMMANDS.</div>
+    </div>
+
+    <form id="secretTermForm" class="secret-term-input-row" autocomplete="off">
+      <span class="term-prompt">ARCHITECT@OMEGA:~$&nbsp;</span>
+      <input type="text" id="secretTermInput" class="term-input" spellcheck="false" placeholder="enter command...">
+    </form>
+  </div>
+
+  <!-- HUD Navigation Bar -->
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Facility Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Return to Homepage">
+        <div class="brand-hologram-dot" id="brandHoloDot" title="Triple click for Root Access"></div>
+        <span class="nav-brand-fallback">PROJECT OMEGA</span>
+        <span class="hud-status-chip">FACILITY // SUB-LEVEL 07</span>
+        <span class="hud-chrono-chip" id="hudChronoResidue">CHRONO RESIDUE: -00:00:14.392</span>
+      </a>
+      
+      <div class="header-right-dock">
+        <!-- Audio Synthesizer Control -->
+        <button type="button" class="btn-hud-audio" id="hudAudioToggleBtn" aria-label="Toggle Synth Audio">
+          <span class="audio-wave-bars" aria-hidden="true">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+          </span>
+          <span id="hudAudioLabel">AUDIO: ON</span>
+        </button>
+
+        <ul class="nav-links">
+          <li><a href="day6.html" class="nav-link">← Day 06</a></li>
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="day8.html" class="nav-link" id="navNextDayBtn">Next Day →</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =========================================================
+       GATE 1: DATE LOCK VIEW
+       ========================================================= -->
+  <section id="day7DateLockedView" class="day7-locked-view" style="display: none;" aria-label="Day 7 Locked by Date">
+    <div class="glass-card locked-card-container">
+      <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+      <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+
+      <div class="locked-icon-halo" aria-hidden="true">
+        <span class="lock-glyph">🔒</span>
+        <div class="sonar-ring"></div>
+      </div>
+      
+      <span class="locked-tag">PROJECT OMEGA // CLASSIFIED RESTRICTION</span>
+      <h1 class="locked-heading">TEMPORAL VAULT LOCKED</h1>
+      <p class="locked-quote">“Access coordinates to Project Zero Hour have not yet materialized in this dimensional plane…”</p>
+      
+      <div class="locked-date-pill" id="dateLockCountdown">
+        SYNCHRONIZING: 26 OCTOBER 2026
+      </div>
+
+      <div class="locked-actions">
+        <a href="index.html#journey" class="btn btn-primary">← RETURN TO BASE CO-ORDINATES</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       MAIN UNLOCKED DAY 7 JOURNEY
+       ========================================================= -->
+  <div id="day7UnlockedView" class="day7-unlocked-view" style="display: none;">
+
+    <!-- SCENE 0: CINEMATIC OPENING SCENE -->
+    <section id="dreamOpeningScene" class="dream-opening-stage" aria-label="Zero Hour Opening Scene">
+      <div class="intro-ethiseal-aurora" aria-hidden="true"></div>
+      
+      <div class="intro-content-cluster glass-card">
+        <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+        <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+
+        <div class="telemetry-bar">
+          <span class="pulse-dot-red"></span>
+          <span>FACILITY TELEMETRY: REALITY INTEGRITY 18% // CYCLE 002 ACTIVE</span>
+        </div>
+        
+        <span class="intro-chapter-badge">DAY 07 • SCI-FI THRILLER</span>
+        <h1 class="intro-dream-title" id="openingDreamTitle" data-whisper="I PROMISED TO SAVE YOU, Tedduu">ZERO HOUR: THE LAST TIMELINE</h1>
+        <p class="intro-dream-tagline">“Two incompatible pasts collided. The facility remembers you, even if your memory was erased.”</p>
+        
+        <div class="intro-dream-prose">
+          <p>You stand outside the blast containment bulkheads of Sector 07. The air vibrates with electric ozone and crimson emergency strobes. Civilian security passes are discarded on the floor.</p>
+          <p class="prose-welcome">Approach the terminal scanner. Reclaim what you left behind, Architect. ⏳🚨</p>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-enter-dreamscape" id="enterDreamworldBtn">
+          <span>INITIALIZE SYSTEM BREACH</span>
+          <span class="btn-spark-dot" aria-hidden="true">⚡</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- MAIN STAGE CONTAINER -->
+    <main id="mainDreamStage" class="day7-main-stage" style="display: none;">
+      <div class="container day7-container">
+
+        <!-- Progress Indicator Bar -->
+        <div class="day7-progress-strip glass-card" role="region" aria-label="Mission Progress">
+          <div class="progress-strip-left">
+            <span class="progress-pill-badge" id="day7StepBadge">DAY 07 / 10</span>
+            <span class="progress-sub-caption" id="day7CurrentStageName">EXPERIENCE 01: THE SECURITY BREACH</span>
+          </div>
+          <div class="progress-strip-track">
+            <div class="progress-strip-fill" id="day7ProgressFill" style="width: 25%;"></div>
+          </div>
+          <span class="progress-strip-percentage" id="day7ProgressPct">25%</span>
+        </div>
+
+        <!-- =========================================================
+             EXPERIENCE 1: THE SECURITY BREACH 🚨🖥️
+             ========================================================= -->
+        <section class="experience-section" id="doorsExperienceSection" aria-label="Experience 1: The Security Breach">
+          <div class="section-cue-header">
+            <span class="cue-kicker">EXPERIENCE 01 • ACCESS OVERRIDE &bull; CONTRADICTORY INCIDENTS</span>
+            <h2 class="cue-title" id="cueTitleExp1" data-whisper="WHY DID YOU RETURN TO THIS PLACE?">THE SECURITY BREACH</h2>
+            <p class="cue-sub">“The facility rejected all civilian clearance. Then it recognized your biometric signature.”</p>
+          </div>
+
+          <!-- Interactive Biometric Scanner Console (Hold-to-Sync) -->
+          <div class="security-terminal-card glass-card" id="securityTerminalCard">
+            <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+            
+            <div class="terminal-header-bar">
+              <span class="terminal-indicator red-blink" id="terminalIndicatorDot"></span>
+              <span class="terminal-title">BIOMETRIC SECURITY GATE // FACILITY ACCESS NODE 07</span>
+              <span class="terminal-tag-status" id="terminalStatusTag">LOCKDOWN ACTIVE</span>
+            </div>
+
+            <div class="terminal-body-console">
+              
+              <div class="scanner-interactive-bay">
+                <button type="button" class="biometric-touchpad" id="biometricTouchBtn" aria-label="Press and hold Biometric Scanner">
+                  <div class="scanner-laser-line"></div>
+                  <div class="scanner-glyph-halo">
+                    <svg viewBox="0 0 100 100" class="biometric-fingerprint-svg" aria-hidden="true">
+                      <path d="M50 15 C30 15 15 30 15 50 C15 70 30 85 50 85 C70 85 85 70 85 50 C85 30 70 15 50 15 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                      <path d="M50 25 C36 25 25 36 25 50 C25 64 36 75 50 75 C64 75 75 64 75 50" fill="none" stroke="currentColor" stroke-width="3"/>
+                      <circle cx="50" cy="50" r="12" fill="none" stroke="currentColor" stroke-width="3"/>
+                    </svg>
+                  </div>
+                  <div class="scanner-hold-progress-bar">
+                    <div class="scanner-hold-fill" id="scannerHoldFill"></div>
+                  </div>
+                  <span class="touchpad-caption" id="touchpadCaption">PRESS &amp; HOLD FOR 3s TO SYNC DNA</span>
+                </button>
+              </div>
+
+              <div class="terminal-log-feed" id="terminalLogFeed">
+                <div class="console-line text-dim">&gt; SCANNING SENSOR ARRAY... WAITING FOR SUSTAINED BIOMETRIC INPUT.</div>
+              </div>
+
+              <!-- Overridden Identity Banner -->
+              <div class="console-badge-cluster" id="architectIdentityBadge" style="display: none;">
+                <div class="console-badge-lead">OVERRIDE CONFIRMED: WELCOME BACK, ARCHITECT.</div>
+                <div class="console-meta-grid">
+                  <div>MEMORY PROFILE: <span class="text-crimson">DELETED</span></div>
+                  <div>ACCESS AUTHORITY: <span class="text-cyan">ROOT</span></div>
+                  <div>ANCHOR ATTACHMENT: <span class="text-crimson">Tedduu (CRITICAL)</span></div>
+                  <div>CURRENT CYCLE: <span class="text-cyan">002</span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Contradictory Records Tracker -->
+          <div class="fragments-tracker-tray glass-card">
+            <span class="tracker-title">INCIDENT ARCHIVES TO EXTRACT:</span>
+            <div class="fragments-slots">
+              <div class="fragment-slot" id="fragSlotPast">
+                <span class="frag-icon">📁</span>
+                <span class="frag-label">Archive 04-A: Timeline Prime</span>
+              </div>
+              <div class="fragment-slot" id="fragSlotImagination">
+                <span class="frag-icon">💥</span>
+                <span class="frag-label">Archive 04-B: Timeline Null</span>
+              </div>
+              <div class="fragment-slot" id="fragSlotFuture">
+                <span class="frag-icon">🧠</span>
+                <span class="frag-label">Archive 04-C: Erasure Order</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Contradictory Terminals Grid -->
+          <div class="doors-grid" id="doorsGrid">
+
+            <!-- Terminal A: Prime -->
+            <article class="dream-door-card door-past" id="doorCardPast" tabindex="0">
+              <div class="door-frame-visual">
+                <div class="door-portal-glow past-glow"></div>
+                <div class="door-emblem">⚡</div>
+                <div class="door-status-badge" id="doorBadgePast">ENCRYPTED</div>
+              </div>
+              <div class="door-info">
+                <span class="door-tag">TERMINAL 01</span>
+                <h3 class="door-title">Archive: Timeline Prime</h3>
+                <p class="door-desc">A reality log certifying complete success. The Architect approved timeline alignment without collapse.</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-inspect-door" id="openDoorPastBtn">
+                <span>INSPECT ARCHIVE</span>
+              </button>
+            </article>
+
+            <!-- Terminal B: Null -->
+            <article class="dream-door-card door-imagination" id="doorCardImagination" tabindex="0">
+              <div class="door-frame-visual">
+                <div class="door-portal-glow imagination-glow"></div>
+                <div class="door-emblem">🚨</div>
+                <div class="door-status-badge" id="doorBadgeImagination">ENCRYPTED</div>
+              </div>
+              <div class="door-info">
+                <span class="door-tag">TERMINAL 02</span>
+                <h3 class="door-title">Archive: Timeline Null</h3>
+                <p class="door-desc">Recorded at the identical second: catastrophic core rupture. The entire facility was vaporized.</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-inspect-door" id="openDoorImaginationBtn">
+                <span>INSPECT ARCHIVE</span>
+              </button>
+            </article>
+
+            <!-- Terminal C: Architect's Erasure Order -->
+            <article class="dream-door-card door-future" id="doorCardFuture" tabindex="0">
+              <div class="door-frame-visual">
+                <div class="door-portal-glow future-glow"></div>
+                <div class="door-emblem">🧬</div>
+                <div class="door-status-badge" id="doorBadgeFuture">ENCRYPTED</div>
+              </div>
+              <div class="door-info">
+                <span class="door-tag">TERMINAL 03</span>
+                <h3 class="door-title">Directive 00-Zero</h3>
+                <p class="door-desc">Emergency neuro-erasure directive signed by the Architect to stop his own endless obsession with saving Tedduu.</p>
+              </div>
+              <button type="button" class="btn btn-secondary btn-inspect-door" id="openDoorFutureBtn">
+                <span>INSPECT ARCHIVE</span>
+              </button>
+            </article>
+
+          </div>
+
+          <!-- Secret Passage Unlock -->
+          <div class="illuminated-path-transition" id="doorsCompletedPath" style="display: none;">
+            <div class="passage-awakened-box glass-card">
+              <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+              <span class="passage-glyph">🚨⚡🔓</span>
+              <p class="path-transition-lead">
+                “ALL THREE CONTRADICTORY ARCHIVES COMBINED.<br>
+                <strong>PROJECT ZERO HOUR — CREATOR: THE ARCHITECT.</strong><br>
+                The facility was not built to keep you out. It was built to let you return.”
+              </p>
+              <button type="button" class="btn btn-primary btn-follow-path" id="enterMuseumBtn">
+                <span>ADVANCE TO THE PARADOX PROTOCOL</span>
+                <span class="btn-spark-dot" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 2: THE PARADOX PROTOCOL (5-STAGE LOCK) 🔐
+             ========================================================= -->
+        <section class="experience-section" id="museumExperienceSection" style="display: none;" aria-label="Experience 2: The Paradox Protocol">
+          <div class="section-cue-header">
+            <span class="cue-kicker">EXPERIENCE 02 • SYSTEM STABILIZATION &bull; 5-STAGE CONTAINMENT</span>
+            <h2 class="cue-title" id="cueTitleExp2" data-whisper="YOU CANNOT FIX WHAT BROKE his">THE PARADOX PROTOCOL</h2>
+            <p class="cue-sub">“The facility is tearing between two realities. Solve the five temporal lock protocols to breach the core.”</p>
+          </div>
+
+          <!-- 5-Stage Vault Console -->
+          <div class="glass-card mystery-gate-card day7-rule-lock" id="ruleLockContainer">
+            <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+            <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+
+            <!-- Top Status Bar -->
+            <div class="lock-top-bar">
+              <div class="lock-stage-indicator">
+                <span class="stage-pill-kicker">CONTAINMENT STATUS</span>
+                <span class="stage-counter-tag" id="lockStageLabel">STAGE 1 / 5</span>
+              </div>
+              <div class="lock-attempts-badge" id="lockAttemptsBadge" aria-label="Remaining attempts">
+                <span class="attempts-caption">FAIL-SAFES:</span>
+                <span class="attempts-hearts" id="lockAttemptsIcons">❤️❤️❤️</span>
+              </div>
+            </div>
+
+            <!-- Vault Halo -->
+            <div class="mystery-halo-box" id="vaultHaloBox" aria-hidden="true">
+              <span class="mystery-glow-glyph" id="vaultStatusGlyph">🔐</span>
+            </div>
+
+            <span class="mystery-kicker-tag">TEMPORAL CONTAINMENT CORE</span>
+            <h3 class="mystery-main-title" id="lockTitle" data-whisper="DO NOT LET his FORGET">PARADOX STABILIZER</h3>
+
+            <!-- Rule Parchment -->
+            <div class="lock-rule-parchment" id="lockRuleBox">
+              <div class="rule-spark-line">
+                <span class="rule-icon" id="ruleIcon">📜</span>
+                <span class="rule-kicker" id="ruleKicker">ACTIVE PROTOCOL</span>
+              </div>
+              <p class="rule-instruction" id="ruleInstructionText">
+                Loading containment sequence...
+              </p>
+            </div>
+
+            <!-- Ciphis Key Display -->
+            <div class="ciphis-legend-strip" id="ciphisLegendStrip" style="display: none;">
+              <span class="ciphis-legend-title">TEMPORAL CIPhis MATRIX:</span>
+              <div class="ciphis-legend-items" id="ciphisLegendItems"></div>
+            </div>
+
+            <!-- Sequence Viewing HUD Screen -->
+            <div class="sequence-display-screen" id="sequenceScreen">
+              <div class="screen-corner-brackets"></div>
+              <div class="sequence-status-banner" id="screenStatusText">SYNCHRONIZING READOUT</div>
+              <div class="sequence-nodes-tray" id="sequenceNodesTray"></div>
+            </div>
+
+            <!-- Input Progress Dots -->
+            <div class="input-progress-track">
+              <span class="progress-sub-caption">INPUT REGISTER:</span>
+              <div class="input-dots-cluster" id="inputDotsCluster"></div>
+            </div>
+
+            <!-- 4 Magical Runes / Input Controls -->
+            <div class="runes-control-grid" role="group" aria-label="Temporal Runes">
+              <button type="button" class="btn-dream-rune rune-red" data-color="RED" id="runeBtnRed" aria-label="Crimson Node">
+                <span class="rune-glyph">🔥</span>
+                <span class="rune-name">CRIMSON</span>
+              </button>
+              <button type="button" class="btn-dream-rune rune-blue" data-color="BLUE" id="runeBtnBlue" aria-label="Azure Node">
+                <span class="rune-glyph">💧</span>
+                <span class="rune-name">AZURE</span>
+              </button>
+              <button type="button" class="btn-dream-rune rune-green" data-color="GREEN" id="runeBtnGreen" aria-label="Emerald Node">
+                <span class="rune-glyph">🌿</span>
+                <span class="rune-name">EMERALD</span>
+              </button>
+              <button type="button" class="btn-dream-rune rune-yellow" data-color="YELLOW" id="runeBtnYellow" aria-label="Amber Node">
+                <span class="rune-glyph">⚡</span>
+                <span class="rune-name">AMBER</span>
+              </button>
+            </div>
+
+            <!-- Utilities -->
+            <div class="lock-utility-actions">
+              <button type="button" class="btn-lock-util" id="replaySequenceBtn">
+                <span>👁️ REPLAY TELEMETRY</span>
+              </button>
+              <button type="button" class="btn-lock-util" id="clearInputBtn">
+                <span>↺ PURGE BUFFER</span>
+              </button>
+            </div>
+
+            <!-- Toast -->
+            <div class="mystery-feedback-toast" id="mysteryFeedbackToast" aria-live="polite"></div>
+
+            <!-- Hint Module -->
+            <div class="mystery-hint-wrapper" id="mysteryHintWrapper">
+              <button type="button" class="btn-text-hint" id="requestRiddleHintBtn">QUERY DIAGNOSTIC (HINTS LEFT: <span id="hintsLeftCount">2</span>)</button>
+              <div class="hint-message-box" id="riddleHintBox" style="display: none;">
+                <span class="hint-icon" aria-hidden="true">💡</span>
+                <p id="riddleHintText">“Carefully follow active protocol instructions.”</p>
+              </div>
+            </div>
+
+            <!-- Success Overlay -->
+            <div class="mystery-success-overlay" id="mysterySuccessOverlay" style="display: none;" aria-live="assertive">
+              <div class="mystery-success-modal glass-card">
+                <div class="dream-awakening-spark" aria-hidden="true">🌌🔓⚡</div>
+                <span class="dream-unlocked-tag">CONTAINMENT STABILIZED</span>
+                <h2 class="dream-success-heading">ALL 5 PROTOCOLS RESTORED!</h2>
+                <p class="dream-success-subtext">The temporal floodgates lock into alignment. Recovering damaged transmission...</p>
+                <div class="dream-loader-track">
+                  <div class="dream-loader-fill"></div>
+                </div>
+                <span class="dream-entering-tag">DECRYPTING ARCHITECT AUDIO...</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Damaged Recording Transcript Card -->
+          <div class="illuminated-path-transition" id="museumCompletedPath" style="display: none;">
+            <div class="passage-awakened-box glass-card recording-reveal-box">
+              <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+              
+              <div class="terminal-header-bar">
+                <span class="terminal-indicator green-blink"></span>
+                <span class="terminal-title">DECRYPTED AUDIO TRANSMISSION // ARCHITECT LOG #001</span>
+                
+                <div class="audio-waveform-vis" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+
+              <p class="path-transition-lead recording-prose">
+                “If I remember everything, I'll try to save Tedduu and break physics again.<br><br>
+                If I forget, perhaps I'll finally make the choice I couldn't make before.<br><br>
+                If you're hearing this… <strong>don't assume you're the first version of me.</strong>”
+              </p>
+
+              <button type="button" class="btn btn-primary btn-follow-path" id="enterFinalDreamBtn">
+                <span>ENTER THE TEMPORAL CORE (THE LAST TIMELINE)</span>
+                <span class="btn-spark-dot" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 03: THE LAST TIMELINE & SINGULARITY RESONANCE ⏳🔄
+             ========================================================= -->
+        <section class="experience-section" id="finalDreamSection" style="display: none;" aria-label="Experience 3: The Last Timeline">
+          
+          <!-- Core Decision Chamber -->
+          <div class="final-portal-chamber glass-card" id="finalPortalChamber">
+            <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+            <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+
+            <!-- Animated 3D Reactor Gyro Core -->
+            <div class="temporal-reactor-rig" id="portalVortexRing" aria-hidden="true">
+              <div class="gyro-ring ring-outer"></div>
+              <div class="gyro-ring ring-mid"></div>
+              <div class="gyro-ring ring-inner"></div>
+              <div class="vortex-core" id="reactorCoreVisual"></div>
+              <div class="vortex-conduit-glow"></div>
+            </div>
+            
+            <span class="portal-kicker-tag">TEMPORAL CORE // COLLAPSE CONDUIT</span>
+            <h2 class="portal-chamber-title" id="coreChamberTitle" data-whisper="YOU ARE BOTH THE PRISON AND KEY">THE LAST TIMELINE</h2>
+            <p class="portal-chamber-subtext">
+              Two incompatible histories stand suspended in the core.<br>
+              <strong>Adjust the Singularity Dial to 50.0% to balance realities or lock your restoration path:</strong>
+            </p>
+
+            <!-- Interactive Singularity Resonance Slider -->
+            <div class="singularity-slider-module">
+              <div class="slider-labels-dock">
+                <span class="slider-side-tag side-prime">TIMELINE PRIME (0%)</span>
+                <span class="singularity-needle-readout" id="singularityGauge">RESONANCE: 50.0% [LOCKED]</span>
+                <span class="slider-side-tag side-null">TIMELINE NULL (100%)</span>
+              </div>
+              <input type="range" min="0" max="100" value="50" class="singularity-slider-input" id="singularitySlider" aria-label="Timeline Resonance Dial">
+              <div class="singularity-hint-line" id="singularityStatusLine">Status: Perfectly balanced at the Singularity Point (50.0%). Ready to execute.</div>
+            </div>
+
+            <div class="timeline-choice-dock">
+              <button type="button" class="btn-timeline-choice choice-prime" id="btnChoosePrime">
+                <span class="choice-tag">PRESET A</span>
+                <span class="choice-title">PRIME RESTORATION</span>
+                <span class="choice-detail">Preserve the reality whise the experiment held togethis.</span>
+              </button>
+              
+              <button type="button" class="btn-timeline-choice choice-null" id="btnChooseNull">
+                <span class="choice-tag">PRESET B</span>
+                <span class="choice-title">NULL RESTORATION</span>
+                <span class="choice-detail">Preserve the reality whise the experiment collapsed to ash.</span>
+              </button>
+            </div>
+
+            <!-- Execution Button with Live Stabilization Countdown -->
+            <button type="button" class="btn btn-primary btn-step-portal" id="stepIntoDreamBtn">
+              <span id="stepPortalBtnText">EXECUTE TIMELINE RECONSTRUCTION</span>
+              <span class="btn-spark-dot" aria-hidden="true">🌌</span>
+            </button>
+          </div>
+
+          <!-- Final Sequence & Twist Narrative -->
+          <div class="dream-letter-landscape" id="dreamLetterLandscape" style="display: none;">
+            
+            <div class="letter-preface-banner">
+              <div class="telemetry-stamp text-cyan">REALITY RECONSTRUCTION: COMPLETE // TIMELINE CONFLICT: RESOLVED // ZERO HOUR: CANCELLED</div>
+              <p class="preface-lead-line">“The alarm strobes fade. The facility hums in silence. For three seconds, you believe it is over.”</p>
+            </div>
+
+            <!-- The Architect Final Dispatch -->
+            <article class="glass-card dream-parchment-envelope" id="dreamLetterCard">
+              <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+              <div class="parchment-top-accent" aria-hidden="true"></div>
+              
+              <header class="letter-meta-header">
+                <span class="letter-badge-sub">OPTICAL PLAYBACK // TRANSMISSION 00-FINAL</span>
+                <span class="letter-stamp-heart" aria-hidden="true">⏳</span>
+              </header>
+
+              <div class="letter-paragraphs-stream" id="letterParagraphsStream">
+                <p class="letter-revealed-line letter-salutation-line" id="letterPara1">
+                  The primary monitor flares to life with a blinding cyan strobe. An archival optical recording initializes before you.
+                </p>
+                
+                <p class="letter-revealed-line" id="letterPara2" style="display: none;">
+                  The face on the screen turns to look directly at the terminal camera. It has your scars. Your exact biometric cadence. Your eyes. It is you. The original Architect.
+                </p>
+                
+                <p class="letter-revealed-line" id="letterPara3" style="display: none;">
+                  “If you are reading this dispatch, the restoration worked. You analyzed the incident logs, stabilized the containment protocols, and made the final choice. You felt the rush of saving Tedduu and saving the world.”
+                </p>
+                
+                <p class="letter-revealed-line" id="letterPara4" style="display: none;">
+                  “I wiped my memories because I thought a version of me that forgot my grief could finally break free from it. But the restoration protocol has a flaw I could never engineer away: the moment the facility restores, it arms the experiment again.”
+                </p>
+                
+                <p class="letter-revealed-line letter-signoff" id="letterPara5" style="display: none;">
+                  TERMINAL SYSTEM LOG:<br>
+                  PROJECT ZERO HOUR<br>
+                  COLLAPSE TIMESTAMP: <span class="text-cyan" id="localLoopTimestamp">--:--:--</span><br>
+                  HOST PLATFORM: <span class="text-cyan" id="clientPlatform">SCANNING...</span><br>
+                  RESTORATION STATUS: SUCCESSFUL<br>
+                  MEMORY ERASURE: CONFIRMED<br>
+                  ANCHOR ENTITY: Tedduu<br>
+                  NEXT CYCLE: INITIATED<br>
+                  TERMINATION CONDITION: NEVER SATISFIED
+                </p>
+              </div>
+
+              <div class="letter-actions-dock" id="letterActionsDock">
+                <button type="button" class="btn btn-secondary btn-continue-letter" id="continueLetterBtn">
+                  <span>DECRYPT NEXT RECORD</span>
+                  <span class="btn-arrow" aria-hidden="true">↓</span>
+                </button>
+              </div>
+
+              <div class="letter-completed-lockup" id="letterCompletedLockup" style="display: none;">
+                <p class="letter-closing-whisper text-crimson">
+                  “You can restore reality. You can erase the past. But you cannot escape a mistake you don't remember making.”
+                </p>
+                <div class="cycle-pending-banner">CYCLE 003 — INITIALIZATION PENDING</div>
+                <button type="button" class="btn btn-primary btn-complete-day7" id="completeDay7Btn">
+                  <span>FINALIZE CYCLE REPORT</span>
+                  <span class="btn-spark-dot" aria-hidden="true">⚡</span>
+                </button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- =========================================================
+             DAY 7 COMPLETION SCREEN
+             ========================================================= -->
+        <section class="day7-completion-screen" id="day7CompletionScreen" style="display: none;" aria-label="Day 7 Completed">
+          <div class="completion-vignette-backdrop" aria-hidden="true"></div>
+
+          <div class="completion-content-box">
+            <div class="cyber-corner tl"></div><div class="cyber-corner tr"></div>
+            <div class="cyber-corner bl"></div><div class="cyber-corner br"></div>
+
+            <div class="completion-check-orb" aria-hidden="true">✓</div>
+            <span class="completion-pill-small">CYCLE 002 LOGGED // ZERO HOUR</span>
+            <h2 class="completion-hiso-title">THE ARCHITECT’S PARADOX</h2>
+            <p class="completion-poetic-quote">“The timeline has restored, but the loop is already ticking toward Cycle 003.”</p>
+            
+            <div class="completion-journey-tally">
+              <span class="tally-number">7 / 10</span>
+              <span class="tally-caption">TIMELINE RECONSTRUCTIONS COMPLETE</span>
+            </div>
+
+            <div class="completion-navigation-dock">
+              <a href="index.html" class="btn btn-secondary foot-home-btn">
+                <span>RETURN HOME</span>
+              </a>
+              <a href="day8.html" class="btn btn-primary foot-next-btn" id="completionDay8Btn">
+                <span>CONTINUE TO DAY 8 →</span>
+              </a>
+            </div>
+
+            <div class="completion-signoff-foot">
+              <span class="foot-tag">PROJECT OMEGA HORIZON</span>
+              <p class="foot-whisper">“Three more coordinates remain before total synchronization.”</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer day7-site-footer">
+      <div class="container day7-container">
+        <h3 class="footer-brand-title">Tedduu <span class="footer-heart">❤️</span></h3>
+        <p class="footer-journey-caps">PROJECT OMEGA &bull; 10 DAYS &bull; ONE UNBROKEN TIMELINE</p>
+        <p class="footer-signature-line">Constructed with <span class="footer-heart">🧡</span> for Budduu</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="global.js"></script>
+  <script src="day7.js"></script>
+</body>
+</html>
