@@ -13,7 +13,7 @@
 </head>
 <body class="day8-body">
 
-  <!-- Detective Room Atmosphere: Amber Desk Lamp, Shadows & Film Grain -->
+  <!-- Detective Room Atmosphere -->
   <div class="day8-detective-ambient" aria-hidden="true">
     <div class="ambient-base-slate"></div>
     <div class="desk-lamp-cone" id="deskLampCone"></div>
@@ -41,7 +41,7 @@
   </header>
 
   <!-- =========================================================
-       GATE 1: DATE LOCK VIEW (Controlled via global.js)
+       GATE 1: DATE LOCK VIEW
        ========================================================= -->
   <section id="day8DateLockedView" class="day8-locked-view" style="display: none;" aria-label="Day 8 Locked by Date">
     <div class="glass-card locked-card-container">
@@ -57,12 +57,10 @@
   </section>
 
   <!-- =========================================================
-       GATE 2: RHYTHM TAP LOCK (Case File Audio Frequency Lock)
+       GATE 2: RHYTHM TAP LOCK (Audio Frequency Cypher)
        ========================================================= -->
   <section id="day8RhythmLockView" class="day8-rhythm-view" style="display: none;" aria-label="Day 8 Rhythm Tap Lock">
     <div class="glass-card rhythm-dossier-card">
-      
-      <!-- Confidential File Header -->
       <div class="dossier-header-bar">
         <span class="confidential-badge">CONFIDENTIAL // TOP SECRET</span>
         <span class="case-file-id">CASE NO. 008</span>
@@ -76,13 +74,11 @@
       <h1 class="rhythm-main-title">THE ACOUSTIC CYPHER</h1>
       
       <p class="rhythm-instruction-text">
-        Listen carefully. Memorize the rhythm.<br>
+        Listen carefully. Memorize the 5-beat rhythm.<br>
         <span>Repeat the pattern on the tap pad to unlock the case.</span>
       </p>
 
-      <!-- Waveform Audio Visualizer Preview -->
       <div class="waveform-audio-display" id="waveformDisplay" aria-hidden="true">
-        <div class="wave-track-bar"></div>
         <div class="wave-bar-row">
           <span class="wave-pulse"></span>
           <span class="wave-pulse"></span>
@@ -94,23 +90,19 @@
           <span class="wave-pulse"></span>
           <span class="wave-pulse"></span>
           <span class="wave-pulse"></span>
-          <span class="wave-pulse"></span>
-          <span class="wave-pulse"></span>
         </div>
       </div>
 
-      <!-- 5 Illuminated Rhythm Beat Indicators -->
       <div class="rhythm-led-cluster" role="status" aria-label="Rhythm Beat Progress">
-        <div class="rhythm-led" id="ledBeat0" aria-label="Beat 1">1</div>
-        <div class="rhythm-led" id="ledBeat1" aria-label="Beat 2">2</div>
-        <div class="rhythm-led" id="ledBeat2" aria-label="Beat 3">3</div>
-        <div class="rhythm-led" id="ledBeat3" aria-label="Beat 4">4</div>
-        <div class="rhythm-led" id="ledBeat4" aria-label="Beat 5">5</div>
+        <div class="rhythm-led" id="ledBeat0">1</div>
+        <div class="rhythm-led" id="ledBeat1">2</div>
+        <div class="rhythm-led" id="ledBeat2">3</div>
+        <div class="rhythm-led" id="ledBeat3">4</div>
+        <div class="rhythm-led" id="ledBeat4">5</div>
       </div>
 
       <div class="rhythm-status-label" id="rhythmStatusLabel">CASE FILE LOCKED • AWAITING DEMO</div>
 
-      <!-- Controls: Play Rhythm Demo & Repeat -->
       <div class="rhythm-controls-row">
         <button type="button" class="btn btn-secondary listen-rhythm-btn" id="listenRhythmBtn">
           <span>LISTEN TO THE RHYTHM</span>
@@ -118,7 +110,6 @@
         </button>
       </div>
 
-      <!-- Interactive Tap Area -->
       <div class="rhythm-input-zone" id="rhythmInputZone">
         <button type="button" class="rhythm-tap-pad" id="rhythmTapPad" aria-label="Tap to repeat rhythm beat">
           <span class="tap-pad-icon">🎙️</span>
@@ -127,25 +118,23 @@
         </button>
       </div>
 
-      <!-- Feedback Toast & Hint -->
       <div class="rhythm-feedback-toast" id="rhythmFeedbackToast" aria-live="polite"></div>
 
-      <!-- Success Dossier Stamp Overlay -->
+      <!-- Success Dossier Stamp Modal -->
       <div class="rhythm-success-overlay" id="rhythmSuccessOverlay" style="display: none;" aria-live="assertive">
         <div class="glass-card rhythm-stamp-modal">
-          <div class="access-granted-stamp" id="accessGrantedStamp">ACCESS GRANTED</div>
-          <h2 class="stamp-modal-heading">The Rhythm Matched.</h2>
-          <p class="stamp-modal-subtext">Case No. 008 is unsealed. <span class="letter-heart">❤️</span></p>
+          <div class="access-granted-stamp">ACCESS GRANTED</div>
+          <h2 class="stamp-modal-heading">Frequency Verified.</h2>
+          <p class="stamp-modal-subtext">Case No. 008 unsealed. Welcome Detective Budduu. <span class="letter-heart">❤️</span></p>
           <div class="dossier-loader-track">
             <div class="dossier-loader-fill"></div>
           </div>
           <button type="button" class="btn btn-primary btn-open-case" id="openCaseFileBtn">
-            <span>OPEN CASE FILE</span>
+            <span>ENTER THE ARCHIVE</span>
             <span class="btn-spark-dot" aria-hidden="true">📂</span>
           </button>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -154,22 +143,21 @@
        ========================================================= -->
   <div id="day8UnlockedView" class="day8-unlocked-view" style="display: none;">
 
-    <!-- INVESTIGATION BRIEFING INTRO -->
+    <!-- BRIEFING INTRO -->
     <section id="investigationBriefingStage" class="investigation-briefing-stage" aria-label="Case Briefing Intro">
       <div class="glass-card briefing-envelope-card">
         <div class="briefing-tape-mark" aria-hidden="true"></div>
         <span class="briefing-folder-tag">CLASSIFIED DOSSIER // DEPT. OF MEMORIES</span>
         <h1 class="briefing-case-title">CASE NO. 008</h1>
-        <p class="briefing-tagline">“Every friendship has a story. Every story leaves evidence.”</p>
+        <p class="briefing-tagline">“Every friendship leaves evidence. But not everything is visible to the naked eye.”</p>
         
         <div class="briefing-dispatch-prose">
-          <p>A confidential file has appeared on the desk.</p>
-          <p>Inside it are unexplained memories, hidden clues, and evidence connected to one particular friendship.</p>
-          <p class="briefing-highlight">Your mission: investigate the evidence, connect the clues, and discover what's really inside the file.</p>
+          <p>An anomalous case file has landed on your desk containing classified photographs, intercepted audio memos, and an encrypted brass cryptex.</p>
+          <p class="briefing-highlight">Your objectives: Inspect evidence under Forensic UV light, tune the wiretap frequency, deduce the yarn pins, and crack the cryptex code.</p>
         </div>
 
         <button type="button" class="btn btn-primary btn-begin-investigation" id="beginInvestigationBtn">
-          <span>BEGIN INVESTIGATION</span>
+          <span>COMMENCE INVESTIGATION</span>
           <span class="btn-spark-dot" aria-hidden="true">🔍</span>
         </button>
       </div>
@@ -179,103 +167,107 @@
     <main id="mainInvestigationStage" class="day8-main-stage" style="display: none;">
       <div class="container">
 
-        <!-- Progress Indicator Bar -->
-        <div class="day8-progress-strip glass-card" role="region" aria-label="Journey Progress">
+        <!-- Progress Bar -->
+        <div class="day8-progress-strip glass-card">
           <div class="progress-strip-left">
-            <span class="progress-pill-badge">DAY 08 / 10 • 80%</span>
+            <span class="progress-pill-badge" id="caseStageBadge">STAGE 1 / 4 • 25%</span>
             <span class="progress-sub-caption">THE FRIENDSHIP FILES</span>
           </div>
           <div class="progress-strip-track">
-            <div class="progress-strip-fill" style="width: 80%;"></div>
+            <div class="progress-strip-fill" id="caseStageFill" style="width: 25%;"></div>
           </div>
-          <span class="progress-strip-percentage">80%</span>
+          <span class="progress-strip-percentage" id="caseStagePercent">25%</span>
         </div>
 
         <!-- =========================================================
-             EXPERIENCE 1: THE EVIDENCE ROOM
+             EXPERIENCE 1: THE FORENSIC EVIDENCE DESK (UV LIGHT)
              ========================================================= -->
-        <section class="investigation-section" id="evidenceRoomSection" aria-label="Experience 1: The Evidence Room">
+        <section class="investigation-section" id="evidenceRoomSection" aria-label="Experience 1: The Forensic Evidence Desk">
           <div class="section-cue-header">
-            <span class="cue-kicker">EXPERIENCE 01 • CRIME SCENE DESK</span>
+            <span class="cue-kicker">EXPERIENCE 01 • FORENSIC DESK</span>
             <h2 class="cue-title">THE EVIDENCE ROOM</h2>
-            <p class="cue-sub">“Three pieces of unscripted evidence pinned to the cork board. Inspect each one.”</p>
+            <p class="cue-sub">“Some truths are written in invisible ink. Switch on the UV torch to reveal what's hidden.”</p>
           </div>
 
-          <!-- Counter Pill -->
-          <div class="investigation-counter-cluster">
-            <span class="counter-badge" id="evidenceCounterBadge">EVIDENCE COLLECTED: 0 / 3</span>
+          <!-- UV Flashlight Control Deck -->
+          <div class="forensic-tool-toolbar">
+            <button type="button" class="btn uv-toggle-btn" id="uvToggleBtn">
+              <span class="uv-btn-glyph">🔦</span>
+              <span id="uvBtnText">ACTIVATE UV FORENSIC LIGHT</span>
+            </button>
+            <span class="counter-badge" id="evidenceCounterBadge">EVIDENCE INSPECTED: 0 / 3</span>
           </div>
 
-          <!-- Connected Cork Board Frame -->
+          <!-- Evidence Cork Board with UV Glow Layer -->
           <div class="evidence-board-frame" id="evidenceBoardFrame">
             <div class="cork-texture-layer" aria-hidden="true"></div>
             
+            <!-- UV Spotlight Beam Mask -->
+            <div class="uv-beam-mask" id="uvBeamMask" aria-hidden="true"></div>
+
             <div class="evidence-items-row">
               
-              <!-- Evidence A: The Photograph -->
-              <article 
-                class="evidence-pin-card item-photograph" 
-                id="evidenceCardA" 
-                role="button" 
-                tabindex="0" 
-                data-evidence="A" 
-                aria-label="Inspect Evidence A: The Photograph"
-              >
-                <div class="pinned-thumbtack tack-red" aria-hidden="true"></div>
+              <!-- Evidence A: Polaroid Photo -->
+              <article class="evidence-pin-card item-photograph" id="evidenceCardA" role="button" tabindex="0" data-evidence="A">
+                <div class="pinned-thumbtack tack-red"></div>
                 <div class="polaroid-photo-frame">
                   <div class="evidence-tag-flag">TAG #01</div>
                   <div class="photo-visual-box">
                     <img src="memory3.jpg" alt="Evidence 1" class="evidence-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="photo-fallback-symbol">📷</div>
+                    <!-- UV Hidden Stamp -->
+                    <div class="uv-hidden-glyph uv-stamp-photo">
+                      <span class="uv-fingerprint">🖐️</span>
+                      <span class="uv-digit-box">[ 8 ]</span>
+                      <span class="uv-tiny-clue">CYPHER DIGIT 1</span>
+                    </div>
                   </div>
                   <span class="photo-label-script">“THE UNPLANNED SNAPSHOT”</span>
                   <span class="evidence-status-pill" id="statusPillA">UNINSPECTED</span>
                 </div>
               </article>
 
-              <!-- Evidence B: The Classified Note -->
-              <article 
-                class="evidence-pin-card item-classified-note" 
-                id="evidenceCardB" 
-                role="button" 
-                tabindex="0" 
-                data-evidence="B" 
-                aria-label="Inspect Evidence B: The Classified Note"
-              >
-                <div class="pinned-thumbtack tack-amber" aria-hidden="true"></div>
+              <!-- Evidence B: Classified Note -->
+              <article class="evidence-pin-card item-classified-note" id="evidenceCardB" role="button" tabindex="0" data-evidence="B">
+                <div class="pinned-thumbtack tack-amber"></div>
                 <div class="parchment-dossier-paper">
                   <div class="evidence-tag-flag">TAG #02</div>
                   <div class="document-seal-icon">📜</div>
-                  <h3 class="document-title">INTERCEPTED MEMORANDUM</h3>
-                  <p class="document-snippet">“CONFIDENTIAL REPORT ON SUBJECT BUDDUU...”</p>
+                  <h3 class="document-title">INTERCEPTED REPORT</h3>
+                  <p class="document-snippet">“MEMORANDUM ON SUBJECT BUDDUU...”</p>
+                  <!-- UV Hidden Ink in Note -->
+                  <div class="uv-hidden-glyph uv-stamp-note">
+                    <span class="uv-note-glow">“No silence ever broke it.”</span>
+                    <span class="uv-digit-box">[ 2 ]</span>
+                    <span class="uv-tiny-clue">CYPHER DIGIT 2</span>
+                  </div>
                   <span class="evidence-status-pill" id="statusPillB">UNINSPECTED</span>
                 </div>
               </article>
 
-              <!-- Evidence C: The Mysterious Object -->
-              <article 
-                class="evidence-pin-card item-mysterious-object" 
-                id="evidenceCardC" 
-                role="button" 
-                tabindex="0" 
-                data-evidence="C" 
-                aria-label="Inspect Evidence C: The Mysterious Object"
-              >
-                <div class="pinned-thumbtack tack-gold" aria-hidden="true"></div>
+              <!-- Evidence C: Mysterious Artifact -->
+              <article class="evidence-pin-card item-mysterious-object" id="evidenceCardC" role="button" tabindex="0" data-evidence="C">
+                <div class="pinned-thumbtack tack-gold"></div>
                 <div class="mysterious-artifact-box">
                   <div class="evidence-tag-flag">TAG #03</div>
                   <div class="artifact-visual-icon">🗝️</div>
-                  <h3 class="artifact-title">THE CIPHER KEY</h3>
-                  <p class="artifact-snippet">“AN UNKNOWN EMBLEM ENGRAVED IN BRASS...”</p>
+                  <h3 class="artifact-title">BRASS RECEIVER KEY</h3>
+                  <p class="artifact-snippet">“AN UNKNOWN FREQUENCY TUNER KEY...”</p>
+                  <!-- UV Hidden Frequency Clue -->
+                  <div class="uv-hidden-glyph uv-stamp-artifact">
+                    <span class="uv-freq-glow">SURVEILLANCE FREQ:</span>
+                    <span class="uv-freq-val">104.2 MHz</span>
+                    <span class="uv-tiny-clue">TUNE RADIO HERE</span>
+                  </div>
                   <span class="evidence-status-pill" id="statusPillC">UNINSPECTED</span>
                 </div>
               </article>
 
             </div>
 
-            <!-- Magnifying Glass Inspection Drawer / Modal -->
+            <!-- Magnifying Inspection Modal -->
             <div class="inspection-drawer-overlay" id="inspectionOverlay" style="display: none;">
-              <div class="glass-card inspection-modal-dossier" id="inspectionModalDossier">
+              <div class="glass-card inspection-modal-dossier">
                 <div class="modal-magnifier-beam" aria-hidden="true">
                   <span class="glass-lens">🔍</span>
                 </div>
@@ -289,101 +281,88 @@
                   <strong>DISCOVERED CLUE:</strong> <span id="modalClueText">“...”</span>
                 </div>
                 <button type="button" class="btn btn-secondary btn-close-inspection" id="closeInspectionBtn">
-                  <span>← RETURN TO EVIDENCE BOARD</span>
+                  <span>← RETURN TO FORENSIC BOARD</span>
                 </button>
               </div>
             </div>
 
           </div>
 
-          <!-- Experience 1 Completion Banner & Transition -->
+          <!-- Gate to Experience 2 -->
           <div class="evidence-completion-gate" id="evidenceCompletionGate" style="display: none;">
             <p class="evidence-gate-summary">
-              “Three pieces of evidence collected.<br>
-              <strong>One story connecting every single one of them.</strong>”
+              “All three pieces of forensic evidence recovered.<br>
+              <strong>The brass key points to a surveillance radio frequency at 104.2 MHz.</strong>”
             </p>
-            <button type="button" class="btn btn-primary btn-connect-clues" id="btnGoToConnectClues">
-              <span>CONNECT THE CLUES</span>
-              <span class="btn-spark-dot" aria-hidden="true">🧶</span>
+            <button type="button" class="btn btn-primary btn-advance-exp" id="btnGoToRadioWiretap">
+              <span>PROCEED TO SURVEILLANCE RADIO</span>
+              <span class="btn-spark-dot" aria-hidden="true">📻</span>
             </button>
           </div>
         </section>
 
         <!-- =========================================================
-             EXPERIENCE 2: CONNECT THE CLUES
+             EXPERIENCE 2: THE WIRETAP RADIO TUNER (AUDIO DECODING)
              ========================================================= -->
-        <section class="investigation-section" id="connectCluesSection" style="display: none;" aria-label="Experience 2: Connect the Clues">
+        <section class="investigation-section" id="wiretapRadioSection" style="display: none;" aria-label="Experience 2: The Wiretap Radio Tuner">
           <div class="section-cue-header">
-            <span class="cue-kicker">EXPERIENCE 02 • THE RED STRING BOARD</span>
-            <h2 class="cue-title">CONNECT THE CLUES</h2>
-            <p class="cue-sub">“Follow the threads of memory to decode the final keyword.”</p>
+            <span class="cue-kicker">EXPERIENCE 02 • AUDIO SURVEILLANCE</span>
+            <h2 class="cue-title">THE WIRETAP TUNER</h2>
+            <p class="cue-sub">“An encrypted radio dispatch is drowning in static. Dial to the frequency found on the brass key.”</p>
           </div>
 
-          <!-- Red String Case Board -->
-          <div class="clue-connection-board glass-card" id="clueConnectionBoard">
+          <div class="radio-receiver-chassis glass-card">
             
-            <!-- Red Thread SVG Lines Layer -->
-            <svg class="red-string-canvas" id="redStringCanvas" aria-hidden="true">
-              <line id="stringLine1" x1="20%" y1="28%" x2="50%" y2="60%" class="thread-line" />
-              <line id="stringLine2" x1="80%" y1="28%" x2="50%" y2="60%" class="thread-line" />
-              <line id="stringLine3" x1="50%" y1="18%" x2="50%" y2="60%" class="thread-line" />
-            </svg>
-
-            <!-- 3 Clue Node Cards -->
-            <div class="clue-nodes-grid">
-              
-              <div class="clue-node-card" id="clueNode1">
-                <span class="node-pin-badge">CLUE 01</span>
-                <p class="node-lead-text">From the Photograph:</p>
-                <div class="node-clue-highlight" id="clueTextA">“Every laugh started unscripted.”</div>
-              </div>
-
-              <div class="clue-node-card" id="clueNode2">
-                <span class="node-pin-badge">CLUE 02</span>
-                <p class="node-lead-text">From the Classified Note:</p>
-                <div class="node-clue-highlight" id="clueTextB">“No distance or silence ever broke it.”</div>
-              </div>
-
-              <div class="clue-node-card" id="clueNode3">
-                <span class="node-pin-badge">CLUE 03</span>
-                <p class="node-lead-text">From the Cipher Key:</p>
-                <div class="node-clue-highlight" id="clueTextC">“The bond has no expiration date.”</div>
-              </div>
-
-            </div>
-
-            <!-- Interactive Deduction Puzzle Module -->
-            <div class="deduction-puzzle-box" id="deductionPuzzleBox">
-              <span class="deduction-kicker">INTERACTIVE DEDUCTION</span>
-              <h3 class="deduction-question" id="deductionQuestion">
-                What single truth is proven by all three pieces of evidence?
-              </h3>
-
-              <div class="deduction-options-grid" id="deductionOptionsGrid" role="group" aria-label="Investigation deduction options">
-                <!-- Populated dynamically by day8.js -->
-              </div>
-
-              <div class="puzzle-feedback-toast" id="cluesPuzzleFeedback" aria-live="polite"></div>
-
-              <div class="puzzle-hint-dock" id="cluesHintDock" style="display: none;">
-                <button type="button" class="btn-text-hint" id="requestClueHintBtn">NEED A DETECTIVE HINT?</button>
-                <p class="hint-inline-text" id="clueHintText" style="display: none;">
-                  “Look for the phrase that means this friendship can never be broken.”
-                </p>
+            <div class="radio-header-panel">
+              <span class="receiver-model">MIL-SPEC SURVEILLANCE // MODEL R-104</span>
+              <div class="signal-strength-meter">
+                <span class="meter-label">SIGNAL STRENGTH:</span>
+                <div class="meter-bar-track">
+                  <div class="meter-bar-fill" id="radioSignalFill" style="width: 12%;"></div>
+                </div>
+                <span class="meter-value" id="radioSignalPercent">12%</span>
               </div>
             </div>
 
-            <!-- Puzzle Solved State Banner -->
-            <div class="clues-solved-banner" id="cluesSolvedBanner" style="display: none;">
-              <div class="solved-red-stamp">VERIFIED BY EVIDENCE</div>
-              <h3 class="solved-heading">THE CLUES CONNECTED.</h3>
-              <p class="solved-keyword-callout">
-                KEYWORD DECODED: <strong id="decodedKeywordText">UNBREAKABLE BOND</strong>
+            <!-- Radio Frequency Needle Display -->
+            <div class="radio-dial-glass">
+              <div class="freq-scale-markings">
+                <span>88.0</span>
+                <span>92.0</span>
+                <span>96.0</span>
+                <span>100.0</span>
+                <span class="target-marker-hint">104.2</span>
+                <span>108.0</span>
+              </div>
+              <div class="radio-dial-needle" id="radioDialNeedle" style="left: 15%;"></div>
+            </div>
+
+            <!-- Frequency Tuning Slider Control -->
+            <div class="tuner-control-rack">
+              <label for="radioFreqSlider" class="tuner-readout-label">
+                FREQUENCY: <strong id="radioFreqDisplay">89.4 MHz</strong>
+              </label>
+              <input type="range" min="88.0" max="108.0" step="0.1" value="89.4" class="radio-freq-slider" id="radioFreqSlider" aria-label="Frequency tuning dial">
+            </div>
+
+            <!-- Dynamic Decrypted Surveillance Transcript Box -->
+            <div class="radio-transcript-terminal" id="radioTranscriptBox">
+              <div class="terminal-status-light blinking-amber" id="radioStatusDot"></div>
+              <p class="transcript-line" id="radioTranscriptText">
+                [HEAVY STATIC NOISE] ...sshhhhh... tune into 104.2 MHz to de-scramble the audio carrier wave...
               </p>
-              <p class="solved-subtext">The evidence points to one final file.</p>
-              <button type="button" class="btn btn-primary btn-unlock-final-file" id="btnUnlockFinalFile">
-                <span>UNLOCK FINAL CASE FILE</span>
-                <span class="btn-spark-dot" aria-hidden="true">📂</span>
+            </div>
+
+            <!-- Radio Decoded Success Action -->
+            <div class="wiretap-solved-block" id="wiretapSolvedBlock" style="display: none;">
+              <div class="solved-green-badge">FREQUENCY LOCKED & VERIFIED</div>
+              <p class="wiretap-solved-prose">
+                “Intercepted audio note confirmed: The third cryptex digit is <strong>[ 7 ]</strong>.<br>
+                All 3 clues are ready for the red thread deduction board.”
+              </p>
+              <button type="button" class="btn btn-primary btn-advance-exp" id="btnGoToYarnBoard">
+                <span>OPEN RED THREAD BOARD</span>
+                <span class="btn-spark-dot" aria-hidden="true">🧶</span>
               </button>
             </div>
 
@@ -391,29 +370,131 @@
         </section>
 
         <!-- =========================================================
-             EXPERIENCE 3: THE FINAL CASE FILE & PERSONAL LETTER
+             EXPERIENCE 3: RED THREAD BOARD + BRASS CRYPTEX LOCK
              ========================================================= -->
-        <section class="investigation-section" id="finalCaseFileSection" style="display: none;" aria-label="Experience 3: The Final Case File">
+        <section class="investigation-section" id="yarnCryptexSection" style="display: none;" aria-label="Experience 3: Connect the Clues & Cryptex Lock">
+          <div class="section-cue-header">
+            <span class="cue-kicker">EXPERIENCE 03 • DEDUCTION & VAULT</span>
+            <h2 class="cue-title">THE RED THREAD & THE CRYPTEX</h2>
+            <p class="cue-sub">“Link the authentic memories to draw the thread, then align the cryptex dials to unlock the vault.”</p>
+          </div>
+
+          <!-- Part A: Interactive Yarn Pin Board -->
+          <div class="interactive-yarn-board glass-card" id="interactiveYarnBoard">
+            <div class="yarn-instruction-bar">
+              <span class="yarn-step-tag">STEP 1: DEDUCE THE THREAD</span>
+              <p>Select the 3 genuine friendship pillars in order. Beware of decoy distractions!</p>
+              <span class="yarn-counter-pill" id="yarnPinsConnectedPill">PINS CONNECTED: 0 / 3</span>
+            </div>
+
+            <!-- 4 Pin Cards (3 genuine, 1 decoy) -->
+            <div class="yarn-pins-grid">
+              <button type="button" class="yarn-pin-node" data-pin-id="1" data-genuine="true">
+                <span class="pin-head-dot"></span>
+                <span class="pin-node-title">PILLAR 1: THE ORIGIN</span>
+                <p class="pin-node-desc">“Every laugh began completely unscripted and real.”</p>
+              </button>
+
+              <button type="button" class="yarn-pin-node" data-pin-id="decoy" data-genuine="false">
+                <span class="pin-head-dot decoy-dot"></span>
+                <span class="pin-node-title">DISTRACTION: THE DISTANCE</span>
+                <p class="pin-node-desc">“Temporary gaps mean friendships naturally drift away.”</p>
+              </button>
+
+              <button type="button" class="yarn-pin-node" data-pin-id="2" data-genuine="true">
+                <span class="pin-head-dot"></span>
+                <span class="pin-node-title">PILLAR 2: THE CONSTANT</span>
+                <p class="pin-node-desc">“Distance and silence never broke the safe haven.”</p>
+              </button>
+
+              <button type="button" class="yarn-pin-node" data-pin-id="3" data-genuine="true">
+                <span class="pin-head-dot"></span>
+                <span class="pin-node-title">PILLAR 3: THE TRUTH</span>
+                <p class="pin-node-desc">“The bond carries no expiration date whatsoever.”</p>
+              </button>
+            </div>
+
+            <div class="yarn-feedback-toast" id="yarnFeedbackToast"></div>
+          </div>
+
+          <!-- Part B: The Rotary Brass Cryptex Lock (Reveals when yarn complete) -->
+          <div class="brass-cryptex-vault glass-card" id="brassCryptexVault" style="display: none;">
+            <div class="cryptex-header">
+              <span class="cryptex-tag">STEP 2: ROTARY VAULT CIPHER</span>
+              <h3 class="cryptex-title">THE BRASS CRYPTEX</h3>
+              <p class="cryptex-lead">Enter the 3 recovered forensic digits to release the locking tumblers.</p>
+            </div>
+
+            <div class="cryptex-dials-row">
+              
+              <!-- Dial 1 -->
+              <div class="cryptex-dial-column">
+                <button type="button" class="dial-arrow-btn" data-dial="0" data-dir="up">▲</button>
+                <div class="dial-cylinder-frame">
+                  <span class="dial-number" id="dialVal0">0</span>
+                </div>
+                <button type="button" class="dial-arrow-btn" data-dial="0" data-dir="down">▼</button>
+                <span class="dial-clue-label">CLUE 1 (PHOTO)</span>
+              </div>
+
+              <div class="dial-separator">:</div>
+
+              <!-- Dial 2 -->
+              <div class="cryptex-dial-column">
+                <button type="button" class="dial-arrow-btn" data-dial="1" data-dir="up">▲</button>
+                <div class="dial-cylinder-frame">
+                  <span class="dial-number" id="dialVal1">0</span>
+                </div>
+                <button type="button" class="dial-arrow-btn" data-dial="1" data-dir="down">▼</button>
+                <span class="dial-clue-label">CLUE 2 (NOTE)</span>
+              </div>
+
+              <div class="dial-separator">:</div>
+
+              <!-- Dial 3 -->
+              <div class="cryptex-dial-column">
+                <button type="button" class="dial-arrow-btn" data-dial="2" data-dir="up">▲</button>
+                <div class="dial-cylinder-frame">
+                  <span class="dial-number" id="dialVal2">0</span>
+                </div>
+                <button type="button" class="dial-arrow-btn" data-dial="2" data-dir="down">▼</button>
+                <span class="dial-clue-label">CLUE 3 (WIRETAP)</span>
+              </div>
+
+            </div>
+
+            <button type="button" class="btn btn-primary btn-test-cryptex" id="btnUnlockCryptex">
+              <span>RELEASE CRYPTEX TUMBLERS</span>
+              <span class="btn-spark-dot" aria-hidden="true">🗝️</span>
+            </button>
+
+            <div class="cryptex-feedback-toast" id="cryptexFeedbackToast"></div>
+          </div>
+
+        </section>
+
+        <!-- =========================================================
+             EXPERIENCE 4: THE FINAL CASE FILE & PERSONAL LETTER
+             ========================================================= -->
+        <section class="investigation-section" id="finalCaseFileSection" style="display: none;" aria-label="Experience 4: The Final Case File & Letter">
           
-          <!-- Stage A: Sealed Confidential Folder in Spotlight -->
+          <!-- Stage A: Sealed Wax Dossier -->
           <div class="sealed-case-stage" id="sealedCaseStage">
-            <div class="spotlight-cone-glow" aria-hidden="true"></div>
-            
             <div class="classified-dossier-packet">
-              <span class="packet-stamp-top">CLASSIFIED — CASE NO. 008</span>
-              <h2 class="packet-title">THE FINAL CASE FILE</h2>
+              <span class="packet-stamp-top">CLASSIFIED VAULT // CASE NO. 008</span>
+              <h2 class="packet-title">THE FINAL DOSSIER</h2>
               <p class="packet-lead-text">
-                “You found the evidence. You connected the clues.<br>
-                <strong>But the real story was never about solving a mystery. It was about discovering what the evidence was pointing toward all along.</strong>”
+                “You followed the invisible ink. You tuned the wiretap. You cracked the cryptex.<br>
+                <strong>Now uncover what this entire investigation was leading toward.</strong>”
               </p>
 
-              <div class="packet-wax-seal" id="packetWaxSeal" role="button" tabindex="0" aria-label="Break evidence seal and open case file">
+              <div class="packet-wax-seal" id="packetWaxSeal" role="button" tabindex="0" aria-label="Break evidence seal">
                 <span class="wax-seal-crest">🕵️</span>
-                <span class="wax-seal-text">CONFIDENTIAL SEAL</span>
+                <span class="wax-seal-text">BREAK SEAL</span>
               </div>
 
               <button type="button" class="btn btn-primary btn-open-confidential" id="btnOpenConfidential">
-                <span>OPEN CONFIDENTIAL FILE</span>
+                <span>UNSEAL DOSSIER</span>
                 <span class="btn-spark-dot" aria-hidden="true">🔓</span>
               </button>
             </div>
@@ -422,37 +503,30 @@
           <!-- Stage B: The Plot Twist Report & Personal Letter -->
           <div class="case-revealed-stage" id="caseRevealedStage" style="display: none;">
             
-            <!-- Plot Twist Investigation Report -->
             <div class="glass-card plot-twist-report">
               <div class="report-header-row">
-                <span class="report-badge">INVESTIGATION REPORT // CONCLUSION</span>
-                <span class="report-date">RECORDED: TODAY</span>
+                <span class="report-badge">FINAL CASE REPORT // CONCLUSION</span>
+                <span class="report-date">CASE NO. 008 • VERIFIED</span>
               </div>
 
-              <h3 class="report-twist-title">CASE SUBJECT: OUR FRIENDSHIP</h3>
+              <h3 class="report-twist-title">CASE SUBJECT: BUDDUU & OUR FRIENDSHIP</h3>
               
               <div class="report-twist-prose">
-                <p>After reviewing the evidence, the memories, and every little detail, one conclusion becomes impossible to ignore.</p>
-                <p><strong>This case was never about a missing object.</strong></p>
-                <p>It was about a friendship that has collected its own little universe of moments.</p>
+                <p>The forensic examination is complete. The mystery is solved.</p>
+                <p><strong>There was never any crime, nor any missing artifact.</strong></p>
+                <p>The entire dossier was an investigation into how two people can create an unbreakable world of their own out of simple everyday moments.</p>
               </div>
             </div>
 
-            <!-- The Personal Letter Document -->
-            <article class="glass-card detective-letter-card" id="detectiveLetterCard">
-              <div class="letter-parchment-border" aria-hidden="true"></div>
-              
+            <!-- Staged Detective Letter -->
+            <article class="glass-card detective-letter-card">
               <div class="letter-top-meta">
                 <span class="letter-from-tag">FROM THE DESK OF THE INVESTIGATOR</span>
                 <span class="letter-heart-seal">🧡</span>
               </div>
 
-              <!-- Progressive Letter Stream -->
-              <div class="letter-prose-stream" id="letterProseStream">
-                <!-- Staged letter paragraphs populated by day8.js -->
-              </div>
+              <div class="letter-prose-stream" id="letterProseStream"></div>
 
-              <!-- Continue Reading Staging Action -->
               <div class="letter-continue-dock" id="letterContinueDock">
                 <button type="button" class="btn btn-secondary btn-continue-letter" id="btnContinueLetter">
                   <span>CONTINUE READING</span>
@@ -460,14 +534,13 @@
                 </button>
               </div>
 
-              <!-- Case Closed Conclusion -->
               <div class="case-closed-lockup" id="caseClosedLockup" style="display: none;">
                 <div class="case-closed-ink-stamp">CASE CLOSED</div>
                 <p class="case-closed-quote">
-                  “Some mysteries are solved with evidence. Some truths are understood through the memories we share. <span class="letter-heart">❤️</span>”
+                  “Some mysteries are solved with logic. Some bonds are understood only through the heart. <span class="letter-heart">❤️</span>”
                 </p>
                 <button type="button" class="btn btn-primary btn-complete-day8" id="btnCompleteDay8">
-                  <span>COMPLETE DAY 8</span>
+                  <span>CONCLUDE DAY 08</span>
                   <span class="btn-spark-dot" aria-hidden="true">✨</span>
                 </button>
               </div>
@@ -477,16 +550,14 @@
         </section>
 
         <!-- =========================================================
-             DAY 8 COMPLETION SCREEN (Ending of Experience 3)
+             DAY 8 COMPLETION SCREEN
              ========================================================= -->
         <section class="day8-completion-screen" id="day8CompletionScreen" style="display: none;" aria-label="Day 8 Completed">
-          <div class="completion-vignette-backdrop" aria-hidden="true"></div>
-
           <div class="completion-content-box">
-            <div class="completion-stamp-seal" aria-hidden="true">CASE CLOSED</div>
+            <div class="completion-stamp-seal">CASE ARCHIVED</div>
             <span class="completion-pill-small">DAY 8 COMPLETE</span>
             <h2 class="completion-hero-title">CASE CLOSED. FRIENDSHIP CONFIRMED. <span class="letter-heart">❤️</span></h2>
-            <p class="completion-poetic-quote">“Another mystery solved. Another memory worth keeping.”</p>
+            <p class="completion-poetic-quote">“Another mystery solved. Another memory preserved forever.”</p>
             
             <div class="completion-journey-tally">
               <span class="tally-number">8 / 10</span>
@@ -512,7 +583,7 @@
       </div>
     </main>
 
-    <!-- Minimal Site Footer -->
+    <!-- Footer -->
     <footer class="site-footer day8-site-footer">
       <div class="container">
         <h3 class="footer-brand-title">BUDDUU <span class="footer-heart">❤️</span></h3>
