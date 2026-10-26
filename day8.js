@@ -1,102 +1,70 @@
 /* ==========================================================================
    BUDDUU — DAY 8: “THE FRIENDSHIP FILES — CASE NO. 008”
-   Gate 1 (Date Lock) → Gate 2 (Rhythm Tap Lock 🎵) → 3 Core Experiences → Complete
+   Gate 1 (Date Lock) → Gate 2 (Acoustic Rhythm Lock) →
+   Exp 1 (UV Forensic Desk) → Exp 2 (Wiretap Radio 104.2 MHz) →
+   Exp 3 (Yarn Deduction + Brass Cryptex 8-2-7) → Exp 4 (Final Dossier & Letter)
    ========================================================================== */
 
-/**
- * ==========================================================================
- * 1. EDITABLE EVIDENCE, PUZZLE DATA & PERSONAL LETTER
- * ==========================================================================
- */
-
-// Experience 1: The Evidence Room Items
+// 1. DATA CONFIGURATION
 const evidenceData = {
   A: {
     tag: "EVIDENCE FILE A // THE PHOTOGRAPH",
     headline: "The Unplanned Snapshot 📷",
-    body: "An ordinary photograph taken without posing or preparation. When examined closely through the magnifying lens, a hidden handwritten annotation appears on the back: 'We laughed so hard here that we completely forgot whatever we were stressed about.'",
-    clue: "Clue #1: Every laugh started unscripted."
+    body: "An ordinary photograph examined under forensic lighting. On the reverse side, an invisible UV watermark highlights a handwritten entry: 'No cameras were scheduled, yet this moment became unforgettable.'",
+    clue: "UV Stamp Discovered: Number [ 8 ] and handwriting: 'Unscripted laughs never fade.'"
   },
   B: {
     tag: "EVIDENCE FILE B // THE CLASSIFIED NOTE",
     headline: "Intercepted Memorandum 📜",
-    body: "A folded memorandum found tucked between old notebook pages. It reads: 'Subject Budduu has consistently proven to be a reliable source of peace, even on the most chaotic days. Distance, time gaps, or silence never changed that.'",
-    clue: "Clue #2: No silence or distance ever broke it."
+    body: "A heavily redacted document. Under the ultraviolet spectrum, the black marker ink becomes transparent, revealing: 'Subject Budduu is an enduring source of reassurance. Time zones and silence have zero diminishing effect.'",
+    clue: "UV Stamp Discovered: Number [ 2 ] and text: 'Distance never broke it.'"
   },
   C: {
-    tag: "EVIDENCE FILE C // THE MYSTERIOUS OBJECT",
-    headline: "The Cipher Key 🗝️",
-    body: "A heavy brass key bearing a tiny stamped inscription. The engraving translates to: 'A friendship built on honesty doesn't come with an expiration date. It's meant to outlast the years.'",
-    clue: "Clue #3: The bond has no expiration date."
+    tag: "EVIDENCE FILE C // THE BRASS KEY",
+    headline: "Surveillance Receiver Key 🗝️",
+    body: "A vintage brass transmitter key. The microscopic ultraviolet stamping on the blade discloses a surveillance frequency: '104.2 MHz - AUDIO CARRIER ACTIVE'.",
+    clue: "UV Stamp Discovered: Surveillance Radio Frequency [ 104.2 MHz ]."
   }
 };
 
-// Experience 2: Deduction Puzzle Data
-const deductionPuzzleData = {
-  question: "What single truth is proven by all three pieces of evidence?",
-  options: [
-    { text: "A. It was just a lucky coincidence.", correct: false },
-    { text: "B. UNBREAKABLE BOND: Built to last forever.", correct: true },
-    { text: "C. It was an unsolved mystery.", correct: false },
-    { text: "D. Time changes everything eventually.", correct: false }
-  ],
-  correctKeyword: "UNBREAKABLE BOND",
-  hint: "Look for the answer that proves this friendship has no expiration date."
-};
-
-// Experience 3: The Personal Letter (Editable)
 const day8LetterData = {
   paragraphs: [
     "Dear Budduu,",
     "Some friendships make ordinary days feel a little more special. The random conversations, the laughter, the unexpected moments, and all the little things we never plan become memories we carry with us.",
     "I hope there are many more moments waiting for us — more laughter, more stories, and more reasons to look back and smile.",
     "No matter how much life changes, I hope we keep finding new reasons to laugh, new memories to collect, and new stories to tell.",
-    "Thank you for being a part of my life.",
+    "Thank you for being such an irreplaceable part of my life.",
     "— Tera Tedduu, Shahid 🧡"
   ]
 };
 
-/**
- * ==========================================================================
- * 2. RHYTHM LOCK TIMING PATTERN SPECIFICATION
- * ==========================================================================
- * Deterministic 5-beat rhythm:
- * Beat 1 at 0ms
- * Beat 2 at 350ms   (interval 1: 350ms - short)
- * Beat 3 at 1050ms  (interval 2: 700ms - long)
- * Beat 4 at 1400ms  (interval 3: 350ms - short)
- * Beat 5 at 2100ms  (interval 4: 700ms - long)
- * Target intervals: [350, 700, 350, 700]
- */
-const targetBeatsCount = 5;
-const demoBeatTimings = [0, 350, 1050, 1400, 2100]; // in ms
-const targetIntervals = [350, 700, 350, 700];
-const totalDemoDuration = 2100;
-
-// Relative interval fractions for tempo-independent validation:
-// 350/2100 = 0.1667, 700/2100 = 0.3333, etc.
-const targetFractions = targetIntervals.map(dt => dt / totalDemoDuration);
-const fractionTolerance = 0.11; // Generous human timing tolerance
-
-let isRhythmDemoPlaying = false;
-let userTapTimestamps = [];
-let audioCtx = null;
-
-// Progress Tracking States
+// 2. STATE REPOSITORY
 let isRhythmLockSolved = false;
-let collectedEvidenceSet = new Set();
-let isCluesPuzzleSolved = false;
+let isUVModeActive = false;
+let inspectedEvidenceSet = new Set();
+let isWiretapSolved = false;
+let connectedYarnPins = [];
+let isYarnSolved = false;
+let cryptexValues = [0, 0, 0];
+const targetCryptex = [8, 2, 7]; // Digits from UV Photo (8), Note (2), Wiretap (7)
+let isCryptexUnlocked = false;
 let hasOpenedFinalCase = false;
 let currentLetterParagraph = 0;
 let isLetterFullyRead = false;
 let isDay8Completed = false;
+
+// Audio context & generators
+let audioCtx = null;
+let staticNoiseNode = null;
+let staticGainNode = null;
+let isStaticPlaying = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   initDay8Flow();
 });
 
 /**
- * Main Flow Controller: Gate 1 (Date Lock) → Gate 2 (Rhythm Lock) → Experiences
+ * Main Flow Controller: Gate 1 → Gate 2 → 4 Experiences
  */
 function initDay8Flow() {
   const day8Data = (typeof JOURNEY_DAYS !== "undefined")
@@ -127,7 +95,6 @@ function initDay8Flow() {
     return;
   }
 
-  // Date passed: hide Gate 1
   if (dateLockedView) dateLockedView.style.display = "none";
 
   // Check persistent storage
@@ -137,8 +104,10 @@ function initDay8Flow() {
     }
     if (localStorage.getItem("budduu_day8_completed") === "true") {
       isRhythmLockSolved = true;
-      collectedEvidenceSet = new Set(["A", "B", "C"]);
-      isCluesPuzzleSolved = true;
+      inspectedEvidenceSet = new Set(["A", "B", "C"]);
+      isWiretapSolved = true;
+      isYarnSolved = true;
+      isCryptexUnlocked = true;
       hasOpenedFinalCase = true;
       isLetterFullyRead = true;
       isDay8Completed = true;
@@ -148,7 +117,7 @@ function initDay8Flow() {
   initDay8AmbientParticles();
   initNextDayNavigation();
 
-  // GATE 2: Rhythm Tap Lock
+  // GATE 2: Rhythm Lock
   if (!isRhythmLockSolved) {
     if (rhythmLockView) rhythmLockView.style.display = "flex";
     if (unlockedView) unlockedView.style.display = "none";
@@ -156,12 +125,12 @@ function initDay8Flow() {
     return;
   }
 
-  // BOTH GATES PASSED: Launch Actual Day 8 Content
+  // BOTH GATES PASSED: Launch Main Journey
   launchActualDay8Content();
 }
 
 /**
- * Ambient Amber Dust Particles Canvas
+ * Ambient Particles Canvas
  */
 function initDay8AmbientParticles() {
   const canvas = document.getElementById("day8ParticlesCanvas");
@@ -176,7 +145,7 @@ function initDay8AmbientParticles() {
     height = canvas.height = window.innerHeight;
   }, { passive: true });
 
-  const count = window.innerWidth <= 768 ? 20 : 38;
+  const count = window.innerWidth <= 768 ? 20 : 36;
   const particles = [];
 
   for (let i = 0; i < count; i++) {
@@ -193,19 +162,15 @@ function initDay8AmbientParticles() {
 
   function render() {
     ctx.clearRect(0, 0, width, height);
-
     particles.forEach((p) => {
       p.y -= p.speedY;
       p.x += p.speedX;
-
       if (p.y < 0) {
         p.y = height;
         p.x = Math.random() * width;
       }
-
       p.pulse += 0.015;
       const alpha = p.opacity * (0.6 + 0.4 * Math.sin(p.pulse));
-
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(255, 179, 71, ${alpha})`;
@@ -213,48 +178,59 @@ function initDay8AmbientParticles() {
       ctx.shadowColor = "rgba(255, 107, 74, 0.6)";
       ctx.fill();
     });
-
     requestAnimationFrame(render);
   }
-
   render();
 }
 
 /**
- * Web Audio API synthesizer for acoustic beats (graceful fallback)
+ * Web Audio Synthesizer Helpers
  */
-function playSynthBeep(freq = 580, duration = 0.12) {
+function getAudioContext() {
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
+  if (!AudioContextClass) return null;
+  if (!audioCtx) audioCtx = new AudioContextClass();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
 
+function playSynthTone(freq = 580, duration = 0.12, type = "sine") {
+  const ctx = getAudioContext();
+  if (!ctx) return;
   try {
-    if (!audioCtx) {
-      audioCtx = new AudioContextClass();
-    }
-    if (audioCtx.state === "suspended") {
-      audioCtx.resume();
-    }
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
+    gain.connect(ctx.destination);
     osc.start();
-    osc.stop(audioCtx.currentTime + duration);
+    osc.stop(ctx.currentTime + duration);
+  } catch (e) {}
+}
+
+function playMechanicalClack() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(140, ctx.currentTime);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.08);
   } catch (e) {}
 }
 
 /**
  * ==========================================================================
- * GATE 2: RHYTHM TAP LOCK CONTROLLER
+ * GATE 2: ACOUSTIC RHYTHM TAP LOCK
  * ==========================================================================
  */
 function initRhythmTapLock() {
@@ -275,164 +251,125 @@ function initRhythmTapLock() {
     document.getElementById("ledBeat4")
   ];
 
-  // Demonstration Playback
-  function playDemoRhythm() {
-    if (isRhythmDemoPlaying) return;
-    isRhythmDemoPlaying = true;
-    userTapTimestamps = [];
-    updateUserTapUI(0);
+  const targetBeatsCount = 5;
+  const demoBeatTimings = [0, 350, 1050, 1400, 2100];
+  const targetIntervals = [350, 700, 350, 700];
+  const totalDemoDuration = 2100;
+  const targetFractions = targetIntervals.map(dt => dt / totalDemoDuration);
+  const fractionTolerance = 0.12;
+
+  let isDemoPlaying = false;
+  let userTaps = [];
+
+  function playDemo() {
+    if (isDemoPlaying) return;
+    isDemoPlaying = true;
+    userTaps = [];
+    if (progressCaption) progressCaption.textContent = "0 / 5 BEATS";
 
     if (listenBtn) listenBtn.disabled = true;
     if (tapPad) tapPad.disabled = true;
     if (waveform) waveform.classList.add("is-playing");
-    if (statusLabel) statusLabel.textContent = "PLAYING DEMONSTRATION... LISTEN CLOSELY";
+    if (statusLabel) statusLabel.textContent = "TRANSMITTING FREQUENCY... LISTEN CLOSELY";
     if (feedback) feedback.textContent = "";
 
-    // Clear LEDs
-    leds.forEach(led => {
-      if (led) {
-        led.classList.remove("beat-flash", "beat-filled");
-      }
-    });
+    leds.forEach(led => led && led.classList.remove("beat-flash", "beat-filled"));
 
     demoBeatTimings.forEach((timing, index) => {
       setTimeout(() => {
-        playSynthBeep(index === targetBeatsCount - 1 ? 720 : 560, 0.14);
+        playSynthTone(index === targetBeatsCount - 1 ? 740 : 540, 0.14);
         if (leds[index]) {
           leds[index].classList.add("beat-flash");
-          setTimeout(() => {
-            leds[index].classList.remove("beat-flash");
-          }, 240);
+          setTimeout(() => leds[index].classList.remove("beat-flash"), 240);
         }
       }, timing);
     });
 
-    // End of playback
     setTimeout(() => {
-      isRhythmDemoPlaying = false;
+      isDemoPlaying = false;
       if (listenBtn) {
         listenBtn.disabled = false;
         listenBtn.querySelector("span").textContent = "REPLAY RHYTHM";
       }
       if (tapPad) tapPad.disabled = false;
       if (waveform) waveform.classList.remove("is-playing");
-      if (statusLabel) statusLabel.textContent = "YOUR TURN: REPEAT THE RHYTHM (5 BEATS)";
+      if (statusLabel) statusLabel.textContent = "YOUR TURN: REPEAT THE 5-BEAT PATTERN";
     }, totalDemoDuration + 400);
   }
 
-  if (listenBtn) {
-    listenBtn.addEventListener("click", playDemoRhythm);
-  }
-
-  // User Tap Handler
-  function handleUserTap() {
-    if (isRhythmDemoPlaying || isRhythmLockSolved) return;
-
-    // Trigger synth beep on user tap
-    playSynthBeep(640, 0.08);
+  function handleTap() {
+    if (isDemoPlaying || isRhythmLockSolved) return;
+    playSynthTone(640, 0.08);
 
     const now = performance.now();
-    userTapTimestamps.push(now);
-    const tapCount = userTapTimestamps.length;
+    userTaps.push(now);
+    const count = userTaps.length;
 
-    // Tap Visual Feedback
     if (tapPad) {
       tapPad.classList.add("active-press");
-      setTimeout(() => tapPad.classList.remove("active-press"), 140);
+      setTimeout(() => tapPad.classList.remove("active-press"), 120);
     }
 
-    // Flash corresponding LED
-    const currentIndex = tapCount - 1;
-    if (leds[currentIndex]) {
-      leds[currentIndex].classList.add("beat-filled");
-    }
+    if (leds[count - 1]) leds[count - 1].classList.add("beat-filled");
+    if (progressCaption) progressCaption.textContent = `${count} / 5 BEATS`;
 
-    updateUserTapUI(tapCount);
-
-    if (tapCount === targetBeatsCount) {
-      validateUserRhythm();
+    if (count === targetBeatsCount) {
+      validateRhythm();
     }
   }
 
-  function updateUserTapUI(count) {
-    if (progressCaption) {
-      progressCaption.textContent = `${count} / ${targetBeatsCount} BEATS`;
-    }
-  }
-
-  function validateUserRhythm() {
+  function validateRhythm() {
     if (tapPad) tapPad.disabled = true;
-
-    // Calculate user intervals
-    const userIntervals = [];
-    for (let i = 1; i < userTapTimestamps.length; i++) {
-      userIntervals.push(userTapTimestamps[i] - userTapTimestamps[i - 1]);
+    const intervals = [];
+    for (let i = 1; i < userTaps.length; i++) {
+      intervals.push(userTaps[i] - userTaps[i - 1]);
     }
+    const totalDuration = intervals.reduce((a, b) => a + b, 0);
 
-    const userTotalDuration = userIntervals.reduce((a, b) => a + b, 0);
-
-    // Sanity check total duration (between 1.0s and 5.0s)
-    let isPatternMatched = true;
-
-    if (userTotalDuration < 1000 || userTotalDuration > 5000) {
-      isPatternMatched = false;
+    let match = true;
+    if (totalDuration < 1000 || totalDuration > 5200) {
+      match = false;
     } else {
-      // Relative fraction comparison:
-      for (let i = 0; i < userIntervals.length; i++) {
-        const userFraction = userIntervals[i] / userTotalDuration;
-        const targetFraction = targetFractions[i];
-        if (Math.abs(userFraction - targetFraction) > fractionTolerance) {
-          isPatternMatched = false;
+      for (let i = 0; i < intervals.length; i++) {
+        const fraction = intervals[i] / totalDuration;
+        if (Math.abs(fraction - targetFractions[i]) > fractionTolerance) {
+          match = false;
           break;
         }
       }
     }
 
-    if (isPatternMatched) {
-      // SUCCESS!
+    if (match) {
       isRhythmLockSolved = true;
-      try {
-        localStorage.setItem("budduu_day8_lock_solved", "true");
-      } catch (e) {}
-
+      try { localStorage.setItem("budduu_day8_lock_solved", "true"); } catch (e) {}
       leds.forEach(led => led && led.classList.add("beat-flash"));
       if (statusLabel) statusLabel.textContent = "ACCESS GRANTED • FREQUENCY VERIFIED";
-      if (feedback) feedback.textContent = "";
-
       setTimeout(() => {
         if (successOverlay) successOverlay.style.display = "flex";
       }, 500);
-
     } else {
-      // MISMATCH
-      if (feedback) {
-        feedback.textContent = "Rhythm mismatch. Listen again and follow the gaps between the beats.";
-      }
-      if (statusLabel) statusLabel.textContent = "MISMATCH • TAP 'REPLAY RHYTHM' OR TRY AGAIN";
-
+      if (feedback) feedback.textContent = "Rhythm mismatch. Notice the pause between beat 2 & 3.";
+      if (statusLabel) statusLabel.textContent = "MISMATCH • TRY AGAIN OR PRESS 'REPLAY RHYTHM'";
       setTimeout(() => {
-        userTapTimestamps = [];
-        updateUserTapUI(0);
-        leds.forEach(led => {
-          if (led) led.classList.remove("beat-filled", "beat-flash");
-        });
+        userTaps = [];
+        if (progressCaption) progressCaption.textContent = "0 / 5 BEATS";
+        leds.forEach(led => led && led.classList.remove("beat-filled", "beat-flash"));
         if (tapPad) tapPad.disabled = false;
       }, 900);
     }
   }
 
-  // Tap Pad interaction (mouse, touch & keyboard space/enter)
+  if (listenBtn) listenBtn.addEventListener("click", playDemo);
   if (tapPad) {
-    tapPad.addEventListener("click", handleUserTap);
+    tapPad.addEventListener("click", handleTap);
     tapPad.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        handleUserTap();
+        handleTap();
       }
     });
   }
 
-  // Transition to Experience 1
   if (openCaseBtn) {
     openCaseBtn.addEventListener("click", () => {
       const rhythmView = document.getElementById("day8RhythmLockView");
@@ -444,7 +381,7 @@ function initRhythmTapLock() {
 
 /**
  * ==========================================================================
- * LAUNCH ACTUAL DAY 8 CONTENT
+ * MAIN STAGE LAUNCHER
  * ==========================================================================
  */
 function launchActualDay8Content() {
@@ -457,20 +394,28 @@ function launchActualDay8Content() {
   } catch (e) {}
 
   initInvestigationBriefing(alreadyCompleted);
-  initExperience1EvidenceRoom(alreadyCompleted);
-  initExperience2ConnectClues(alreadyCompleted);
-  initExperience3FinalCase(alreadyCompleted);
+  initExperience1ForensicDesk(alreadyCompleted);
+  initExperience2Wiretap(alreadyCompleted);
+  initExperience3YarnAndCryptex(alreadyCompleted);
+  initExperience4FinalCase(alreadyCompleted);
 
   if (alreadyCompleted) {
+    updateOverallProgress(4);
     renderCompletionView();
   }
 }
 
-/**
- * ==========================================================================
- * INVESTIGATION BRIEFING INTRO
- * ==========================================================================
- */
+function updateOverallProgress(stageNumber) {
+  const badge = document.getElementById("caseStageBadge");
+  const fill = document.getElementById("caseStageFill");
+  const percent = document.getElementById("caseStagePercent");
+
+  const pct = Math.min(100, stageNumber * 25);
+  if (badge) badge.textContent = `STAGE ${stageNumber} / 4 • ${pct}%`;
+  if (fill) fill.style.width = `${pct}%`;
+  if (percent) percent.textContent = `${pct}%`;
+}
+
 function initInvestigationBriefing(skipIntro) {
   const briefingStage = document.getElementById("investigationBriefingStage");
   const mainStage = document.getElementById("mainInvestigationStage");
@@ -495,7 +440,7 @@ function initInvestigationBriefing(skipIntro) {
             mainStage.style.display = "block";
             setTimeout(() => mainStage.classList.add("visible"), 40);
           }
-        }, 800);
+        }, 700);
       }
     });
   }
@@ -503,10 +448,14 @@ function initInvestigationBriefing(skipIntro) {
 
 /**
  * ==========================================================================
- * EXPERIENCE 1: THE EVIDENCE ROOM (INSPECTION DRAWER)
+ * EXPERIENCE 1: THE FORENSIC EVIDENCE DESK (UV BLACKLIGHT)
  * ==========================================================================
  */
-function initExperience1EvidenceRoom(alreadyCompleted) {
+function initExperience1ForensicDesk(alreadyCompleted) {
+  const uvBtn = document.getElementById("uvToggleBtn");
+  const uvBtnText = document.getElementById("uvBtnText");
+  const boardFrame = document.getElementById("evidenceBoardFrame");
+  const beamMask = document.getElementById("uvBeamMask");
   const evidenceCards = document.querySelectorAll(".evidence-pin-card");
   const counterBadge = document.getElementById("evidenceCounterBadge");
   const overlay = document.getElementById("inspectionOverlay");
@@ -516,60 +465,93 @@ function initExperience1EvidenceRoom(alreadyCompleted) {
   const modalClueText = document.getElementById("modalClueText");
   const closeBtn = document.getElementById("closeInspectionBtn");
   const completionGate = document.getElementById("evidenceCompletionGate");
-  const btnGoToConnect = document.getElementById("btnGoToConnectClues");
-  const connectCluesSection = document.getElementById("connectCluesSection");
+  const btnGoToRadio = document.getElementById("btnGoToRadioWiretap");
+  const wiretapSection = document.getElementById("wiretapRadioSection");
 
   if (alreadyCompleted) {
-    evidenceCards.forEach(card => card.classList.add("is-collected"));
-    document.getElementById("statusPillA").textContent = "COLLECTED ✓";
-    document.getElementById("statusPillB").textContent = "COLLECTED ✓";
-    document.getElementById("statusPillC").textContent = "COLLECTED ✓";
-    if (counterBadge) counterBadge.textContent = "EVIDENCE COLLECTED: 3 / 3";
+    evidenceCards.forEach(c => c.classList.add("is-inspected"));
+    document.getElementById("statusPillA").textContent = "INSPECTED ✓";
+    document.getElementById("statusPillB").textContent = "INSPECTED ✓";
+    document.getElementById("statusPillC").textContent = "INSPECTED ✓";
+    if (counterBadge) counterBadge.textContent = "EVIDENCE INSPECTED: 3 / 3";
     if (completionGate) completionGate.style.display = "block";
-    if (connectCluesSection) connectCluesSection.style.display = "block";
+    if (wiretapSection) wiretapSection.style.display = "block";
     return;
   }
 
-  function updateEvidenceUI() {
-    if (counterBadge) {
-      counterBadge.textContent = `EVIDENCE COLLECTED: ${collectedEvidenceSet.size} / 3`;
-    }
+  // Toggle Forensic UV Torch
+  if (uvBtn) {
+    uvBtn.addEventListener("click", () => {
+      isUVModeActive = !isUVModeActive;
+      playSynthTone(isUVModeActive ? 880 : 440, 0.15, "triangle");
 
-    if (collectedEvidenceSet.size === 3 && completionGate) {
-      completionGate.style.display = "block";
-      completionGate.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+      if (isUVModeActive) {
+        boardFrame.classList.add("uv-mode-active");
+        uvBtn.classList.add("uv-active");
+        uvBtnText.textContent = "DEACTIVATE UV LIGHT";
+      } else {
+        boardFrame.classList.remove("uv-mode-active");
+        uvBtn.classList.remove("uv-active");
+        uvBtnText.textContent = "ACTIVATE UV FORENSIC LIGHT";
+      }
+    });
   }
 
-  evidenceCards.forEach((card) => {
-    const key = card.dataset.evidence; // 'A', 'B', 'C'
+  // Track UV Torch Spotlight on Cursor / Touch
+  if (boardFrame && beamMask) {
+    const handleMove = (e) => {
+      if (!isUVModeActive) return;
+      const rect = boardFrame.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
 
-    const handleInspect = () => {
+      beamMask.style.setProperty("--uv-x", `${x}px`);
+      beamMask.style.setProperty("--uv-y", `${y}px`);
+    };
+
+    boardFrame.addEventListener("mousemove", handleMove);
+    boardFrame.addEventListener("touchmove", handleMove, { passive: true });
+  }
+
+  // Card Inspection
+  evidenceCards.forEach((card) => {
+    const key = card.dataset.evidence;
+    const inspectAction = () => {
       const data = evidenceData[key];
       if (!data) return;
 
-      collectedEvidenceSet.add(key);
-      card.classList.add("is-collected");
-
-      // Update Card Status Pill
+      inspectedEvidenceSet.add(key);
+      card.classList.add("is-inspected");
       const pill = document.getElementById(`statusPill${key}`);
-      if (pill) pill.textContent = "COLLECTED ✓";
+      if (pill) pill.textContent = "INSPECTED ✓";
 
-      // Populate Inspection Modal
+      playSynthTone(720, 0.1);
+
       if (modalTag) modalTag.textContent = data.tag;
       if (modalHeadline) modalHeadline.textContent = data.headline;
       if (modalBody) modalBody.innerHTML = `<p>${data.body}</p>`;
       if (modalClueText) modalClueText.textContent = data.clue;
 
       if (overlay) overlay.style.display = "flex";
-      updateEvidenceUI();
+
+      if (counterBadge) {
+        counterBadge.textContent = `EVIDENCE INSPECTED: ${inspectedEvidenceSet.size} / 3`;
+      }
+
+      if (inspectedEvidenceSet.size === 3 && completionGate) {
+        completionGate.style.display = "block";
+        completionGate.scrollIntoView({ behavior: "smooth", block: "center" });
+        updateOverallProgress(1);
+      }
     };
 
-    card.addEventListener("click", handleInspect);
+    card.addEventListener("click", inspectAction);
     card.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        handleInspect();
+        inspectAction();
       }
     });
   });
@@ -580,104 +562,291 @@ function initExperience1EvidenceRoom(alreadyCompleted) {
     });
   }
 
-  if (btnGoToConnect && connectCluesSection) {
-    btnGoToConnect.addEventListener("click", () => {
-      connectCluesSection.style.display = "block";
-      connectCluesSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (btnGoToRadio && wiretapSection) {
+    btnGoToRadio.addEventListener("click", () => {
+      wiretapSection.style.display = "block";
+      wiretapSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      startRadioStaticSound();
+      updateOverallProgress(2);
     });
   }
 }
 
 /**
  * ==========================================================================
- * EXPERIENCE 2: CONNECT THE CLUES
+ * EXPERIENCE 2: THE WIRETAP RADIO TUNER (AUDIO DECODING)
  * ==========================================================================
  */
-function initExperience2ConnectClues(alreadyCompleted) {
-  const board = document.getElementById("clueConnectionBoard");
-  const optionsGrid = document.getElementById("deductionOptionsGrid");
-  const feedback = document.getElementById("cluesPuzzleFeedback");
-  const hintDock = document.getElementById("cluesHintDock");
-  const hintBtn = document.getElementById("requestClueHintBtn");
-  const hintText = document.getElementById("clueHintText");
-  const solvedBanner = document.getElementById("cluesSolvedBanner");
-  const btnUnlockFinal = document.getElementById("btnUnlockFinalFile");
-  const finalCaseSection = document.getElementById("finalCaseFileSection");
+function startRadioStaticSound() {
+  if (isStaticPlaying || isWiretapSolved) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
 
-  let wrongDeductionAttempts = 0;
+  try {
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1; // White noise
+    }
+
+    staticNoiseNode = ctx.createBufferSource();
+    staticNoiseNode.buffer = buffer;
+    staticNoiseNode.loop = true;
+
+    staticGainNode = ctx.createGain();
+    staticGainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+
+    staticNoiseNode.connect(staticGainNode);
+    staticGainNode.connect(ctx.destination);
+
+    staticNoiseNode.start();
+    isStaticPlaying = true;
+  } catch (e) {}
+}
+
+function stopRadioStaticSound() {
+  if (staticGainNode && audioCtx) {
+    try {
+      staticGainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+      setTimeout(() => {
+        if (staticNoiseNode) staticNoiseNode.stop();
+        isStaticPlaying = false;
+      }, 500);
+    } catch (e) {}
+  }
+}
+
+function initExperience2Wiretap(alreadyCompleted) {
+  const slider = document.getElementById("radioFreqSlider");
+  const freqDisplay = document.getElementById("radioFreqDisplay");
+  const needle = document.getElementById("radioDialNeedle");
+  const fill = document.getElementById("radioSignalFill");
+  const percentText = document.getElementById("radioSignalPercent");
+  const statusDot = document.getElementById("radioStatusDot");
+  const transcript = document.getElementById("radioTranscriptText");
+  const solvedBlock = document.getElementById("wiretapSolvedBlock");
+  const btnGoToYarn = document.getElementById("btnGoToYarnBoard");
+  const yarnSection = document.getElementById("yarnCryptexSection");
+
+  const targetFreq = 104.2;
 
   if (alreadyCompleted) {
-    if (board) board.classList.add("is-connected");
-    if (solvedBanner) solvedBanner.style.display = "block";
+    if (slider) slider.value = "104.2";
+    if (freqDisplay) freqDisplay.textContent = "104.2 MHz";
+    if (needle) needle.style.left = "81%";
+    if (fill) fill.style.width = "100%";
+    if (percentText) percentText.textContent = "100%";
+    if (statusDot) statusDot.className = "terminal-status-light locked-green";
+    if (transcript) {
+      transcript.innerHTML = "<strong style='color:#52e396;'>TRANSMISSION CLEAR:</strong> 'Subject Budduu verified. The final Cryptex tumbler digit is confirmed: <strong>[ 7 ]</strong>.'";
+    }
+    if (solvedBlock) solvedBlock.style.display = "block";
+    if (yarnSection) yarnSection.style.display = "block";
+    return;
+  }
+
+  if (slider) {
+    slider.addEventListener("input", (e) => {
+      if (isWiretapSolved) return;
+      startRadioStaticSound();
+
+      const val = parseFloat(e.target.value);
+      if (freqDisplay) freqDisplay.textContent = `${val.toFixed(1)} MHz`;
+
+      // Position needle (scale from 88 to 108)
+      const ratio = (val - 88.0) / (108.0 - 88.0);
+      const needlePos = 8 + ratio * 84;
+      if (needle) needle.style.left = `${needlePos}%`;
+
+      // Distance from target
+      const delta = Math.abs(val - targetFreq);
+
+      // Signal Strength percentage
+      let strength = Math.max(8, Math.round((1 - Math.min(delta, 6) / 6) * 100));
+      if (fill) fill.style.width = `${strength}%`;
+      if (percentText) percentText.textContent = `${strength}%`;
+
+      // Adjust static noise level
+      if (staticGainNode && audioCtx) {
+        const noiseLevel = Math.max(0.005, (delta / 5) * 0.1);
+        staticGainNode.gain.setValueAtTime(noiseLevel, audioCtx.currentTime);
+      }
+
+      // Check Match (within 0.1 MHz)
+      if (delta <= 0.15) {
+        isWiretapSolved = true;
+        stopRadioStaticSound();
+        playSynthTone(1046, 0.35, "sine"); // Harmonic unlock chime
+
+        if (fill) fill.style.width = "100%";
+        if (percentText) percentText.textContent = "100%";
+        if (statusDot) statusDot.className = "terminal-status-light locked-green";
+
+        if (transcript) {
+          transcript.innerHTML = "<strong style='color:#52e396;'>AUDIO CARRIER LOCKED:</strong> 'Surveillance log intercepted. Subject Budduu verified. The 3rd Cryptex digit is <strong>[ 7 ]</strong>.'";
+        }
+
+        if (solvedBlock) {
+          solvedBlock.style.display = "block";
+          solvedBlock.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      } else {
+        if (statusDot) statusDot.className = "terminal-status-light blinking-amber";
+        if (transcript) {
+          transcript.textContent = `[STATIC: ${(100 - strength)}%] ...sshhhhh... carrier wave out of phase... target is 104.2 MHz...`;
+        }
+      }
+    });
+  }
+
+  if (btnGoToYarn && yarnSection) {
+    btnGoToYarn.addEventListener("click", () => {
+      yarnSection.style.display = "block";
+      yarnSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      updateOverallProgress(3);
+    });
+  }
+}
+
+/**
+ * ==========================================================================
+ * EXPERIENCE 3: RED THREAD BOARD + BRASS CRYPTEX LOCK
+ * ==========================================================================
+ */
+function initExperience3YarnAndCryptex(alreadyCompleted) {
+  const pinNodes = document.querySelectorAll(".yarn-pin-node");
+  const pinsPill = document.getElementById("yarnPinsConnectedPill");
+  const yarnFeedback = document.getElementById("yarnFeedbackToast");
+  const cryptexVault = document.getElementById("brassCryptexVault");
+  const unlockCryptexBtn = document.getElementById("btnUnlockCryptex");
+  const cryptexFeedback = document.getElementById("cryptexFeedbackToast");
+  const finalCaseSection = document.getElementById("finalCaseFileSection");
+
+  if (alreadyCompleted) {
+    pinNodes.forEach(node => {
+      if (node.dataset.genuine === "true") node.classList.add("node-connected");
+    });
+    if (pinsPill) pinsPill.textContent = "PINS CONNECTED: 3 / 3 (VERIFIED)";
+    if (cryptexVault) cryptexVault.style.display = "block";
+    targetCryptex.forEach((val, i) => {
+      const el = document.getElementById(`dialVal${i}`);
+      if (el) el.textContent = val;
+    });
     if (finalCaseSection) finalCaseSection.style.display = "block";
     return;
   }
 
-  // Populate Deduction Options
-  if (optionsGrid) {
-    optionsGrid.innerHTML = "";
-    deductionPuzzleData.options.forEach((opt) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "deduction-chip-btn";
-      btn.textContent = opt.text;
+  // Part A: Interactive Yarn Pinning
+  pinNodes.forEach((node) => {
+    node.addEventListener("click", () => {
+      if (isYarnSolved) return;
 
-      btn.addEventListener("click", () => {
-        if (isCluesPuzzleSolved) return;
+      const isGenuine = node.dataset.genuine === "true";
+      const pinId = node.dataset.pinId;
 
-        if (opt.correct) {
-          isCluesPuzzleSolved = true;
-          btn.classList.add("is-correct");
-          if (board) board.classList.add("is-connected");
-          if (feedback) feedback.textContent = "";
+      if (!isGenuine) {
+        // Red Herring Decoy clicked!
+        playSynthTone(220, 0.25, "sawtooth");
+        node.classList.add("node-snapped");
+        if (yarnFeedback) {
+          yarnFeedback.textContent = "Thread Snapped! Decoy distraction detected. Focus on unbreakable truths.";
+        }
+        setTimeout(() => node.classList.remove("node-snapped"), 600);
+        return;
+      }
 
-          // Disable options
-          optionsGrid.querySelectorAll("button").forEach(b => b.disabled = true);
+      // Genuine Pin
+      if (!connectedYarnPins.includes(pinId)) {
+        connectedYarnPins.push(pinId);
+        node.classList.add("node-connected");
+        playSynthTone(440 + connectedYarnPins.length * 150, 0.15, "triangle");
 
-          if (solvedBanner) {
-            solvedBanner.style.display = "block";
-            solvedBanner.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (pinsPill) {
+          pinsPill.textContent = `PINS CONNECTED: ${connectedYarnPins.length} / 3`;
+        }
+
+        if (yarnFeedback) yarnFeedback.textContent = "";
+
+        if (connectedYarnPins.length === 3) {
+          isYarnSolved = true;
+          if (yarnFeedback) {
+            yarnFeedback.innerHTML = "<strong style='color:#52e396;'>DEDUCTION VERIFIED!</strong> The thread points directly to the Brass Cryptex.";
           }
-        } else {
-          wrongDeductionAttempts++;
-          btn.classList.add("is-wrong");
-          setTimeout(() => btn.classList.remove("is-wrong"), 500);
-
-          if (feedback) {
-            feedback.textContent = "The clues don't point to that. Review all three evidence cards.";
-          }
-
-          if (wrongDeductionAttempts >= 2 && hintDock) {
-            hintDock.style.display = "block";
+          if (cryptexVault) {
+            cryptexVault.style.display = "block";
+            cryptexVault.scrollIntoView({ behavior: "smooth", block: "center" });
           }
         }
-      });
-
-      optionsGrid.appendChild(btn);
+      }
     });
-  }
+  });
 
-  if (hintBtn && hintText) {
-    hintBtn.addEventListener("click", () => {
-      hintBtn.style.display = "none";
-      hintText.style.display = "block";
+  // Part B: Brass Cryptex Dial Rotations
+  const dialButtons = document.querySelectorAll(".dial-arrow-btn");
+  dialButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (isCryptexUnlocked) return;
+      const dialIdx = parseInt(btn.dataset.dial, 10);
+      const dir = btn.dataset.dir;
+
+      playMechanicalClack();
+
+      if (dir === "up") {
+        cryptexValues[dialIdx] = (cryptexValues[dialIdx] + 1) % 10;
+      } else {
+        cryptexValues[dialIdx] = (cryptexValues[dialIdx] - 1 + 10) % 10;
+      }
+
+      const valEl = document.getElementById(`dialVal${dialIdx}`);
+      if (valEl) valEl.textContent = cryptexValues[dialIdx];
     });
-  }
+  });
 
-  if (btnUnlockFinal && finalCaseSection) {
-    btnUnlockFinal.addEventListener("click", () => {
-      finalCaseSection.style.display = "block";
-      finalCaseSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Test Cryptex Code
+  if (unlockCryptexBtn) {
+    unlockCryptexBtn.addEventListener("click", () => {
+      if (isCryptexUnlocked) return;
+
+      const isMatch = (
+        cryptexValues[0] === targetCryptex[0] &&
+        cryptexValues[1] === targetCryptex[1] &&
+        cryptexValues[2] === targetCryptex[2]
+      );
+
+      if (isMatch) {
+        isCryptexUnlocked = true;
+        playSynthTone(880, 0.4, "sine");
+        setTimeout(() => playSynthTone(1320, 0.5, "sine"), 200);
+
+        if (cryptexFeedback) {
+          cryptexFeedback.innerHTML = "<strong style='color:#52e396;'>TUMBLERS RELEASED!</strong> The brass lock opened.";
+        }
+        unlockCryptexBtn.disabled = true;
+        unlockCryptexBtn.classList.add("is-unlocked");
+        unlockCryptexBtn.querySelector("span").textContent = "VAULT UNLOCKED ✓";
+
+        if (finalCaseSection) {
+          finalCaseSection.style.display = "block";
+          finalCaseSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          updateOverallProgress(4);
+        }
+      } else {
+        playSynthTone(180, 0.3, "sawtooth");
+        if (cryptexFeedback) {
+          cryptexFeedback.textContent = "The tumblers resisted. Review clues: Photo UV digit, Note UV digit, and Radio audio log.";
+        }
+      }
     });
   }
 }
 
 /**
  * ==========================================================================
- * EXPERIENCE 3: THE FINAL CASE FILE & PERSONAL LETTER
+ * EXPERIENCE 4: THE FINAL CASE FILE & PERSONAL LETTER
  * ==========================================================================
  */
-function initExperience3FinalCase(alreadyCompleted) {
+function initExperience4FinalCase(alreadyCompleted) {
   const sealedStage = document.getElementById("sealedCaseStage");
   const revealedStage = document.getElementById("caseRevealedStage");
   const openConfidentialBtn = document.getElementById("btnOpenConfidential");
@@ -691,7 +860,6 @@ function initExperience3FinalCase(alreadyCompleted) {
   if (alreadyCompleted) {
     if (sealedStage) sealedStage.style.display = "none";
     if (revealedStage) revealedStage.style.display = "block";
-
     if (letterStream) {
       letterStream.innerHTML = "";
       day8LetterData.paragraphs.forEach((p, idx) => {
@@ -701,16 +869,17 @@ function initExperience3FinalCase(alreadyCompleted) {
         letterStream.appendChild(line);
       });
     }
-
     if (continueDock) continueDock.style.display = "none";
     if (caseClosedLockup) caseClosedLockup.style.display = "block";
     return;
   }
 
-  // Open Confidential File (Stage A -> Stage B)
   function handleOpenSecretFile() {
     if (hasOpenedFinalCase) return;
     hasOpenedFinalCase = true;
+
+    playSynthTone(587, 0.2);
+    setTimeout(() => playSynthTone(880, 0.4), 160);
 
     if (sealedStage) {
       sealedStage.style.opacity = "0";
@@ -729,7 +898,6 @@ function initExperience3FinalCase(alreadyCompleted) {
   if (openConfidentialBtn) openConfidentialBtn.addEventListener("click", handleOpenSecretFile);
   if (waxSeal) waxSeal.addEventListener("click", handleOpenSecretFile);
 
-  // Staged Progressive Letter Line Reveal
   function revealNextLetterParagraph() {
     if (!letterStream) return;
 
@@ -742,6 +910,8 @@ function initExperience3FinalCase(alreadyCompleted) {
       pEl.textContent = pText;
       letterStream.appendChild(pEl);
 
+      playSynthTone(400 + currentLetterParagraph * 80, 0.08, "triangle");
+
       currentLetterParagraph++;
 
       if (currentLetterParagraph >= day8LetterData.paragraphs.length) {
@@ -752,9 +922,7 @@ function initExperience3FinalCase(alreadyCompleted) {
     }
   }
 
-  if (continueBtn) {
-    continueBtn.addEventListener("click", revealNextLetterParagraph);
-  }
+  if (continueBtn) continueBtn.addEventListener("click", revealNextLetterParagraph);
 
   if (completeDay8Btn) {
     completeDay8Btn.addEventListener("click", () => {
@@ -764,15 +932,15 @@ function initExperience3FinalCase(alreadyCompleted) {
 }
 
 /**
- * ==========================================================================
- * DAY 8 COMPLETION CRITERIA & COMPLETION SCREEN RENDER
- * ==========================================================================
+ * Completion Criteria & View
  */
 function checkDay8Completion() {
   if (
     isRhythmLockSolved &&
-    collectedEvidenceSet.size >= 3 &&
-    isCluesPuzzleSolved &&
+    inspectedEvidenceSet.size >= 3 &&
+    isWiretapSolved &&
+    isYarnSolved &&
+    isCryptexUnlocked &&
     hasOpenedFinalCase &&
     isLetterFullyRead
   ) {
@@ -780,7 +948,6 @@ function checkDay8Completion() {
     try {
       localStorage.setItem("budduu_day8_completed", "true");
     } catch (e) {}
-
     renderCompletionView();
   }
 }
@@ -791,7 +958,7 @@ function renderCompletionView() {
     completionScreen.style.display = "block";
     setTimeout(() => {
       completionScreen.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 450);
+    }, 400);
   }
 }
 
