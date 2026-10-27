@@ -1,0 +1,1533 @@
+/* ==========================================================================
+   BUDDUU — DAY 09: “OPERATION: LAST GATE // THE SEVEN SEALS”
+   Aesthetic: Dark Classified Archive, Heavy Stone, Antique Brass & Candlelight
+   Palette:
+     - Charcoal Black: #0B0B0D
+     - Deep Archive Brown: #211A13
+     - Antique Gold: #C7A76C
+     - Bright Gold Highlight: #E4C27A
+     - Warm Ivory: #E8DFC9
+     - Muted Crimson: #6B2525
+     - Aged Parchment: #CBB995
+   ========================================================================== */
+
+:root {
+  --color-archive-black: #0B0B0D;
+  --color-archive-brown: #211A13;
+  --color-antique-gold: #C7A76C;
+  --color-gold-bright: #E4C27A;
+  --color-warm-ivory: #E8DFC9;
+  --color-muted-crimson: #6B2525;
+  --color-aged-parchment: #CBB995;
+  --font-serif-heading: 'Cinzel', serif;
+  --font-serif-book: 'Cormorant Garamond', Georgia, serif;
+  --font-mono-ledger: 'Courier Prime', monospace;
+  --font-sans-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+.day9-body {
+  background-color: var(--color-archive-black);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  color: var(--color-warm-ivory);
+  font-family: var(--font-sans-body);
+}
+
+/* ==========================================================================
+   ATMOSPHERIC LIGHTING & SUSPENDED DUST
+   ========================================================================== */
+
+.day9-ambient-stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ambient-base-stone {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 10%, rgba(199, 167, 108, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 60%, rgba(107, 37, 37, 0.14) 0%, transparent 55%),
+    linear-gradient(180deg, #120e0c 0%, #0b0b0d 65%, #050506 100%);
+}
+
+.ambient-candlelight-glow {
+  position: absolute;
+  top: -100px;
+  right: 20%;
+  width: 580px;
+  height: 580px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(228, 194, 122, 0.16) 0%, transparent 70%);
+  filter: blur(120px);
+  animation: candleFlicker 6s infinite ease-in-out alternate;
+}
+
+.ambient-candlelight-glow.secondary {
+  top: 45%;
+  left: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(199, 167, 108, 0.12) 0%, transparent 70%);
+  animation: candleFlicker 8s infinite ease-in-out alternate-reverse;
+}
+
+@keyframes candleFlicker {
+  0% { opacity: 0.7; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 0.8; transform: scale(0.98); }
+}
+
+.ambient-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.92);
+}
+
+.ambient-parchment-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: radial-gradient(rgba(232, 223, 201, 0.85) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.day9-particles-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ==========================================================================
+   NAVIGATION AUDIO TOGGLE
+   ========================================================================== */
+
+.nav-center-audio-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.btn-sound-toggle {
+  background: rgba(33, 26, 19, 0.7);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--color-antique-gold);
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.btn-sound-toggle:hover {
+  border-color: var(--color-gold-bright);
+  background: rgba(199, 167, 108, 0.15);
+}
+
+/* ==========================================================================
+   COMMON ARCHIVE CARD ARCHITECTURE
+   ========================================================================== */
+
+.archive-card {
+  background: linear-gradient(175deg, rgba(33, 26, 19, 0.96) 0%, rgba(18, 14, 11, 0.98) 100%);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.9), 0 0 35px rgba(199, 167, 108, 0.15);
+  border-radius: 18px;
+  position: relative;
+}
+
+.archive-kicker {
+  display: inline-block;
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 3px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   GATE 1: DATE LOCKED VIEW
+   ========================================================================== */
+
+.day9-locked-view {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.locked-card-container {
+  max-width: 540px;
+  width: 100%;
+  padding: 50px 36px;
+  text-align: center;
+}
+
+.locked-wax-seal {
+  width: 74px;
+  height: 74px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #5c1818 0%, #300c0c 100%);
+  border: 2px solid rgba(199, 167, 108, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 28px rgba(107, 37, 37, 0.6);
+}
+
+.seal-insignia {
+  font-size: 2.2rem;
+  color: var(--color-gold-bright);
+}
+
+.locked-heading {
+  font-family: var(--font-serif-heading);
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--color-gold-bright);
+  margin-bottom: 12px;
+}
+
+.locked-quote {
+  font-family: var(--font-serif-book);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: var(--color-aged-parchment);
+  line-height: 1.6;
+  margin-bottom: 26px;
+}
+
+.locked-date-capsule {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(199, 167, 108, 0.4);
+  color: var(--color-antique-gold);
+  font-family: var(--font-mono-ledger);
+  font-size: 0.88rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 30px;
+}
+
+/* ==========================================================================
+   BRIEFING VIEW: OPERATION LAST GATE
+   ========================================================================== */
+
+.day9-intro-view {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.intro-briefing-card {
+  max-width: 680px;
+  width: 100%;
+  padding: 44px 36px;
+  text-align: center;
+}
+
+.intro-seal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(199, 167, 108, 0.12);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+
+.brass-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-antique-gold);
+  box-shadow: 0 0 8px var(--color-gold-bright);
+}
+
+.briefing-code {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+}
+
+.intro-main-title {
+  font-family: var(--font-serif-heading);
+  font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--color-gold-bright);
+  margin-bottom: 10px;
+}
+
+.intro-subtitle-lead {
+  font-family: var(--font-serif-book);
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--color-warm-ivory);
+  margin-bottom: 24px;
+}
+
+.archive-parchment-inset {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(199, 167, 108, 0.3);
+  padding: 22px;
+  border-radius: 12px;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--color-aged-parchment);
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.archive-parchment-inset p + p {
+  margin-top: 12px;
+}
+
+.intro-protocol-warning {
+  border-top: 1px dashed rgba(199, 167, 108, 0.25);
+  padding-top: 12px;
+  color: var(--color-gold-bright);
+  font-size: 0.92rem;
+}
+
+.btn-enter-archive {
+  padding: 16px 42px;
+  letter-spacing: 2px;
+  font-family: var(--font-mono-ledger);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   MAIN OPERATION HUD & 7 SEALS RIBBON
+   ========================================================================== */
+
+.day9-game-view {
+  position: relative;
+  z-index: 2;
+  padding: 95px 0 60px;
+}
+
+.archive-hud-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 26px;
+  margin-bottom: 28px;
+  background: rgba(22, 17, 13, 0.92);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  border-radius: 14px;
+  flex-wrap: wrap;
+}
+
+.hud-chamber-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-chamber-tag {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+}
+
+.hud-chamber-title {
+  font-family: var(--font-serif-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-gold-bright);
+}
+
+/* 7 Seals Tracker Nodes */
+.hud-seals-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.seal-node {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: rgba(232, 223, 201, 0.4);
+  font-family: var(--font-serif-heading);
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.seal-node.active {
+  border-color: var(--color-gold-bright);
+  color: #fff;
+  background: rgba(199, 167, 108, 0.2);
+  box-shadow: 0 0 14px rgba(228, 194, 122, 0.4);
+}
+
+.seal-node.completed {
+  border-color: #52e396;
+  background: rgba(82, 227, 150, 0.18);
+  color: #52e396;
+}
+
+.seal-connector {
+  width: 10px;
+  height: 1px;
+  background: rgba(199, 167, 108, 0.25);
+}
+
+.hud-security-lockout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.attempts-caption {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  color: var(--color-aged-parchment);
+}
+
+.attempts-pips-track {
+  display: flex;
+  gap: 6px;
+}
+
+.attempt-pip {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(199, 167, 108, 0.3);
+  transition: all 0.25s ease;
+}
+
+.attempt-pip.filled {
+  background: var(--color-muted-crimson);
+  border-color: #c94646;
+  box-shadow: 0 0 8px rgba(201, 70, 70, 0.7);
+}
+
+.archive-status-toast {
+  text-align: center;
+  font-family: var(--font-serif-book);
+  font-size: 1.1rem;
+  font-style: italic;
+  min-height: 28px;
+  margin-bottom: 18px;
+  transition: color 0.3s ease;
+}
+
+/* ==========================================================================
+   CHAMBER CARD STRUCTURE
+   ========================================================================== */
+
+.archive-chamber-card {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 44px 34px;
+  background: linear-gradient(175deg, rgba(30, 23, 17, 0.96) 0%, rgba(16, 12, 10, 0.98) 100%);
+  border: 1px solid rgba(199, 167, 108, 0.38);
+  border-radius: 20px;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
+  animation: fadeInChamber 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInChamber {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chamber-masthead {
+  text-align: center;
+  margin-bottom: 26px;
+  border-bottom: 1px dashed rgba(199, 167, 108, 0.25);
+  padding-bottom: 18px;
+}
+
+.chamber-sector-label {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 3px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.chamber-hero-title {
+  font-family: var(--font-serif-heading);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--color-gold-bright);
+  margin-bottom: 8px;
+}
+
+.chamber-verse {
+  font-family: var(--font-serif-book);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--color-aged-parchment);
+  line-height: 1.5;
+}
+
+/* Trial Submodule */
+.trial-module {
+  margin-bottom: 28px;
+}
+
+.trial-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.trial-tag {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+}
+
+.trial-status {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(199, 167, 108, 0.2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: var(--color-aged-parchment);
+}
+
+.parchment-ledger-box {
+  background: rgba(14, 11, 8, 0.7);
+  border: 1px dashed rgba(199, 167, 108, 0.35);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.ledger-inscription {
+  font-family: var(--font-serif-book);
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: var(--color-warm-ivory);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   EXPERIENCE 01: THE SEALED ENTRANCE
+   ========================================================================== */
+
+.rune-slots-row {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.rune-slot {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(199, 167, 108, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--color-gold-bright);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  transition: border-color 0.2s ease;
+}
+
+.runes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 440px;
+  margin: 0 auto 20px;
+}
+
+.btn-rune {
+  height: 60px;
+  border-radius: 10px;
+  background: rgba(33, 26, 19, 0.7);
+  border: 1px solid rgba(199, 167, 108, 0.28);
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-rune:hover {
+  background: rgba(199, 167, 108, 0.2);
+  border-color: var(--color-gold-bright);
+  transform: translateY(-2px);
+}
+
+.trial-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   EXPERIENCE 02: THE HIDDEN TESTAMENT
+   ========================================================================== */
+
+.relic-inspection-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.relic-item-btn {
+  padding: 22px 14px;
+  border-radius: 12px;
+  background: rgba(33, 26, 19, 0.6);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  color: var(--color-warm-ivory);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.relic-item-btn:hover {
+  background: rgba(199, 167, 108, 0.16);
+  border-color: var(--color-gold-bright);
+  transform: translateY(-4px);
+}
+
+.relic-icon { font-size: 2.2rem; }
+.relic-label { font-size: 0.95rem; font-weight: 700; }
+.relic-action-tag {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  color: var(--color-antique-gold);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   EXPERIENCE 03: THE CIPHER ARCHIVE
+   ========================================================================== */
+
+.cipher-lead-inscription {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  color: var(--color-antique-gold);
+  margin-bottom: 4px;
+}
+
+.cipher-letters-display {
+  font-family: var(--font-serif-heading);
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: 10px;
+  color: var(--color-gold-bright);
+  text-shadow: 0 0 20px rgba(228, 194, 122, 0.5);
+  margin-bottom: 8px;
+}
+
+.archive-input-form {
+  max-width: 480px;
+  margin: 0 auto 16px;
+}
+
+.input-lock-cluster {
+  display: flex;
+  gap: 10px;
+}
+
+.archive-text-field {
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  color: var(--color-warm-ivory);
+  font-family: var(--font-mono-ledger);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.archive-text-field:focus {
+  border-color: var(--color-gold-bright);
+  box-shadow: 0 0 16px rgba(199, 167, 108, 0.3);
+}
+
+/* ==========================================================================
+   EXPERIENCE 04: THE CONCEALED SWITCH
+   ========================================================================== */
+
+.emblem-selection-panel {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.emblem-card-btn {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(33, 26, 19, 0.6);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  color: var(--color-warm-ivory);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.emblem-card-btn:hover {
+  background: rgba(199, 167, 108, 0.2);
+  border-color: var(--color-gold-bright);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   EXPERIENCE 05: THE BRASS SWITCHBOARD & RELICS
+   ========================================================================== */
+
+.circuit-parchment-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.circuit-rule-box {
+  padding: 14px 12px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(199, 167, 108, 0.2);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.rule-num {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  color: var(--color-antique-gold);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.circuit-rule-box p {
+  font-size: 0.88rem;
+  color: var(--color-aged-parchment);
+  line-height: 1.4;
+}
+
+.switch-selection-track {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.switch-slot {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(199, 167, 108, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono-ledger);
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--color-gold-bright);
+}
+
+.switches-chassis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 500px;
+  margin: 0 auto 20px;
+}
+
+.switch-lever-btn {
+  padding: 18px 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #2b2219, #14100c);
+  border: 2px solid rgba(199, 167, 108, 0.35);
+  color: var(--color-warm-ivory);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+}
+
+.lever-stem {
+  width: 6px;
+  height: 24px;
+  background: #554838;
+  border-radius: 3px;
+}
+
+.lever-knob {
+  width: 20px;
+  height: 20px;
+  background: var(--color-antique-gold);
+  border-radius: 50%;
+  border: 1px solid var(--color-gold-bright);
+  transition: transform 0.25s ease;
+}
+
+.switch-lever-btn.active-sw {
+  border-color: #52e396;
+  box-shadow: 0 0 16px rgba(82, 227, 150, 0.4);
+}
+
+.switch-lever-btn.active-sw .lever-knob {
+  background: #52e396;
+  border-color: #7affb5;
+  transform: translateY(6px);
+}
+
+.lever-label {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+/* Relay Grid */
+.relay-chamber-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  max-width: 480px;
+  margin: 0 auto 20px;
+}
+
+.relay-card {
+  padding: 18px 16px;
+  border-radius: 10px;
+  background: rgba(33, 26, 19, 0.6);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  color: var(--color-warm-ivory);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.25s ease;
+}
+
+.relay-filament {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.relay-crimson .relay-filament { background: #b02e2e; box-shadow: 0 0 8px #b02e2e; }
+.relay-amber .relay-filament { background: var(--color-gold-bright); box-shadow: 0 0 8px var(--color-gold-bright); }
+.relay-cobalt .relay-filament { background: #3b74c4; box-shadow: 0 0 8px #3b74c4; }
+.relay-emerald .relay-filament { background: #3ba868; box-shadow: 0 0 8px #3ba868; }
+
+.relay-card:hover {
+  background: rgba(199, 167, 108, 0.2);
+  border-color: var(--color-gold-bright);
+}
+
+/* ==========================================================================
+   EXPERIENCE 06: THE MASTER LEDGER
+   ========================================================================== */
+
+.master-ledger-dossier {
+  background: rgba(14, 11, 8, 0.7);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.dossier-heading {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 2.5px;
+  color: var(--color-antique-gold);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.dossier-values-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 12px;
+  font-family: var(--font-mono-ledger);
+  font-size: 0.88rem;
+  color: var(--color-warm-ivory);
+}
+
+.dossier-values-row strong {
+  color: var(--color-gold-bright);
+}
+
+.keypad-readout-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.digit-cell {
+  width: 54px;
+  height: 64px;
+  border-radius: 8px;
+  background: #000;
+  border: 2px solid rgba(199, 167, 108, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono-ledger);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-gold-bright);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.85);
+}
+
+.antique-keypad-panel {
+  max-width: 280px;
+  margin: 0 auto 20px;
+  background: rgba(22, 17, 13, 0.85);
+  padding: 16px;
+  border-radius: 14px;
+  border: 2px solid rgba(199, 167, 108, 0.3);
+}
+
+.keypad-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn-num {
+  height: 52px;
+  border-radius: 8px;
+  background: rgba(33, 26, 19, 0.7);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  color: var(--color-warm-ivory);
+  font-family: var(--font-mono-ledger);
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-num:active {
+  background: rgba(199, 167, 108, 0.35);
+  transform: scale(0.95);
+}
+
+.btn-num-action { color: #d46363; font-size: 0.95rem; }
+.btn-num-enter { color: #52e396; font-size: 0.95rem; }
+
+/* ==========================================================================
+   EXPERIENCE 07: THE LAST GATE
+   ========================================================================== */
+
+.last-gate-monolith-display {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.gate-archway-graphic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px solid rgba(199, 167, 108, 0.45);
+  background: radial-gradient(circle, rgba(199, 167, 108, 0.15) 0%, transparent 70%);
+}
+
+.gate-seal-rune {
+  font-size: 2.8rem;
+  color: var(--color-gold-bright);
+  animation: sealPulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes sealPulse {
+  0% { transform: scale(0.94); opacity: 0.8; }
+  100% { transform: scale(1.06); opacity: 1; }
+}
+
+/* Chamber Solved Banner */
+.chamber-cleared-banner {
+  text-align: center;
+  padding: 24px 20px;
+  border-radius: 12px;
+  background: rgba(82, 227, 150, 0.1);
+  border: 1px solid rgba(82, 227, 150, 0.35);
+  margin-top: 24px;
+}
+
+.seal-recovered-stamp {
+  display: inline-block;
+  font-family: var(--font-serif-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #52e396;
+  border: 2px dashed #52e396;
+  padding: 4px 16px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.token-discovery-copy {
+  font-size: 1rem;
+  color: var(--color-warm-ivory);
+  margin-bottom: 18px;
+}
+
+.brass-token-number {
+  font-size: 1.3rem;
+  color: var(--color-gold-bright);
+}
+
+.btn-advance-chamber {
+  padding: 14px 34px;
+}
+
+/* Hints Control */
+.hint-compartment {
+  text-align: center;
+  margin-top: 14px;
+}
+
+.btn-hint {
+  background: transparent;
+  border: none;
+  color: var(--color-antique-gold);
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px dashed rgba(199, 167, 108, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-hint:hover {
+  background: rgba(199, 167, 108, 0.12);
+  border-color: var(--color-gold-bright);
+}
+
+.hint-text-readout {
+  margin-top: 10px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: rgba(199, 167, 108, 0.08);
+  border: 1px solid rgba(199, 167, 108, 0.25);
+  font-family: var(--font-serif-book);
+  font-style: italic;
+  font-size: 0.98rem;
+  color: var(--color-warm-ivory);
+}
+
+/* ==========================================================================
+   MODALS: INSPECTION & ARCHIVE LOCKDOWN
+   ========================================================================== */
+
+.modal-dialog-backdrop,
+.lockdown-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 5, 5, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 6000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-inspection-box,
+.lockdown-alert-box {
+  max-width: 520px;
+  width: 100%;
+  padding: 38px 28px;
+  text-align: center;
+}
+
+.modal-relic-emblem { font-size: 2.8rem; }
+.modal-relic-title {
+  font-family: var(--font-serif-heading);
+  font-size: 1.6rem;
+  color: var(--color-gold-bright);
+  margin: 10px 0;
+}
+
+.modal-filigree-divider {
+  width: 60px;
+  height: 2px;
+  background: var(--color-antique-gold);
+  margin: 0 auto 18px;
+}
+
+.modal-relic-body {
+  font-family: var(--font-serif-book);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--color-aged-parchment);
+  margin-bottom: 24px;
+}
+
+.modal-actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Lockdown Styles */
+.lockdown-insignia {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.lockdown-alert-kicker {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 3px;
+  color: #d46363;
+  font-weight: 700;
+  display: block;
+}
+
+.lockdown-title {
+  font-family: var(--font-serif-heading);
+  font-size: 2.2rem;
+  color: #d46363;
+  margin-bottom: 12px;
+}
+
+.lockdown-reason-text {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.95rem;
+  color: var(--color-antique-gold);
+  margin-bottom: 8px;
+}
+
+.lockdown-subtext {
+  font-size: 0.95rem;
+  color: var(--color-aged-parchment);
+  line-height: 1.5;
+  margin-bottom: 26px;
+}
+
+/* ==========================================================================
+   CINEMATIC SEQUENCE: LAST GATE OPENING
+   ========================================================================== */
+
+.gate-cinematic-stage {
+  position: fixed;
+  inset: 0;
+  background: #090807;
+  z-index: 5500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.ambient-gate-aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(199, 167, 108, 0.14) 0%, transparent 65%);
+}
+
+.cinematic-dossier-wrap {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cinematic-line {
+  font-family: var(--font-serif-heading);
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  font-weight: 700;
+  color: var(--color-warm-ivory);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  position: absolute;
+}
+
+.cinematic-line.active-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cinematic-sealed-note {
+  color: var(--color-gold-bright);
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.cinematic-quote {
+  font-family: var(--font-serif-book);
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.cinematic-auth-tag {
+  font-family: var(--font-mono-ledger);
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+  color: var(--color-antique-gold);
+}
+
+.cinematic-final-kicker {
+  font-family: var(--font-mono-ledger);
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--color-gold-bright);
+}
+
+.btn-view-countdown {
+  position: absolute;
+  bottom: 40px;
+  z-index: 10;
+  padding: 14px 38px;
+}
+
+/* ==========================================================================
+   EXPERIENCE 08: THE FINAL COUNTDOWN CHAMBER
+   ========================================================================== */
+
+.final-countdown-view {
+  max-width: 760px;
+  margin: 60px auto 40px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 0 20px;
+}
+
+.countdown-dossier-card {
+  padding: 50px 36px;
+  background: linear-gradient(175deg, rgba(30, 23, 17, 0.98) 0%, rgba(14, 11, 9, 0.99) 100%);
+  border: 1px solid rgba(199, 167, 108, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 50px rgba(199, 167, 108, 0.15);
+}
+
+.dossier-wax-emblem {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #5c1818 0%, #300c0c 100%);
+  border: 2px solid var(--color-antique-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--color-gold-bright);
+}
+
+.countdown-kicker {
+  display: inline-block;
+  font-family: var(--font-mono-ledger);
+  font-size: 0.74rem;
+  letter-spacing: 3px;
+  color: var(--color-antique-gold);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.countdown-main-heading {
+  font-family: var(--font-serif-heading);
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--color-gold-bright);
+  margin-bottom: 8px;
+}
+
+.countdown-sub-heading {
+  font-family: var(--font-serif-book);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--color-aged-parchment);
+  margin-bottom: 24px;
+}
+
+.countdown-seals-emblem-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.recovered-seal-pip {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-antique-gold);
+  background: rgba(199, 167, 108, 0.15);
+  color: var(--color-gold-bright);
+  font-family: var(--font-serif-heading);
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 4-Unit IST Countdown Block */
+.live-countdown-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.countdown-unit-pod {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(199, 167, 108, 0.35);
+  border-radius: 12px;
+  padding: 16px 14px;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.unit-digit {
+  font-family: var(--font-mono-ledger);
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  color: var(--color-gold-bright);
+  line-height: 1;
+  text-shadow: 0 0 16px rgba(228, 194, 122, 0.4);
+}
+
+.unit-label {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: var(--color-aged-parchment);
+  margin-top: 6px;
+}
+
+.countdown-unit-divider {
+  font-family: var(--font-mono-ledger);
+  font-size: 2rem;
+  color: var(--color-antique-gold);
+}
+
+.authorization-status-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(199, 167, 108, 0.3);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.auth-icon { font-size: 1.8rem; }
+.auth-date-title {
+  display: block;
+  font-family: var(--font-serif-heading);
+  font-size: 1.1rem;
+  color: var(--color-gold-bright);
+}
+.auth-subtext {
+  font-size: 0.85rem;
+  color: var(--color-aged-parchment);
+}
+
+.countdown-whisper-motto {
+  font-family: var(--font-serif-book);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--color-warm-ivory);
+  margin-bottom: 30px;
+}
+
+.countdown-dock-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.dossier-signoff-foot {
+  padding-top: 20px;
+  border-top: 1px solid rgba(199, 167, 108, 0.2);
+}
+
+.signoff-tag {
+  font-family: var(--font-mono-ledger);
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  color: var(--color-antique-gold);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.signoff-quote {
+  font-family: var(--font-serif-book);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--color-aged-parchment);
+}
+
+.archive-site-footer {
+  margin-top: 60px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN & ACCESSIBILITY
+   ========================================================================== */
+
+@media (max-width: 820px) {
+  .archive-hud-bar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .circuit-parchment-trio,
+  .relic-inspection-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .switches-chassis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .day9-game-view {
+    padding-top: 80px;
+  }
+
+  .archive-chamber-card {
+    padding: 30px 18px;
+  }
+
+  .runes-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .btn-rune {
+    height: 52px;
+    font-size: 1.3rem;
+  }
+
+  .rune-slot {
+    width: 48px;
+    height: 48px;
+    font-size: 1.3rem;
+  }
+
+  .countdown-unit-pod {
+    min-width: 64px;
+    padding: 12px 8px;
+  }
+
+  .countdown-unit-divider {
+    font-size: 1.4rem;
+  }
+
+  .countdown-dock-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .countdown-dock-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .day9-body,
+  .archive-chamber-card,
+  .cinematic-line,
+  .gate-seal-rune,
+  .ambient-candlelight-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAY 09 — OPERATION: LAST GATE // THE SEVEN SEALS | Budduu Journey</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="day9.css">
+</head>
+<body class="day9-body">
+
+  <!-- Atmospheric Background: Dark Stone Archive, Candlelight Warmth & Vignette -->
+  <div class="day9-ambient-stage" aria-hidden="true">
+    <div class="ambient-base-stone"></div>
+    <div class="ambient-candlelight-glow" id="candleGlow1"></div>
+    <div class="ambient-candlelight-glow secondary" id="candleGlow2"></div>
+    <div class="ambient-vignette-overlay"></div>
+    <div class="ambient-parchment-grain"></div>
+  </div>
+
+  <!-- Ambient Suspended Dust Canvas -->
+  <canvas id="day9ParticlesCanvas" class="day9-particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="site-nav" aria-label="Main Navigation">
+      <a href="index.html" class="nav-brand" aria-label="Return to Archive Ledger">
+        <img src="logo.png" alt="BUDDUU Logo" class="nav-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span class="nav-brand-fallback">BUDDUU ⚜</span>
+      </a>
+      
+      <div class="nav-center-audio-toggle">
+        <button type="button" class="btn-sound-toggle" id="btnAudioToggle" aria-label="Toggle atmospheric sound" aria-pressed="false">
+          <span class="sound-icon" id="soundIcon">🔇</span>
+          <span class="sound-label" id="soundLabel">SOUND: OFF</span>
+        </button>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="day8.html" class="nav-link">← Day 08</a></li>
+        <li><a href="index.html" class="nav-link">Ledger</a></li>
+        <li><a href="day10.html" class="nav-link" id="navNextDayBtn">Final Gate →</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- =========================================================
+       GATE 1: DATE LOCKED VIEW (Active before 28 October 2026)
+       ========================================================= -->
+  <section id="day9DateLockedView" class="day9-locked-view" style="display: none;" aria-label="Day 9 Locked by Date">
+    <div class="archive-card locked-card-container">
+      <div class="locked-wax-seal" aria-hidden="true">
+        <span class="seal-insignia">⚜</span>
+      </div>
+      <span class="archive-kicker">CLASSIFIED DOSSIER • SECTOR 09</span>
+      <h1 class="locked-heading">ARCHIVE SEALED</h1>
+      <p class="locked-quote">“Seven seals guard what lies within. The mechanisms remain inert until the appointed hour on the eve of the day…”</p>
+      <div class="locked-date-capsule" id="dateLockCountdown">Unlocks on 28 October 2026</div>
+      <div class="locked-actions">
+        <a href="index.html#journey" class="btn btn-secondary">← RETURN TO JOURNEY</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       BRIEFING: OPERATION LAST GATE BRIEFING
+       ========================================================= -->
+  <section id="day9IntroView" class="day9-intro-view" style="display: none;" aria-label="Archive Briefing">
+    <div class="archive-card intro-briefing-card">
+      <div class="intro-seal-badge">
+        <span class="brass-pip" aria-hidden="true"></span>
+        <span class="briefing-code">CLEARANCE LEVEL: RESTRICTED // FILE: 28-OCT-2026</span>
+      </div>
+
+      <span class="archive-kicker">OPERATION: LAST GATE</span>
+      <h1 class="intro-main-title">THE SEVEN SEALS</h1>
+      <p class="intro-subtitle-lead">“Seven seals protect the final evidence. The archive recognizes you.”</p>
+
+      <div class="archive-parchment-inset">
+        <p>A forgotten classified archive has been discovered, sealed behind seven layers of ancient mechanical security.</p>
+        <p>Inside lie forgotten documents, brass switchboards, cryptic ciphers, and hidden relays. The archive was prepared deliberately—each trial yields a recovered seal.</p>
+        <p class="intro-protocol-warning">
+          <strong>⚠️ PROTOCOL NOTE:</strong> Each lock permits exactly <strong>3 validation attempts</strong>. If three consecutive failures occur, the chamber safety seals engage, requiring that specific chamber to be re-initialized.
+        </p>
+      </div>
+
+      <button type="button" class="btn btn-primary btn-enter-archive" id="btnStartEscapeRoom">
+        <span>COMMENCE OPERATION</span>
+        <span class="btn-spark-dot" aria-hidden="true">⚜</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       MAIN OPERATION INTERFACE (7 SEALS PROGRESSION)
+       ========================================================= -->
+  <main id="day9GameView" class="day9-game-view" style="display: none;">
+    <div class="container">
+
+      <!-- Dossier Top Status Ribbon (7 Seals Tracker & Security Gauge) -->
+      <header class="archive-hud-bar" role="region" aria-label="Archive Progress Ribbon">
+        <div class="hud-chamber-info">
+          <span class="hud-chamber-tag" id="hudRoomBadge">TRIAL 01 / 07</span>
+          <span class="hud-chamber-title" id="hudRoomName">THE SEALED ENTRANCE</span>
+        </div>
+
+        <!-- 7 Seals Progress Ribbon -->
+        <div class="hud-seals-ribbon" role="status" aria-label="Seven Seals Status">
+          <div class="seal-node active" id="sealNode1" title="Seal 01: Entrance Rune">
+            <span class="seal-glyph">I</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode2" title="Seal 02: Hidden Testament">
+            <span class="seal-glyph">II</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode3" title="Seal 03: Cipher Archive">
+            <span class="seal-glyph">III</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode4" title="Seal 04: Concealed Switch">
+            <span class="seal-glyph">IV</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode5" title="Seal 05: Brass Switchboard">
+            <span class="seal-glyph">V</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode6" title="Seal 06: The Master Ledger">
+            <span class="seal-glyph">VI</span>
+            <span class="seal-status-dot"></span>
+          </div>
+          <span class="seal-connector"></span>
+          <div class="seal-node" id="sealNode7" title="Seal 07: The Last Gate">
+            <span class="seal-glyph">VII</span>
+            <span class="seal-status-dot"></span>
+          </div>
+        </div>
+
+        <!-- Attempts Gauge -->
+        <div class="hud-security-lockout">
+          <span class="attempts-caption">SECURITY ATTEMPTS:</span>
+          <div class="attempts-pips-track" id="attemptsGauge" aria-label="Remaining lock attempts">
+            <span class="attempt-pip filled" id="pip1"></span>
+            <span class="attempt-pip filled" id="pip2"></span>
+            <span class="attempt-pip filled" id="pip3"></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Feedback Banner / Status Message -->
+      <div class="archive-status-toast" id="roomFeedbackToast" aria-live="polite"></div>
+
+      <!-- =========================================================
+           CHAMBER 01: THE SEALED ENTRANCE & HIDDEN TESTAMENT
+           ========================================================= -->
+      <section class="archive-chamber-card" id="room1Container" aria-label="Chamber 01: The Sealed Entrance">
+        <div class="chamber-masthead">
+          <span class="chamber-sector-label">ARCHIVE CHAMBER 01</span>
+          <h2 class="chamber-hero-title">THE SEALED ENTRANCE</h2>
+          <p class="chamber-verse">“A massive stone portal sits embedded in darkness. Four engraved symbols answer only to the order of time.”</p>
+        </div>
+
+        <!-- Experience 1: The Symbol Sequence (Seal 01) -->
+        <div class="trial-module" id="p1Module">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 01 • THE ENTRANCE RUNES</span>
+            <span class="trial-status" id="p1Status">SEAL ENGAGED</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="ledger-inscription">
+              “First comes the light that begins the day.<br>
+              Then the bond that holds the story together.<br>
+              Follow the watcher of the night.<br>
+              Finish with what shines above it all.”
+            </p>
+          </div>
+
+          <!-- Assembled Sequence Slots -->
+          <div class="rune-slots-row" aria-label="Current rune sequence">
+            <div class="rune-slot" id="p1Slot0">_</div>
+            <div class="rune-slot" id="p1Slot1">_</div>
+            <div class="rune-slot" id="p1Slot2">_</div>
+            <div class="rune-slot" id="p1Slot3">_</div>
+          </div>
+
+          <!-- Selectable Symbol Rune Buttons -->
+          <div class="runes-grid" role="group" aria-label="Selectable Runes">
+            <button type="button" class="btn-rune" data-symbol="🌅" aria-label="Sunrise">🌅</button>
+            <button type="button" class="btn-rune" data-symbol="❤️" aria-label="Heart">❤️</button>
+            <button type="button" class="btn-rune" data-symbol="🎧" aria-label="Headphones">🎧</button>
+            <button type="button" class="btn-rune" data-symbol="⭐" aria-label="Star">⭐</button>
+            <button type="button" class="btn-rune" data-symbol="📸" aria-label="Camera">📸</button>
+            <button type="button" class="btn-rune" data-symbol="🎁" aria-label="Gift">🎁</button>
+            <button type="button" class="btn-rune" data-symbol="🌙" aria-label="Moon">🌙</button>
+            <button type="button" class="btn-rune" data-symbol="💌" aria-label="Letter">💌</button>
+          </div>
+
+          <div class="trial-actions">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnP1Clear">RESET RUNES</button>
+            <button type="button" class="btn btn-primary" id="btnP1Submit">
+              <span>ENGAGE ENTRANCE LOCK</span>
+              <span class="btn-spark-dot" aria-hidden="true">✦</span>
+            </button>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP1Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p1HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Experience 2: The Hidden Testament (Seal 02) -->
+        <div class="trial-module" id="p2Module" style="display: none;">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 02 • THE DESK OF RECORDS</span>
+            <span class="trial-status" id="p2Status">AWAITING INSPECTION</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="ledger-inscription">
+              “One preserves a moment.<br>
+              One preserves a message.<br>
+              One measures the wait.”
+            </p>
+          </div>
+
+          <div class="relic-inspection-grid" role="group" aria-label="Inspectable Relics">
+            <button type="button" class="relic-item-btn" data-obj="photo">
+              <span class="relic-icon">🖼️</span>
+              <span class="relic-label">Framed Polaroid</span>
+              <span class="relic-action-tag">INSPECT</span>
+            </button>
+            <button type="button" class="relic-item-btn" data-obj="note">
+              <span class="relic-icon">📜</span>
+              <span class="relic-label">Folded Scrap</span>
+              <span class="relic-action-tag">INSPECT</span>
+            </button>
+            <button type="button" class="relic-item-btn" data-obj="clock" id="objClockSwitch">
+              <span class="relic-icon">🕰️</span>
+              <span class="relic-label">Antique Clock</span>
+              <span class="relic-action-tag">INSPECT</span>
+            </button>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP2Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p2HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Chamber 01 Complete Banner -->
+        <div class="chamber-cleared-banner" id="room1SolvedBanner" style="display: none;">
+          <span class="seal-recovered-stamp">SEALS 01 & 02 RECOVERED</span>
+          <p class="token-discovery-copy">Chamber Token Discovered: <strong class="brass-token-number">4</strong> (4 entrance runes verified)</p>
+          <button type="button" class="btn btn-primary btn-advance-chamber" id="btnAdvanceToRoom2">
+            <span>PROCEED TO CIPHER ARCHIVE</span>
+            <span class="btn-spark-dot" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           CHAMBER 02: THE CIPHER ARCHIVE & CONCEALED SWITCH
+           ========================================================= -->
+      <section class="archive-chamber-card" id="room2Container" style="display: none;" aria-label="Chamber 02: The Cipher Archive">
+        <div class="chamber-masthead">
+          <span class="chamber-sector-label">ARCHIVE CHAMBER 02</span>
+          <h2 class="chamber-hero-title">THE CIPHER ARCHIVE</h2>
+          <p class="chamber-verse">“A cold room of classified manuscripts. Letters that almost make sense, shifted by an ancient cipher.”</p>
+        </div>
+
+        <!-- Experience 3: Caesar Cipher (Seal 03) -->
+        <div class="trial-module" id="p3Module">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 03 • CAESAR CYPHER MANUSCRIPT</span>
+            <span class="trial-status" id="p3Status">ENCRYPTED</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="cipher-lead-inscription">CLASSIFIED CIPHERTEXT:</p>
+            <div class="cipher-letters-display" id="p3CipherString">IFBSU</div>
+            <p class="ledger-inscription">“Every letter has moved one step forward in the order. Move each back to recover the truth.”</p>
+          </div>
+
+          <form class="archive-input-form" id="p3Form">
+            <div class="input-lock-cluster">
+              <input 
+                type="text" 
+                class="archive-text-field" 
+                id="p3Input" 
+                placeholder="ENTER DECODED WORD..." 
+                autocomplete="off" 
+                spellcheck="false" 
+                aria-label="Decoded cipher answer"
+                required
+              >
+              <button type="submit" class="btn btn-primary" id="btnP3Submit">
+                <span>VALIDATE</span>
+                <span class="btn-spark-dot" aria-hidden="true">✦</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP3Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p3HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Experience 4: Concealed Ruby Panel (Seal 04) -->
+        <div class="trial-module" id="p4Module" style="display: none;">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 04 • THE CONCEALED EMBOSSER</span>
+            <span class="trial-status" id="p4Status">MECHANISM LOCKED</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="ledger-inscription">“The decrypted word reveals what animates this archive. Locate its emblem upon the carved panel.”</p>
+          </div>
+
+          <div class="emblem-selection-panel" role="group" aria-label="Concealed Emblems">
+            <button type="button" class="emblem-card-btn" data-panel="key">
+              <span class="emblem-icon">🗝️</span>
+              <span class="emblem-name">Brass Key</span>
+            </button>
+            <button type="button" class="emblem-card-btn" data-panel="hourglass">
+              <span class="emblem-icon">⏳</span>
+              <span class="emblem-name">Sand Hourglass</span>
+            </button>
+            <button type="button" class="emblem-card-btn" data-panel="heart" id="panelHeartSwitch">
+              <span class="emblem-icon">💖</span>
+              <span class="emblem-name">Ruby Heart</span>
+            </button>
+            <button type="button" class="emblem-card-btn" data-panel="compass">
+              <span class="emblem-icon">🧭</span>
+              <span class="emblem-name">Iron Compass</span>
+            </button>
+            <button type="button" class="emblem-card-btn" data-panel="prism">
+              <span class="emblem-icon">💎</span>
+              <span class="emblem-name">Glass Prism</span>
+            </button>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP4Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p4HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Chamber 02 Complete Banner -->
+        <div class="chamber-cleared-banner" id="room2SolvedBanner" style="display: none;">
+          <span class="seal-recovered-stamp">SEALS 03 & 04 RECOVERED</span>
+          <p class="token-discovery-copy">Chamber Token Discovered: <strong class="brass-token-number">5</strong> (5 letters verified in HEART)</p>
+          <button type="button" class="btn btn-primary btn-advance-chamber" id="btnAdvanceToRoom3">
+            <span>PROCEED TO BRASS SWITCHBOARD</span>
+            <span class="btn-spark-dot" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           CHAMBER 03: THE BRASS SWITCHBOARD & RELICS
+           ========================================================= -->
+      <section class="archive-chamber-card" id="room3Container" style="display: none;" aria-label="Chamber 03: The Brass Switchboard">
+        <div class="chamber-masthead">
+          <span class="chamber-sector-label">ARCHIVE CHAMBER 03</span>
+          <h2 class="chamber-hero-title">THE BRASS SWITCHBOARD</h2>
+          <p class="chamber-verse">“Heavy copper conduits hum softly behind aged slate. Four mechanical levers govern the power flow to the final vault.”</p>
+        </div>
+
+        <!-- Experience 5: Four Switch Sequence (Seal 05) -->
+        <div class="trial-module" id="p5Module">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 05 • RELAY MATRIX CALIBRATION</span>
+            <span class="trial-status" id="p5Status">CIRCUIT INACTIVE</span>
+          </div>
+
+          <!-- Circuit Rule Terminals -->
+          <div class="circuit-parchment-trio">
+            <div class="circuit-rule-box">
+              <span class="rule-num">RULE I</span>
+              <p>“Lever B must be engaged before Lever A.”</p>
+            </div>
+            <div class="circuit-rule-box">
+              <span class="rule-num">RULE II</span>
+              <p>“Lever D immediately follows Lever B.”</p>
+            </div>
+            <div class="circuit-rule-box">
+              <span class="rule-num">RULE III</span>
+              <p>“Lever C completes the circuit.”</p>
+            </div>
+          </div>
+
+          <!-- Switch Sequence Display Track -->
+          <div class="switch-selection-track" aria-label="Engaged switch sequence">
+            <div class="switch-slot" id="swSlot0">_</div>
+            <div class="switch-slot" id="swSlot1">_</div>
+            <div class="switch-slot" id="swSlot2">_</div>
+            <div class="switch-slot" id="swSlot3">_</div>
+          </div>
+
+          <!-- Physical Brass Lever Controls -->
+          <div class="switches-chassis" role="group" aria-label="Physical Levers">
+            <button type="button" class="switch-lever-btn" data-switch="A" aria-label="Lever A">
+              <span class="lever-stem"></span>
+              <span class="lever-knob"></span>
+              <span class="lever-label">LEVER A</span>
+            </button>
+            <button type="button" class="switch-lever-btn" data-switch="B" aria-label="Lever B">
+              <span class="lever-stem"></span>
+              <span class="lever-knob"></span>
+              <span class="lever-label">LEVER B</span>
+            </button>
+            <button type="button" class="switch-lever-btn" data-switch="C" aria-label="Lever C">
+              <span class="lever-stem"></span>
+              <span class="lever-knob"></span>
+              <span class="lever-label">LEVER C</span>
+            </button>
+            <button type="button" class="switch-lever-btn" data-switch="D" aria-label="Lever D">
+              <span class="lever-stem"></span>
+              <span class="lever-knob"></span>
+              <span class="lever-label">LEVER D</span>
+            </button>
+          </div>
+
+          <div class="trial-actions">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnP5Reset">RESET LEVERS</button>
+            <button type="button" class="btn btn-primary" id="btnP5Submit">
+              <span>ENGAGE GRID</span>
+              <span class="btn-spark-dot" aria-hidden="true">⚡</span>
+            </button>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP5Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p5HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Experience 5 Part B: Concealed Relay Calibration -->
+        <div class="trial-module" id="p6Module" style="display: none;">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 05 • RELIC RELAY MATRIX</span>
+            <span class="trial-status" id="p6Status">CIRCUIT GROUNDED</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="ledger-inscription">
+              “MAIN GRID RESTORED. ONE COUPLING REMAINS.<br>
+              The relay that carries the warmth of the warning light completes the circuit.”
+            </p>
+          </div>
+
+          <div class="relay-chamber-grid" role="group" aria-label="Relay Choices">
+            <button type="button" class="relay-card relay-crimson" data-relay="crimson" aria-label="Crimson Relay">
+              <span class="relay-filament"></span>
+              <span class="relay-title">CRIMSON RELAY</span>
+            </button>
+            <button type="button" class="relay-card relay-amber" data-relay="amber" id="relayAmber" aria-label="Amber Relay">
+              <span class="relay-filament"></span>
+              <span class="relay-title">AMBER RELAY</span>
+            </button>
+            <button type="button" class="relay-card relay-cobalt" data-relay="cobalt" aria-label="Cobalt Relay">
+              <span class="relay-filament"></span>
+              <span class="relay-title">COBALT RELAY</span>
+            </button>
+            <button type="button" class="relay-card relay-emerald" data-relay="emerald" aria-label="Emerald Relay">
+              <span class="relay-filament"></span>
+              <span class="relay-title">EMERALD RELAY</span>
+            </button>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP6Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p6HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Chamber 03 Complete Banner -->
+        <div class="chamber-cleared-banner" id="room3SolvedBanner" style="display: none;">
+          <span class="seal-recovered-stamp">SEAL 05 RECOVERED</span>
+          <p class="token-discovery-copy">Chamber Token Discovered: <strong class="brass-token-number">4</strong> (4 switches calibrated)</p>
+          <button type="button" class="btn btn-primary btn-advance-chamber" id="btnAdvanceToRoom4">
+            <span>PROCEED TO MASTER LEDGER</span>
+            <span class="btn-spark-dot" aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           CHAMBER 04: THE MASTER LEDGER & THE LAST GATE
+           ========================================================= -->
+      <section class="archive-chamber-card" id="room4Container" style="display: none;" aria-label="Chamber 04: The Master Ledger and Last Gate">
+        <div class="chamber-masthead">
+          <span class="chamber-sector-label">ARCHIVE CHAMBER 04</span>
+          <h2 class="chamber-hero-title">THE MASTER LEDGER & LAST GATE</h2>
+          <p class="chamber-verse">“Every chamber left an imprint in the records. The monumental gate demands all tokens before the final authorization can be spoken.”</p>
+        </div>
+
+        <!-- Experience 6: The Master Ledger Keypad (Seal 06) -->
+        <div class="trial-module" id="p7Module">
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 06 • MASTER LEDGER 4-DIGIT KEYPAD</span>
+            <span class="trial-status" id="p7Status">AUTHORIZATION REQUIRED</span>
+          </div>
+
+          <!-- Dossier Discovered Tokens File -->
+          <div class="master-ledger-dossier">
+            <span class="dossier-heading">CLASSIFIED TOKENS LOGGED</span>
+            <div class="dossier-values-row">
+              <div class="token-record">CHAMBER I: <strong id="dossierToken1">4</strong></div>
+              <div class="token-record">CHAMBER II: <strong id="dossierToken2">5</strong></div>
+              <div class="token-record">CHAMBER III: <strong id="dossierToken3">4</strong></div>
+            </div>
+            <p class="ledger-inscription">
+              “Use the number of runes from the entrance. Then the number of letters in the decoded word. Then the number of switches in the relay room. Finish with the final day before the birthday.”
+            </p>
+          </div>
+
+          <!-- 4-Digit Display Windows -->
+          <div class="keypad-readout-row" aria-label="Entered 4-digit code">
+            <div class="digit-cell" id="vDigit0">_</div>
+            <div class="digit-cell" id="vDigit1">_</div>
+            <div class="digit-cell" id="vDigit2">_</div>
+            <div class="digit-cell" id="vDigit3">_</div>
+          </div>
+
+          <!-- Antique Brass Keypad Grid -->
+          <div class="antique-keypad-panel">
+            <div class="keypad-buttons-grid" role="group" aria-label="Keypad Numbers">
+              <button type="button" class="btn-num" data-key="1">1</button>
+              <button type="button" class="btn-num" data-key="2">2</button>
+              <button type="button" class="btn-num" data-key="3">3</button>
+              <button type="button" class="btn-num" data-key="4">4</button>
+              <button type="button" class="btn-num" data-key="5">5</button>
+              <button type="button" class="btn-num" data-key="6">6</button>
+              <button type="button" class="btn-num" data-key="7">7</button>
+              <button type="button" class="btn-num" data-key="8">8</button>
+              <button type="button" class="btn-num" data-key="9">9</button>
+              <button type="button" class="btn-num btn-num-action" id="btnKeypadClear">CLR</button>
+              <button type="button" class="btn-num" data-key="0">0</button>
+              <button type="button" class="btn-num btn-num-enter" id="btnKeypadEnter">ENT</button>
+            </div>
+          </div>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP7Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p7HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+
+        <!-- Experience 7: The Last Gate Authorization (Seal 07) -->
+        <div class="trial-module" id="p8Module" style="display: none;">
+          <div class="last-gate-monolith-display" aria-hidden="true">
+            <div class="gate-archway-graphic">
+              <span class="gate-seal-rune">⚜</span>
+            </div>
+          </div>
+
+          <div class="trial-meta-bar">
+            <span class="trial-tag">TRIAL 07 • THE LAST GATE FINAL SEAL</span>
+            <span class="trial-status" id="p8Status">FINAL SEAL READY</span>
+          </div>
+
+          <div class="parchment-ledger-box">
+            <p class="ledger-inscription">
+              “I arrive after tonight.<br>
+              I hold the day you have been waiting for.<br>
+              I cannot be opened before my time.<br>
+              <strong>What am I?</strong>”
+            </p>
+          </div>
+
+          <form class="archive-input-form" id="p8Form">
+            <div class="input-lock-cluster">
+              <input 
+                type="text" 
+                class="archive-text-field" 
+                id="p8Input" 
+                placeholder="ENTER FINAL WORD..." 
+                autocomplete="off" 
+                spellcheck="false" 
+                aria-label="Final word lock answer"
+                required
+              >
+              <button type="submit" class="btn btn-primary" id="btnP8Submit">
+                <span>OPEN LAST GATE</span>
+                <span class="btn-spark-dot" aria-hidden="true">🔓</span>
+              </button>
+            </div>
+          </form>
+
+          <div class="hint-compartment">
+            <button type="button" class="btn-hint" id="btnP8Hint">CONSULT FIELD NOTES</button>
+            <p class="hint-text-readout" id="p8HintDisplay" style="display: none;"></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================
+       MODAL: CLUE & RELIC INSPECTION DIALOG
+       ========================================================= -->
+  <div class="modal-dialog-backdrop" id="clueInspectionModal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalObjTitle">
+    <div class="archive-card modal-inspection-box">
+      <span class="modal-relic-emblem" id="modalObjIcon">🔍</span>
+      <h3 class="modal-relic-title" id="modalObjTitle">Inspecting Relic</h3>
+      <div class="modal-filigree-divider" aria-hidden="true"></div>
+      <p class="modal-relic-body" id="modalObjDesc">Description...</p>
+      <div class="modal-actions-row">
+        <button type="button" class="btn btn-secondary btn-sm" id="btnModalClose">CLOSE INSPECTION</button>
+        <button type="button" class="btn btn-primary btn-sm" id="btnModalActivate" style="display: none;">TRIGGER MECHANISM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODAL: ARCHIVE LOCKDOWN (3-ATTEMPT PENALTY)
+       ========================================================= -->
+  <div class="lockdown-modal-backdrop" id="roomLockdownModal" style="display: none;" role="alertdialog" aria-modal="true" aria-labelledby="lockdownTitle">
+    <div class="archive-card lockdown-alert-box">
+      <div class="lockdown-insignia" aria-hidden="true">⚠️</div>
+      <span class="lockdown-alert-kicker">CLEARANCE REJECTED</span>
+      <h2 class="lockdown-title" id="lockdownTitle">CHAMBER LOCKDOWN</h2>
+      <p class="lockdown-reason-text" id="lockdownReason">3 validation attempts failed. Bulkhead safety seals engaged.</p>
+      <p class="lockdown-subtext">The mechanism has retracted its tumblers. Your recovered tokens from prior chambers remain intact. Re-initialize this chamber to proceed.</p>
+      <button type="button" class="btn btn-primary btn-restart-chamber" id="btnRestartRoom">
+        <span>RE-INITIALIZE CHAMBER</span>
+        <span class="btn-spark-dot" aria-hidden="true">🔄</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       CINEMATIC SEQUENCE: THE OPENING OF THE LAST GATE
+       ========================================================= -->
+  <section class="gate-cinematic-stage" id="escapeSequenceStage" style="display: none;" aria-label="The Last Gate Revealed">
+    <div class="ambient-gate-aura" aria-hidden="true"></div>
+
+    <div class="cinematic-dossier-wrap">
+      <div class="cinematic-line" id="escLine0">OPERATION COMPLETE</div>
+      <div class="cinematic-line" id="escLine1">Seven trials completed.</div>
+      <div class="cinematic-line" id="escLine2">Seven seals recovered.</div>
+      <div class="cinematic-line" id="escLine3">The Last Gate has been opened.</div>
+      <div class="cinematic-line cinematic-sealed-note" id="escLine4">THE FINAL FILE REMAINS SEALED.</div>
+      <div class="cinematic-line cinematic-quote" id="escLine5">You found every answer that brought you here.<br>But the one thing waiting beyond this archive cannot be unlocked tonight.</div>
+      <div class="cinematic-line cinematic-auth-tag" id="escLine6">NEXT AUTHORIZATION: DAY 10 — 29 OCTOBER 2026</div>
+      <div class="cinematic-line cinematic-final-kicker" id="escLine7">THE ARCHIVE IS CLOSED.<br>THE COUNTDOWN HAS BEGUN.</div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-view-countdown" id="btnProceedCompletion" style="display: none;">
+      <span>REVEAL COUNTDOWN CHAMBER</span>
+      <span class="btn-spark-dot" aria-hidden="true">⚜</span>
+    </button>
+  </section>
+
+  <!-- =========================================================
+       EXPERIENCE 08: THE FINAL COUNTDOWN CHAMBER
+       ========================================================= -->
+  <section class="final-countdown-view" id="day9CompletionScreen" style="display: none;" aria-label="Experience 08: The Final Countdown">
+    <div class="countdown-dossier-card">
+      <div class="dossier-wax-emblem" aria-hidden="true">⚜</div>
+      <span class="countdown-kicker">OPERATION COMPLETE • THE ARCHIVE IS CLOSED</span>
+      <h1 class="countdown-main-heading">THE FINAL COUNTDOWN</h1>
+      <p class="countdown-sub-heading" id="countdownPendingNote">Authorization for the final day is pending.</p>
+
+      <!-- 7 Recovered Seals Indicator Ring -->
+      <div class="countdown-seals-emblem-row" aria-label="Seven seals verified">
+        <span class="recovered-seal-pip" title="Seal I: Rune Entrance">I</span>
+        <span class="recovered-seal-pip" title="Seal II: Hidden Testament">II</span>
+        <span class="recovered-seal-pip" title="Seal III: Cipher">III</span>
+        <span class="recovered-seal-pip" title="Seal IV: Ruby Panel">IV</span>
+        <span class="recovered-seal-pip" title="Seal V: Brass Grid">V</span>
+        <span class="recovered-seal-pip" title="Seal VI: Ledger Keypad">VI</span>
+        <span class="recovered-seal-pip" title="Seal VII: Last Gate">VII</span>
+      </div>
+
+      <!-- Live 4-Unit IST Countdown Block -->
+      <div class="live-countdown-grid" id="countdownCluster" role="timer" aria-live="off">
+        <div class="countdown-unit-pod">
+          <span class="unit-digit" id="cdDays">00</span>
+          <span class="unit-label">DAYS</span>
+        </div>
+        <div class="countdown-unit-divider">:</div>
+        <div class="countdown-unit-pod">
+          <span class="unit-digit" id="cdHours">00</span>
+          <span class="unit-label">HOURS</span>
+        </div>
+        <div class="countdown-unit-divider">:</div>
+        <div class="countdown-unit-pod">
+          <span class="unit-digit" id="cdMinutes">00</span>
+          <span class="unit-label">MINUTES</span>
+        </div>
+        <div class="countdown-unit-divider">:</div>
+        <div class="countdown-unit-pod">
+          <span class="unit-digit" id="cdSeconds">00</span>
+          <span class="unit-label">SECONDS</span>
+        </div>
+      </div>
+
+      <!-- Authorization Status Box -->
+      <div class="authorization-status-banner" id="authStatusBanner">
+        <span class="auth-icon" id="authStatusIcon">🔒</span>
+        <div class="auth-copy-wrap">
+          <strong class="auth-date-title" id="authDateTitle">29 OCTOBER 2026</strong>
+          <span class="auth-subtext" id="authSubtext">THE FINAL DAY — BUDDUU'S BIRTHDAY</span>
+        </div>
+      </div>
+
+      <p class="countdown-whisper-motto">“Some doors don't open until the right moment.”</p>
+
+      <!-- Navigation Dock -->
+      <div class="countdown-dock-actions">
+        <a href="index.html" class="btn btn-secondary">
+          <span>RETURN TO LEDGER</span>
+        </a>
+        <button type="button" class="btn btn-secondary" id="btnReviewRooms">
+          <span>REVIEW COMPLETED SEALS</span>
+        </button>
+        <a href="day10.html" class="btn btn-primary" id="completionDay10Btn">
+          <span>ACCESS FINAL GATE →</span>
+        </a>
+      </div>
+
+      <div class="dossier-signoff-foot">
+        <span class="signoff-tag">BUDDUU'S 10-DAY ARCHIVE</span>
+        <p class="signoff-quote">“28 October 2026 • The eve before the celebration.”</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer archive-site-footer">
+    <div class="container">
+      <h3 class="footer-brand-title">BUDDUU <span class="footer-heart">⚜</span></h3>
+      <p class="footer-journey-caps">10 DAYS &bull; 10 MOMENTS &bull; ONE SPECIAL JOURNEY</p>
+      <p class="footer-signature-line">Made with <span class="footer-heart">❤️</span> for Budduu</p>
+    </div>
+  </footer>
+
+  <script src="global.js"></script>
+  <script src="day9.js"></script>
+</body>
+</html>
