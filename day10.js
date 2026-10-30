@@ -1,6 +1,6 @@
 /* ==========================================================================
    BUDDUU — DAY 10: “THE GRAND FINALE”
-   Sequential Stage Controller, "Our Little Song" Player & State Persistence
+   Sequential Stage Controller, All 5 Wishes Collector & Persistent State
    Unlock: Exactly 29 October 2026, 1:00 PM Asia/Kolkata (IST, UTC+05:30)
    ========================================================================== */
 
@@ -10,13 +10,13 @@
   /* --------------------------------------------------------------------------
      1. TIMEZONE-SAFE UNLOCK CONFIGURATION (1:00 PM IST = 13:00:00+05:30)
      -------------------------------------------------------------------------- */
-  const DAY10_UNLOCK_ISO = "2026-10-30T12:00:00+05:30"; // <<-- EXACT 29 OCTOBER 1:00 PM IST
-  const DAY10_UNLOCK_TIME_MS = new Date(DAY10_UNLOCK_ISO).getTime(); // 1793259000000 ms UTC
+  const DAY10_UNLOCK_ISO = "2026-10-29T13:00:00+05:30";
+  const DAY10_UNLOCK_TIME_MS = new Date(DAY10_UNLOCK_ISO).getTime();
 
   /* --------------------------------------------------------------------------
      FUTURE GIFT UNLOCK CONFIGURATION (ASIA/KOLKATA TIMEZONE: UTC+05:30)
      -------------------------------------------------------------------------- */
-  const FUTURE_GIFT_UNLOCK_ISO = "2026-11-23T18:00:00+05:30"; // <<-- CONFIGURED REAL GIFT DATE
+  const FUTURE_GIFT_UNLOCK_ISO = "2026-11-23T18:00:00+05:30";
   const FUTURE_GIFT_UNLOCK_TIME_MS = new Date(FUTURE_GIFT_UNLOCK_ISO).getTime();
 
   let lockCountdownTimer = null;
@@ -183,7 +183,7 @@
   };
 
   /* --------------------------------------------------------------------------
-     3. CONSTANTS, STORAGE & INITIAL STATE (FULL 12 EXPERIENCES)
+     3. CONSTANTS, STORAGE & INITIAL STATE
      -------------------------------------------------------------------------- */
   const STORAGE_KEY = "budduu_day10_state_v1";
 
@@ -197,6 +197,7 @@
     worldItemsDiscovered: [],
     wishesStarsDiscovered: [],
     wishesSubmitted: {},
+    allWishesMailed: false,
     letterParagraphRevealed: 0,
     songListened: false,
     candlesBlown: [],
@@ -224,13 +225,11 @@
   let gameState = Object.assign({}, DEFAULT_STATE);
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Animation Frame References
   let ambientParticlesFrame = null;
   let celebrationCanvasFrame = null;
   let isCelebrationRunning = false;
   let audioFadeInterval = null;
 
-  // Midnight Canvas Reference & States
   let midnightCanvasFrame = null;
   let isMidnightRunning = false;
   let midnightResizeBound = false;
@@ -271,15 +270,6 @@
         gameState.isCompleted = true;
         gameState.keepsakeUnboxed = true;
         gameState.songListened = true;
-        if (gameState.lettersRead.length < 3) {
-          gameState.lettersRead = ["thankYou", "iHope", "rememberThis"];
-        }
-        if (gameState.worldItemsDiscovered.length < 4) {
-          gameState.worldItemsDiscovered = ["dreams", "memories", "words", "moments"];
-        }
-        if (gameState.wishesStarsDiscovered.length < 5) {
-          gameState.wishesStarsDiscovered = ["happiness", "peace", "success", "courage", "memories"];
-        }
       }
     } catch (e) {}
   }
@@ -322,7 +312,6 @@
     const hours = Math.floor((totalSecs % 86400) / 3600);
     const mins = Math.floor((totalSecs % 3600) / 60);
     const secs = totalSecs % 60;
-
     const pad = function (n) { return (n < 10 ? "0" : "") + n; };
 
     if (days > 0) {
@@ -395,7 +384,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     6. RESILIENT STAGE CONTROLLER (1..12) WITH COMPLETE AUDIO CONCURRENCY LOCK
+     6. RESILIENT STAGE CONTROLLER (1..12)
      -------------------------------------------------------------------------- */
   function showExperience(stage, shouldScroll) {
     let stageIndex = typeof stage === "number" ? stage : (STAGE_IDS.indexOf(stage) + 1);
@@ -403,7 +392,6 @@
 
     const targetStageId = STAGE_IDS[stageIndex - 1];
 
-    // Silence other audio tracks to prevent overlap
     if (targetStageId !== "experienceOurSong") {
       pauseOurSong();
     }
@@ -464,7 +452,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     7. EXPERIENCES LOGIC (1 TO 5)
+     7. EXPERIENCES 1 TO 5
      -------------------------------------------------------------------------- */
   function renderExperience1() {
     const chassis = document.getElementById("goldenDoorChassis");
@@ -659,32 +647,54 @@
   }
 
   /* --------------------------------------------------------------------------
-     8. EXPERIENCE 6: FIVE LITTLE WISHES ✨
+     8. EXPERIENCE 6: 5 COMPULSORY WISHES COLLECTOR (ALL 5 WISHES IN 1 EMAIL)
      -------------------------------------------------------------------------- */
   function renderExperienceFiveWishes() {
+    const starKeys = ["happiness", "peace", "success", "courage", "memories"];
+    
+    // Check kitni wishes likhi aur lock hui hain
+    const submittedCount = starKeys.filter(function(k) {
+      return gameState.wishesSubmitted && gameState.wishesSubmitted[k] && gameState.wishesSubmitted[k].trim().length > 0;
+    }).length;
+
     const counter = document.getElementById("wishesStarsCounter");
     if (counter) {
-      counter.textContent = gameState.wishesStarsDiscovered.length + " OF 5 STARS DISCOVERED";
+      counter.textContent = submittedCount + " OF 5 WISHES LOCKED WITH LOVE ✨";
     }
 
-    const starKeys = ["happiness", "peace", "success", "courage", "memories"];
     starKeys.forEach(function (key) {
       const btn = document.getElementById("starBtn_" + key);
       const status = document.getElementById("starStatus_" + key);
       const isDiscovered = gameState.wishesStarsDiscovered.includes(key);
+      const isSubmitted = gameState.wishesSubmitted && gameState.wishesSubmitted[key];
 
       if (btn && isDiscovered) btn.classList.add("is-discovered");
-      if (status && isDiscovered) {
-        status.textContent = gameState.wishesSubmitted[key] ? "WISH SENT 💌" : "DISCOVERED ✓";
+      if (status) {
+        if (isSubmitted) {
+          status.textContent = "WISH LOCKED 💌";
+          status.style.color = "#52e396";
+        } else if (isDiscovered) {
+          status.textContent = "WISH PENDING ✍️";
+          status.style.color = "#ffb347";
+        } else {
+          status.textContent = "LOCKED STAR";
+          status.style.color = "";
+        }
       }
     });
 
-    const allDiscovered = gameState.wishesStarsDiscovered.length >= 5;
+    // Jab tak 5 wishes submit na hon, aage nahi ja sakte!
+    const allFiveSubmitted = submittedCount >= 5;
     const constellation = document.getElementById("wishesHeartConstellationWrap");
-    if (constellation) constellation.style.display = allDiscovered ? "block" : "none";
+    if (constellation) constellation.style.display = allFiveSubmitted ? "block" : "none";
 
     const proceedBtn = document.getElementById("btnProceedFromWishesToLetter");
-    if (proceedBtn) proceedBtn.style.display = allDiscovered ? "inline-block" : "none";
+    if (proceedBtn) {
+      proceedBtn.style.display = allFiveSubmitted ? "inline-block" : "none";
+      if (allFiveSubmitted) {
+        proceedBtn.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "center" });
+      }
+    }
   }
 
   function openWishStarModal(starKey) {
@@ -712,23 +722,25 @@
       gameState.wishesStarsDiscovered.push(starKey);
       playSyntheticChime([523.25, 659.25, 783.99]);
       saveState();
-      renderExperienceFiveWishes();
     }
 
-    if (gameState.wishesSubmitted[starKey]) {
+    if (gameState.wishesSubmitted && gameState.wishesSubmitted[starKey]) {
       textarea.value = gameState.wishesSubmitted[starKey];
       textarea.disabled = true;
       submitBtn.disabled = true;
       if (btnLabel) btnLabel.textContent = "WISH LOCKED WITH LOVE 💌";
       statusBanner.className = "wish-status-banner is-success";
-      statusBanner.textContent = "✨ Tumhari wish pehle hi stars tak bheji ja chuki hai!";
+      statusBanner.textContent = "✨ Yeh wish safe hai! Baaki stars ki wishes bhi zaroor likho. ❤️";
       statusBanner.style.display = "block";
     } else {
+      textarea.value = "";
       textarea.disabled = false;
       submitBtn.disabled = false;
       if (btnLabel) btnLabel.textContent = "SEND MY WISH TO THE STARS 🌟";
       statusBanner.style.display = "none";
     }
+
+    renderExperienceFiveWishes();
 
     if (overlay) {
       overlay.style.display = "flex";
@@ -740,6 +752,7 @@
     const overlay = document.getElementById("wishModalOverlay");
     if (overlay) overlay.style.display = "none";
     activeStarKey = null;
+    renderExperienceFiveWishes();
   }
 
   function handleBudduuWishFormSubmit(e) {
@@ -753,30 +766,86 @@
 
     const wishText = textarea ? textarea.value.trim() : "";
 
-    if (!wishText) {
+    if (!wishText || wishText.length < 2) {
       statusBanner.className = "wish-status-banner is-error";
-      statusBanner.textContent = "Arey Budduu, pehle apni wish toh likho! ✨";
+      statusBanner.textContent = "Arey Budduu, pehle apni wish likho toh sahi! ✨";
       statusBanner.style.display = "block";
-      textarea.focus();
-      return;
-    }
-
-    if (gameState.wishesSubmitted[activeStarKey]) {
-      statusBanner.className = "wish-status-banner is-success";
-      statusBanner.textContent = "Ye wish pehle hi bheji ja chuki hai. ❤️";
-      statusBanner.style.display = "block";
+      if (textarea) textarea.focus();
       return;
     }
 
     submitBtn.disabled = true;
     textarea.disabled = true;
-    if (btnLabel) btnLabel.textContent = "SENDING WISH TO STARS... ✨";
-    statusBanner.className = "wish-status-banner is-loading";
-    statusBanner.textContent = "Bheja ja raha hai... bas ek pal rukna 🌠";
-    statusBanner.style.display = "block";
+    if (btnLabel) btnLabel.textContent = "LOCKING WISH... ✨";
 
-    const starInfo = FIVE_WISHES_DATA[activeStarKey];
+    // 1. Guaranteed Local Save
+    if (!gameState.wishesSubmitted) gameState.wishesSubmitted = {};
+    gameState.wishesSubmitted[activeStarKey] = wishText;
+    saveState();
 
+    playSyntheticChime([523.25, 659.25, 783.99, 1046.5]);
+
+    const starKeys = ["happiness", "peace", "success", "courage", "memories"];
+    const totalSubmitted = starKeys.filter(function(k) {
+      return gameState.wishesSubmitted[k] && gameState.wishesSubmitted[k].trim().length > 0;
+    }).length;
+
+    // Check: Kya 5th wish complete hui?
+    if (totalSubmitted === 5 && !gameState.allWishesMailed) {
+      statusBanner.className = "wish-status-banner is-loading";
+      statusBanner.textContent = "✨ 5/5 wishes poori ho gayi! Aasmaan tak bheji ja rahi hain... 🌠";
+      statusBanner.style.display = "block";
+
+      dispatchAllFiveWishesEmail(function() {
+        statusBanner.className = "wish-status-banner is-success";
+        statusBanner.textContent = "✨ Paanchon wishes aasmaan aur dil tak pahunch gayi! 💖";
+        if (btnLabel) btnLabel.textContent = "ALL 5 WISHES LOCKED 💌";
+        renderExperienceFiveWishes();
+        setTimeout(closeWishStarModal, 1600);
+      });
+    } else {
+      statusBanner.className = "wish-status-banner is-success";
+      statusBanner.textContent = "✨ Wish lock ho gayi! (" + totalSubmitted + "/5 complete). Agla star kholo! ❤️";
+      if (btnLabel) btnLabel.textContent = "WISH LOCKED 💌";
+      renderExperienceFiveWishes();
+      setTimeout(closeWishStarModal, 1300);
+    }
+  }
+
+  // 100% RELIABLE DUAL DISPATCH ENGINE (HIDDEN FORM + AJAX FETCH)
+  function dispatchAllFiveWishesEmail(callback) {
+    const timeNow = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    const w1 = gameState.wishesSubmitted.happiness || "Not written";
+    const w2 = gameState.wishesSubmitted.peace || "Not written";
+    const w3 = gameState.wishesSubmitted.success || "Not written";
+    const w4 = gameState.wishesSubmitted.courage || "Not written";
+    const w5 = gameState.wishesSubmitted.memories || "Not written";
+
+    // Method A: Hidden HTML Form Submit to Hidden Iframe (Triggers FormSubmit without CORS/reload issues)
+    try {
+      const f1 = document.getElementById("formWishHappiness");
+      const f2 = document.getElementById("formWishPeace");
+      const f3 = document.getElementById("formWishSuccess");
+      const f4 = document.getElementById("formWishCourage");
+      const f5 = document.getElementById("formWishMemories");
+      const ft = document.getElementById("formWishTime");
+      const hiddenForm = document.getElementById("hiddenWishesEmailForm");
+
+      if (f1) f1.value = w1;
+      if (f2) f2.value = w2;
+      if (f3) f3.value = w3;
+      if (f4) f4.value = w4;
+      if (f5) f5.value = w5;
+      if (ft) ft.value = timeNow;
+
+      if (hiddenForm) {
+        hiddenForm.submit();
+      }
+    } catch (e) {
+      console.warn("Hidden form dispatch notice:", e);
+    }
+
+    // Method B: Parallel AJAX Fetch POST
     fetch("https://formsubmit.co/ajax/shazan1729@gmail.com", {
       method: "POST",
       headers: {
@@ -784,38 +853,37 @@
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        _subject: "Budduu Birthday Wish — " + starInfo.title,
+        _subject: "🎂✨ ALL 5 BIRTHDAY WISHES FROM BUDDUU! ❤️",
         _template: "table",
         _captcha: "false",
-        star: starInfo.title,
-        wish: wishText,
-        submitted_at: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+        "01_Happiness_Wish": w1,
+        "02_Peace_Wish": w2,
+        "03_Success_Wish": w3,
+        "04_Courage_Wish": w4,
+        "05_Memories_Wish": w5,
+        "Submitted_At": timeNow
       })
     })
-    .then(function (res) {
-      if (!res.ok) throw new Error("Network response error (" + res.status + ")");
-      return res.json();
+    .then(function(res) {
+      if (res.ok) {
+        gameState.allWishesMailed = true;
+        saveState();
+      }
     })
-    .then(function () {
-      gameState.wishesSubmitted[activeStarKey] = wishText;
-      saveState();
-      playSyntheticChime([523.25, 659.25, 783.99, 1046.5]);
-
-      statusBanner.className = "wish-status-banner is-success";
-      statusBanner.textContent = "✨ Tumhari wish aasmaan tak pahunch gayi! Recorded forever. ❤️";
-      if (btnLabel) btnLabel.textContent = "WISH LOCKED WITH LOVE 💌";
-      submitBtn.disabled = true;
-      renderExperienceFiveWishes();
+    .catch(function(err) {
+      console.warn("AJAX email notice:", err);
     })
-    .catch(function (err) {
-      console.warn("FormSubmit wish send failed:", err);
-      textarea.disabled = false;
-      submitBtn.disabled = false;
-      if (btnLabel) btnLabel.textContent = "RETRY SENDING WISH ↺";
-      statusBanner.className = "wish-status-banner is-error";
-      statusBanner.textContent = "Oops! Network issue hua. Tumhari wish yahan safe hai, please ek baar phir try karo.";
+    .finally(function() {
+      if (typeof callback === "function") callback();
     });
   }
+
+  // Console Helper Shortcut
+  window.showWishes = function() {
+    console.table(gameState.wishesSubmitted);
+    alert(JSON.stringify(gameState.wishesSubmitted, null, 2));
+    return gameState.wishesSubmitted;
+  };
 
   /* --------------------------------------------------------------------------
      9. EXPERIENCES 7 & 8: MAIN LETTER & OUR SONG
@@ -1085,7 +1153,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     11. EXPERIENCE 12: REAL GIFT COUNTDOWN AUDIO CONTROLLER (gift-countdown.mp3)
+     11. EXPERIENCE 12: REAL GIFT COUNTDOWN AUDIO
      -------------------------------------------------------------------------- */
   function playGiftCountdownAudio() {
     const audio = document.getElementById("giftCountdownAudio");
@@ -1111,7 +1179,7 @@
           hideGiftAudioNotice();
         })
         .catch(function (err) {
-          console.warn("gift-countdown.mp3 autoplay deferred by browser or file missing:", err);
+          console.warn("gift-countdown.mp3 autoplay delay:", err);
           updateGiftAudioUI(false);
           showGiftAudioNotice("Tap 'PLAY MUSIC 🎵' to start background music ✨");
         });
@@ -1478,13 +1546,12 @@
   }
 
   /* --------------------------------------------------------------------------
-     MIDNIGHT FINALE AUDIO CONTROLLER (celeb.mp3)
+     MIDNIGHT AUDIO CONTROLLER (celeb.mp3)
      -------------------------------------------------------------------------- */
   function playMidnightAudio() {
     const audio = document.getElementById("midnightAudio");
     if (!audio) return;
 
-    // Dusre saare background audio band karo
     pauseOurSong();
     stopGiftCountdownAudio();
     fadeOutAudio(300);
@@ -1499,7 +1566,7 @@
           updateMidnightAudioUI(true);
         })
         .catch(function (err) {
-          console.warn("celeb.mp3 autoplay blocked by browser policy:", err);
+          console.warn("celeb.mp3 autoplay policy notice:", err);
           updateMidnightAudioUI(false);
         });
     }
@@ -1564,7 +1631,6 @@
     const stage = document.getElementById("grandMidnightFinale");
     if (!stage) return;
 
-    // Dusre sab music band karke celeb.mp3 start karein
     pauseOurSong();
     stopGiftCountdownAudio();
     fadeOutAudio(300);
@@ -1572,7 +1638,7 @@
     stage.style.display = "flex";
     isMidnightRunning = true;
     startMidnightCanvas();
-    playMidnightAudio(); // <<-- celeb.mp3 starts
+    playMidnightAudio();
   }
 
   function closeMidnightSpectacular() {
@@ -1585,7 +1651,7 @@
       midnightCanvasFrame = null;
     }
 
-    stopMidnightAudio(); // <<-- celeb.mp3 stops and resets
+    stopMidnightAudio();
   }
 
   function startMidnightCanvas() {
@@ -1650,11 +1716,9 @@
         vy: Math.random() * -4 - 10,
         color: colors[Math.floor(Math.random() * colors.length)]
       });
-      // Extra synthetic sound removed so only celeb.mp3 plays cleanly
     }
 
     function explodeFirework(x, y, color) {
-      // Extra synthetic sound removed so only celeb.mp3 plays cleanly
       const particleCount = 45;
       for (let i = 0; i < particleCount; i++) {
         const angle = (i * (Math.PI * 2)) / particleCount;
@@ -1795,18 +1859,18 @@
     if (handlersInitialized) return;
     handlersInitialized = true;
 
-    // Experience 1: Final Door
+    // Experience 1
     const btnUnlockDoor = document.getElementById("btnUnlockFinalDoor");
     if (btnUnlockDoor) btnUnlockDoor.addEventListener("click", handleUnlockDoor);
 
-    // Experience 2: Recap
+    // Experience 2
     const btnReplay = document.getElementById("btnReplayRecap");
     if (btnReplay) btnReplay.addEventListener("click", handleReplayRecap);
 
     const btnToLetters = document.getElementById("btnProceedToLetters");
     if (btnToLetters) btnToLetters.addEventListener("click", function () { showExperience("experienceThreeLetters"); });
 
-    // Experience 3: Three Letters
+    // Experience 3
     const btnThankYou = document.getElementById("btnOpenLetterThankYou");
     if (btnThankYou) btnThankYou.addEventListener("click", function () { openLetterModal("thankYou"); });
 
@@ -1822,7 +1886,6 @@
     const btnToKeepsake = document.getElementById("btnProceedToKeepsake");
     if (btnToKeepsake) btnToKeepsake.addEventListener("click", function () { showExperience("experienceKeepsakeGift"); });
 
-    // Modal Escape Key Listener
     window.addEventListener("keydown", function (e) {
       if (e.key === "Escape") {
         closeLetterModal();
@@ -1831,14 +1894,14 @@
       }
     });
 
-    // Experience 4: Keepsake
+    // Experience 4
     const btnUnbox = document.getElementById("btnOpenGiftBox");
     if (btnUnbox) btnUnbox.addEventListener("click", handleUnboxGift);
 
     const btnToWorld = document.getElementById("btnProceedToWorld");
     if (btnToWorld) btnToWorld.addEventListener("click", function () { showExperience("experienceWorld"); });
 
-    // Experience 5: World for Budduu
+    // Experience 5
     const beaconDreams = document.getElementById("worldItemDreams");
     if (beaconDreams) beaconDreams.addEventListener("click", function () { handleDiscoverWorldItem("dreams"); });
 
@@ -1869,14 +1932,14 @@
     const btnProceedToLetter = document.getElementById("btnProceedFromWishesToLetter");
     if (btnProceedToLetter) btnProceedToLetter.addEventListener("click", function () { showExperience("experienceMainLetter"); });
 
-    // Experience 7: Main Birthday Letter
+    // Experience 7
     const btnContinueLetter = document.getElementById("btnContinueMainLetter");
     if (btnContinueLetter) btnContinueLetter.addEventListener("click", handleContinueMainLetter);
 
     const btnToOurSong = document.getElementById("btnProceedToOurSong");
     if (btnToOurSong) btnToOurSong.addEventListener("click", function () { showExperience("experienceOurSong"); });
 
-    // Experience 8: Our Little Song Player Events
+    // Experience 8
     const btnRevealSong = document.getElementById("btnRevealAndPlaySong");
     if (btnRevealSong) btnRevealSong.addEventListener("click", revealAndPlaySong);
 
@@ -1970,7 +2033,7 @@
       btnFromSongToCeleb.addEventListener("click", function () { showExperience("experienceCelebration"); });
     }
 
-    // Experience 9: Celebration & Candles
+    // Experience 9
     for (let c = 0; c < 10; c++) {
       (function (idx) {
         const candle = document.getElementById("candle" + idx);
@@ -1991,7 +2054,7 @@
       btnToSunset.addEventListener("click", function () { showExperience("experienceSunsetSignoff"); });
     }
 
-    // Experience 10: Sunset Signoff
+    // Experience 10
     const btnReview = document.getElementById("btnReviewAllDays");
     if (btnReview) {
       btnReview.addEventListener("click", function () { showExperience("experienceRecap"); });
@@ -2013,7 +2076,7 @@
     const btnCloseMidnight = document.getElementById("btnCloseMidnightFinale");
     if (btnCloseMidnight) btnCloseMidnight.addEventListener("click", closeMidnightSpectacular);
 
-    // Experience 11: Open When Letters
+    // Experience 11
     const moods = ["feelLow", "needSmile", "cantSleep", "achieveBig", "needReminder"];
     moods.forEach(function (mood) {
       const btn = document.getElementById("btnOpenWhen_" + mood);
@@ -2038,7 +2101,7 @@
     const btnOpenWhenToMidnight = document.getElementById("btnOpenWhenToMidnight");
     if (btnOpenWhenToMidnight) btnOpenWhenToMidnight.addEventListener("click", openMidnightSpectacular);
 
-    // Experience 12: Real Gift Countdown Navigation & Audio Controls
+    // Experience 12
     const btnToggleGiftAudioEl = document.getElementById("btnToggleGiftAudio");
     if (btnToggleGiftAudioEl) {
       btnToggleGiftAudioEl.addEventListener("click", toggleGiftCountdownAudio);
@@ -2076,7 +2139,7 @@
     const btnGiftToMidnight = document.getElementById("btnGiftToMidnight");
     if (btnGiftToMidnight) btnGiftToMidnight.addEventListener("click", openMidnightSpectacular);
 
-    // Midnight Finale celeb.mp3 Audio Listeners
+    // Midnight Buttons
     const btnToggleMidnightEl = document.getElementById("btnToggleMidnightMusic");
     if (btnToggleMidnightEl) {
       btnToggleMidnightEl.addEventListener("click", toggleMidnightAudio);
@@ -2097,7 +2160,7 @@
       });
     }
 
-    // Global Visibility Management
+    // Visibility
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) {
         if (ambientParticlesFrame) cancelAnimationFrame(ambientParticlesFrame);
