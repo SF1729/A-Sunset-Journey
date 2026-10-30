@@ -1,6 +1,7 @@
 /* ==========================================================================
    BUDDUU — DAY 10: “THE GRAND FINALE”
    Sequential Stage Controller — ALWAYS FRESH START (NO LOCALSTORAGE SAVE)
+   All 5 Wishes Delivered via Web3Forms (Key: 623e91bc-6a2e-4098-8d66-743ee5f060fb)
    Unlock: Exactly 29 October 2026, 1:00 PM Asia/Kolkata (IST, UTC+05:30)
    ========================================================================== */
 
@@ -236,10 +237,9 @@
   let isSongScrubbing = false;
 
   /* --------------------------------------------------------------------------
-     4. NO-STORAGE LOGIC (BROWSER ME DATA SAVE NAHI HOGA)
+     4. NO-STORAGE LOGIC (BROWSER ME DATA SAVE NAHI HOGA - ALWAYS FRESH)
      -------------------------------------------------------------------------- */
   function loadState() {
-    // Purane kisi bhi test key ko clean karein taaki hamesha 0 se start ho
     try {
       localStorage.removeItem("budduu_day10_state_v1");
       localStorage.removeItem("budduu_day10_lock_solved");
@@ -247,7 +247,6 @@
       sessionStorage.clear();
     } catch (e) {}
 
-    // Hamesha bilkul naya blank state
     gameState = Object.assign({}, DEFAULT_STATE, {
       completedExperiences: [],
       lettersRead: [],
@@ -260,7 +259,7 @@
   }
 
   function saveState() {
-    // Browser me save nahi karna (in-memory session only)
+    // In-memory only (Browser me save nahi hoga taaki refresh par 0 se start ho)
   }
 
   /* --------------------------------------------------------------------------
@@ -354,7 +353,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     6. STAGE CONTROLLER (1..12)
+     6. RESILIENT STAGE CONTROLLER (1..12)
      -------------------------------------------------------------------------- */
   function showExperience(stage, shouldScroll) {
     let stageIndex = typeof stage === "number" ? stage : (STAGE_IDS.indexOf(stage) + 1);
@@ -753,7 +752,7 @@
       return gameState.wishesSubmitted[k] && gameState.wishesSubmitted[k].trim().length > 0;
     }).length;
 
-    // Check if all 5 are completed
+    // Check if 5th wish complete hui
     if (totalSubmitted === 5 && !gameState.allWishesMailed) {
       statusBanner.className = "wish-status-banner is-loading";
       statusBanner.textContent = "✨ 5/5 wishes poori ho gayi! Aasmaan tak bheji ja rahi hain... 🌠";
@@ -775,7 +774,7 @@
     }
   }
 
-  // Dual Dispatch Engine (Hidden Form + AJAX)
+  // 100% RELIABLE WEB3FORMS DISPATCH ENGINE (KEY: 623e91bc-6a2e-4098-8d66-743ee5f060fb)
   function dispatchAllFiveWishesEmail(callback) {
     const timeNow = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const w1 = gameState.wishesSubmitted.happiness || "Not written";
@@ -784,6 +783,18 @@
     const w4 = gameState.wishesSubmitted.courage || "Not written";
     const w5 = gameState.wishesSubmitted.memories || "Not written";
 
+    const formData = new FormData();
+    formData.append("access_key", "623e91bc-6a2e-4098-8d66-743ee5f060fb");
+    formData.append("subject", "🎂✨ ALL 5 BIRTHDAY WISHES FROM BUDDUU! ❤️");
+    formData.append("from_name", "Budduu Birthday Journey");
+    formData.append("01_Happiness_Wish", w1);
+    formData.append("02_Peace_Wish", w2);
+    formData.append("03_Success_Wish", w3);
+    formData.append("04_Courage_Wish", w4);
+    formData.append("05_Memories_Wish", w5);
+    formData.append("Submitted_At", timeNow);
+
+    // Method A: Hidden HTML Form Submit to Hidden Iframe
     try {
       const f1 = document.getElementById("formWishHappiness");
       const f2 = document.getElementById("formWishPeace");
@@ -807,37 +818,29 @@
       console.warn("Hidden form dispatch notice:", e);
     }
 
-    fetch("https://formsubmit.co/ajax/shazan1729@gmail.com", {
+    // Method B: Direct Fetch API to Web3Forms
+    fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        _subject: "🎂✨ ALL 5 BIRTHDAY WISHES FROM BUDDUU! ❤️",
-        _template: "table",
-        _captcha: "false",
-        "01_Happiness_Wish": w1,
-        "02_Peace_Wish": w2,
-        "03_Success_Wish": w3,
-        "04_Courage_Wish": w4,
-        "05_Memories_Wish": w5,
-        "Submitted_At": timeNow
-      })
+      body: formData
     })
     .then(function(res) {
-      if (res.ok) {
+      return res.json();
+    })
+    .then(function(data) {
+      if (data.success) {
+        console.log("Wishes successfully delivered to email via Web3Forms!");
         gameState.allWishesMailed = true;
       }
     })
     .catch(function(err) {
-      console.warn("AJAX email notice:", err);
+      console.warn("Web3Forms fetch notice:", err);
     })
     .finally(function() {
       if (typeof callback === "function") callback();
     });
   }
 
+  // Console Helper Shortcut
   window.showWishes = function() {
     console.table(gameState.wishesSubmitted);
     alert(JSON.stringify(gameState.wishesSubmitted, null, 2));
@@ -1805,7 +1808,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     14. EVENT INITIALIZATION
+     14. IDEMPOTENT EVENT INITIALIZATION
      -------------------------------------------------------------------------- */
   let handlersInitialized = false;
 
@@ -1871,7 +1874,7 @@
     const btnProceedToWishes = document.getElementById("btnProceedToWishes");
     if (btnProceedToWishes) btnProceedToWishes.addEventListener("click", function () { showExperience("experienceFiveWishes"); });
 
-    // Experience 6
+    // Experience 6: Five Little Wishes
     ["happiness", "peace", "success", "courage", "memories"].forEach(function (starKey) {
       const btn = document.getElementById("starBtn_" + starKey);
       if (btn) btn.addEventListener("click", function () { openWishStarModal(starKey); });
