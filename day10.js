@@ -1,6 +1,6 @@
 /* ==========================================================================
    BUDDUU — DAY 10: “THE GRAND FINALE”
-   Sequential Stage Controller, All 5 Wishes Collector & Persistent State
+   Sequential Stage Controller — ALWAYS FRESH START (NO LOCALSTORAGE SAVE)
    Unlock: Exactly 29 October 2026, 1:00 PM Asia/Kolkata (IST, UTC+05:30)
    ========================================================================== */
 
@@ -183,10 +183,8 @@
   };
 
   /* --------------------------------------------------------------------------
-     3. CONSTANTS, STORAGE & INITIAL STATE
+     3. CLEAN IN-MEMORY STATE (RESET HAR REFRESH PAR)
      -------------------------------------------------------------------------- */
-  const STORAGE_KEY = "budduu_day10_state_v1";
-
   const DEFAULT_STATE = {
     doorUnlocked: false,
     currentExperience: 1,
@@ -238,54 +236,31 @@
   let isSongScrubbing = false;
 
   /* --------------------------------------------------------------------------
-     4. PERSISTENT STATE LOAD & SAVE
+     4. NO-STORAGE LOGIC (BROWSER ME DATA SAVE NAHI HOGA)
      -------------------------------------------------------------------------- */
   function loadState() {
+    // Purane kisi bhi test key ko clean karein taaki hamesha 0 se start ho
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (typeof parsed === "object" && parsed !== null) {
-          gameState = Object.assign({}, DEFAULT_STATE, parsed);
-          gameState.completedExperiences = Array.isArray(gameState.completedExperiences) ? gameState.completedExperiences : [];
-          gameState.lettersRead = Array.isArray(gameState.lettersRead) ? gameState.lettersRead : [];
-          gameState.worldItemsDiscovered = Array.isArray(gameState.worldItemsDiscovered) ? gameState.worldItemsDiscovered : [];
-          gameState.wishesStarsDiscovered = Array.isArray(gameState.wishesStarsDiscovered) ? gameState.wishesStarsDiscovered : [];
-          gameState.wishesSubmitted = (typeof gameState.wishesSubmitted === "object" && gameState.wishesSubmitted !== null) ? gameState.wishesSubmitted : {};
-          gameState.candlesBlown = Array.isArray(gameState.candlesBlown) ? gameState.candlesBlown : [];
-          gameState.openWhenRead = Array.isArray(gameState.openWhenRead) ? gameState.openWhenRead : [];
-        }
-      }
-    } catch (err) {
-      console.warn("Storage read error, using defaults:", err);
-      gameState = Object.assign({}, DEFAULT_STATE);
-    }
-
-    try {
-      if (localStorage.getItem("budduu_day10_lock_solved") === "true") {
-        gameState.doorUnlocked = true;
-      }
-      if (localStorage.getItem("budduu_day10_completed") === "true") {
-        gameState.doorUnlocked = true;
-        gameState.isCompleted = true;
-        gameState.keepsakeUnboxed = true;
-        gameState.songListened = true;
-      }
+      localStorage.removeItem("budduu_day10_state_v1");
+      localStorage.removeItem("budduu_day10_lock_solved");
+      localStorage.removeItem("budduu_day10_completed");
+      sessionStorage.clear();
     } catch (e) {}
+
+    // Hamesha bilkul naya blank state
+    gameState = Object.assign({}, DEFAULT_STATE, {
+      completedExperiences: [],
+      lettersRead: [],
+      worldItemsDiscovered: [],
+      wishesStarsDiscovered: [],
+      wishesSubmitted: {},
+      candlesBlown: [],
+      openWhenRead: []
+    });
   }
 
   function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
-      if (gameState.doorUnlocked) {
-        localStorage.setItem("budduu_day10_lock_solved", "true");
-      }
-      if (gameState.isCompleted) {
-        localStorage.setItem("budduu_day10_completed", "true");
-      }
-    } catch (err) {
-      console.warn("Storage save error:", err);
-    }
+    // Browser me save nahi karna (in-memory session only)
   }
 
   /* --------------------------------------------------------------------------
@@ -373,18 +348,13 @@
       initEventHandlers();
       startAmbientParticles();
 
-      if (gameState.isCompleted) {
-        showExperience("experienceSunsetSignoff", false);
-      } else if (gameState.doorUnlocked) {
-        showExperience(Math.max(2, gameState.currentExperience), false);
-      } else {
-        showExperience(1, false);
-      }
+      // Hamesha Experience 1 (The Final Door) se start hoga
+      showExperience(1, false);
     }
   }
 
   /* --------------------------------------------------------------------------
-     6. RESILIENT STAGE CONTROLLER (1..12)
+     6. STAGE CONTROLLER (1..12)
      -------------------------------------------------------------------------- */
   function showExperience(stage, shouldScroll) {
     let stageIndex = typeof stage === "number" ? stage : (STAGE_IDS.indexOf(stage) + 1);
@@ -406,7 +376,6 @@
     if (!gameState.completedExperiences.includes(stageIndex)) {
       gameState.completedExperiences.push(stageIndex);
     }
-    saveState();
 
     STAGE_IDS.forEach(function (id, idx) {
       const el = document.getElementById(id);
@@ -458,12 +427,12 @@
     const chassis = document.getElementById("goldenDoorChassis");
     const statusText = document.getElementById("finalDoorStatus");
     const quoteReveal = document.getElementById("doorEmotionalReveal");
+    const btn = document.getElementById("btnUnlockFinalDoor");
 
-    if (chassis && gameState.doorUnlocked) {
-      chassis.classList.add("is-open");
-      if (statusText) statusText.textContent = "The final door is open. Welcome to your day!";
-      if (quoteReveal) quoteReveal.style.display = "block";
-    }
+    if (btn) btn.disabled = false;
+    if (chassis) chassis.classList.remove("is-open");
+    if (statusText) statusText.textContent = "";
+    if (quoteReveal) quoteReveal.style.display = "none";
   }
 
   function handleUnlockDoor() {
@@ -483,7 +452,6 @@
     playSyntheticChime([440, 554.37, 659.25, 880]);
 
     gameState.doorUnlocked = true;
-    saveState();
 
     setTimeout(function () {
       advanceExperience();
@@ -519,8 +487,8 @@
       const isRead = gameState.lettersRead.includes(key);
       const flagEl = document.getElementById(flagMap[key]);
       const btnEl = document.getElementById(btnMap[key]);
-      if (flagEl && isRead) flagEl.textContent = "OPENED ✓";
-      if (btnEl && isRead) btnEl.classList.add("is-read");
+      if (flagEl) flagEl.textContent = isRead ? "OPENED ✓" : "SEALED";
+      if (btnEl) btnEl.classList.toggle("is-read", isRead);
     });
 
     const proceedBtn = document.getElementById("btnProceedToKeepsake");
@@ -551,7 +519,6 @@
 
     if (!gameState.lettersRead.includes(letterKey)) {
       gameState.lettersRead.push(letterKey);
-      saveState();
       renderExperience3();
     }
 
@@ -572,6 +539,9 @@
     if (gameState.keepsakeUnboxed) {
       if (chassis) chassis.style.display = "none";
       if (reveal) reveal.style.display = "block";
+    } else {
+      if (chassis) chassis.style.display = "block";
+      if (reveal) reveal.style.display = "none";
     }
   }
 
@@ -588,7 +558,6 @@
     }
 
     gameState.keepsakeUnboxed = true;
-    saveState();
   }
 
   function renderExperience5() {
@@ -604,8 +573,8 @@
       const status = document.getElementById("status" + capKey);
       const isDiscovered = gameState.worldItemsDiscovered.includes(key);
 
-      if (btn && isDiscovered) btn.classList.add("is-discovered");
-      if (status && isDiscovered) status.textContent = "DISCOVERED ✓";
+      if (btn) btn.classList.toggle("is-discovered", isDiscovered);
+      if (status) status.textContent = isDiscovered ? "DISCOVERED ✓" : "HIDDEN";
     });
 
     const isAllFour = gameState.worldItemsDiscovered.length >= 4;
@@ -636,7 +605,6 @@
     if (!gameState.worldItemsDiscovered.includes(itemKey)) {
       gameState.worldItemsDiscovered.push(itemKey);
       playSyntheticChime([587.33, 739.99]);
-      saveState();
       renderExperience5();
     }
 
@@ -652,7 +620,6 @@
   function renderExperienceFiveWishes() {
     const starKeys = ["happiness", "peace", "success", "courage", "memories"];
     
-    // Check kitni wishes likhi aur lock hui hain
     const submittedCount = starKeys.filter(function(k) {
       return gameState.wishesSubmitted && gameState.wishesSubmitted[k] && gameState.wishesSubmitted[k].trim().length > 0;
     }).length;
@@ -668,7 +635,7 @@
       const isDiscovered = gameState.wishesStarsDiscovered.includes(key);
       const isSubmitted = gameState.wishesSubmitted && gameState.wishesSubmitted[key];
 
-      if (btn && isDiscovered) btn.classList.add("is-discovered");
+      if (btn) btn.classList.toggle("is-discovered", isDiscovered);
       if (status) {
         if (isSubmitted) {
           status.textContent = "WISH LOCKED 💌";
@@ -683,7 +650,6 @@
       }
     });
 
-    // Jab tak 5 wishes submit na hon, aage nahi ja sakte!
     const allFiveSubmitted = submittedCount >= 5;
     const constellation = document.getElementById("wishesHeartConstellationWrap");
     if (constellation) constellation.style.display = allFiveSubmitted ? "block" : "none";
@@ -721,7 +687,6 @@
     if (!gameState.wishesStarsDiscovered.includes(starKey)) {
       gameState.wishesStarsDiscovered.push(starKey);
       playSyntheticChime([523.25, 659.25, 783.99]);
-      saveState();
     }
 
     if (gameState.wishesSubmitted && gameState.wishesSubmitted[starKey]) {
@@ -778,10 +743,8 @@
     textarea.disabled = true;
     if (btnLabel) btnLabel.textContent = "LOCKING WISH... ✨";
 
-    // 1. Guaranteed Local Save
     if (!gameState.wishesSubmitted) gameState.wishesSubmitted = {};
     gameState.wishesSubmitted[activeStarKey] = wishText;
-    saveState();
 
     playSyntheticChime([523.25, 659.25, 783.99, 1046.5]);
 
@@ -790,7 +753,7 @@
       return gameState.wishesSubmitted[k] && gameState.wishesSubmitted[k].trim().length > 0;
     }).length;
 
-    // Check: Kya 5th wish complete hui?
+    // Check if all 5 are completed
     if (totalSubmitted === 5 && !gameState.allWishesMailed) {
       statusBanner.className = "wish-status-banner is-loading";
       statusBanner.textContent = "✨ 5/5 wishes poori ho gayi! Aasmaan tak bheji ja rahi hain... 🌠";
@@ -812,7 +775,7 @@
     }
   }
 
-  // 100% RELIABLE DUAL DISPATCH ENGINE (HIDDEN FORM + AJAX FETCH)
+  // Dual Dispatch Engine (Hidden Form + AJAX)
   function dispatchAllFiveWishesEmail(callback) {
     const timeNow = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const w1 = gameState.wishesSubmitted.happiness || "Not written";
@@ -821,7 +784,6 @@
     const w4 = gameState.wishesSubmitted.courage || "Not written";
     const w5 = gameState.wishesSubmitted.memories || "Not written";
 
-    // Method A: Hidden HTML Form Submit to Hidden Iframe (Triggers FormSubmit without CORS/reload issues)
     try {
       const f1 = document.getElementById("formWishHappiness");
       const f2 = document.getElementById("formWishPeace");
@@ -845,7 +807,6 @@
       console.warn("Hidden form dispatch notice:", e);
     }
 
-    // Method B: Parallel AJAX Fetch POST
     fetch("https://formsubmit.co/ajax/shazan1729@gmail.com", {
       method: "POST",
       headers: {
@@ -867,7 +828,6 @@
     .then(function(res) {
       if (res.ok) {
         gameState.allWishesMailed = true;
-        saveState();
       }
     })
     .catch(function(err) {
@@ -878,7 +838,6 @@
     });
   }
 
-  // Console Helper Shortcut
   window.showWishes = function() {
     console.table(gameState.wishesSubmitted);
     alert(JSON.stringify(gameState.wishesSubmitted, null, 2));
@@ -911,7 +870,6 @@
   function handleContinueMainLetter() {
     const count = gameState.letterParagraphRevealed + 1;
     gameState.letterParagraphRevealed = count;
-    saveState();
     renderExperience6();
 
     const stream = document.getElementById("mainLetterStream");
@@ -934,6 +892,9 @@
     if (gameState.songListened) {
       if (invitationCard) invitationCard.style.display = "none";
       if (playerContainer) playerContainer.style.display = "block";
+    } else {
+      if (invitationCard) invitationCard.style.display = "block";
+      if (playerContainer) playerContainer.style.display = "none";
     }
   }
 
@@ -949,7 +910,6 @@
     }
 
     gameState.songListened = true;
-    saveState();
 
     if (audio) {
       fadeOutAudio(400);
@@ -961,7 +921,7 @@
             updateSongPlayerState(true);
           })
           .catch(function (err) {
-            console.warn("Autoplay blocked or file load delay:", err);
+            console.warn("Autoplay notice:", err);
             updateSongPlayerState(false);
           });
       }
@@ -1059,7 +1019,6 @@
     if (!gameState.candlesBlown.includes(index)) {
       gameState.candlesBlown.push(index);
       playPuffSound();
-      saveState();
       renderExperienceCelebration();
 
       if (gameState.candlesBlown.length >= 10) {
@@ -1071,14 +1030,12 @@
   function blowAllCandles() {
     gameState.candlesBlown = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     playPuffSound();
-    saveState();
     renderExperienceCelebration();
     triggerGrandCelebration();
   }
 
   function triggerGrandCelebration() {
     gameState.celebrationTriggered = true;
-    saveState();
     startCelebrationCanvas();
     const proceedBtn = document.getElementById("btnProceedToSunset");
     if (proceedBtn) {
@@ -1091,7 +1048,6 @@
     stopCelebrationCanvas();
     fadeOutAudio(2000);
     gameState.isCompleted = true;
-    saveState();
   }
 
   function renderExperienceOpenWhen() {
@@ -1106,8 +1062,8 @@
       const pill = document.getElementById("statusPill_" + mood);
       const isUnsealed = gameState.openWhenRead.includes(mood);
 
-      if (btn && isUnsealed) btn.classList.add("is-unsealed");
-      if (pill && isUnsealed) pill.textContent = "UNSEALED 🤍";
+      if (btn) btn.classList.toggle("is-unsealed", isUnsealed);
+      if (pill) pill.textContent = isUnsealed ? "UNSEALED 🤍" : "SEALED";
     });
   }
 
@@ -1137,7 +1093,6 @@
     if (!gameState.openWhenRead.includes(moodKey)) {
       gameState.openWhenRead.push(moodKey);
       playSyntheticChime([493.88, 659.25, 987.77]);
-      saveState();
       renderExperienceOpenWhen();
     }
 
@@ -1179,7 +1134,7 @@
           hideGiftAudioNotice();
         })
         .catch(function (err) {
-          console.warn("gift-countdown.mp3 autoplay delay:", err);
+          console.warn("gift-countdown.mp3 notice:", err);
           updateGiftAudioUI(false);
           showGiftAudioNotice("Tap 'PLAY MUSIC 🎵' to start background music ✨");
         });
@@ -1277,7 +1232,6 @@
 
       if (!gameState.futureGiftRevealed) {
         gameState.futureGiftRevealed = true;
-        saveState();
         playSyntheticChime([440, 554.37, 659.25, 880, 1108.73]);
       }
     } else {
@@ -1566,7 +1520,7 @@
           updateMidnightAudioUI(true);
         })
         .catch(function (err) {
-          console.warn("celeb.mp3 autoplay policy notice:", err);
+          console.warn("celeb.mp3 notice:", err);
           updateMidnightAudioUI(false);
         });
     }
@@ -1851,7 +1805,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     14. IDEMPOTENT EVENT INITIALIZATION
+     14. EVENT INITIALIZATION
      -------------------------------------------------------------------------- */
   let handlersInitialized = false;
 
@@ -1917,7 +1871,7 @@
     const btnProceedToWishes = document.getElementById("btnProceedToWishes");
     if (btnProceedToWishes) btnProceedToWishes.addEventListener("click", function () { showExperience("experienceFiveWishes"); });
 
-    // Experience 6: Five Little Wishes
+    // Experience 6
     ["happiness", "peace", "success", "courage", "memories"].forEach(function (starKey) {
       const btn = document.getElementById("starBtn_" + starKey);
       if (btn) btn.addEventListener("click", function () { openWishStarModal(starKey); });
@@ -2195,7 +2149,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     15. BOOTSTRAP
+     15. BOOTSTRAP (ALWAYS FROM ZERO)
      -------------------------------------------------------------------------- */
   function initDay10() {
     const unlockTargetMs = getDay10UnlockTimestamp();
